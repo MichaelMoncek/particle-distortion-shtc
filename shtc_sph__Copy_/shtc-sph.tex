@@ -110,6 +110,7 @@
 \newcommand{\rr}{\mathbf{r}}
 \newcommand{\pp}{\mathbf{p}}
 \newcommand{\LL}{\mathbf{L}}
+\newcommand{\ee}{\mathbf{e}}
 
 \renewcommand{\ss}{\mathbf{s}}
 
@@ -244,8 +245,10 @@ where \begin{equation}
     \QQ_a =  \left( \sum_b w_{ab} \xx_{ab} \otimes \xx_{ab} \right)
 \end{equation}
 The differential of the distortion field is then \begin{equation}
-    \diff \AA = \diff \PP \QQ^{-1} + \PP \diff \QQ^{-1} = \diff \PP \QQ^{-1} - \PP \QQ^{-1} \diff \QQ \QQ^{-1} 
+    \diff \AA = \diff \PP \QQ^{-1} + \PP \diff \QQ^{-1} =
+    \diff \PP \QQ^{-1} - \PP \QQ^{-1} \diff \QQ \QQ^{-1} 
 \end{equation}
+
 If we use the approximations \begin{equation}
     \dot{\xx}_a \approx \dot{\xx}_b + \nabla \vv \Big|_a \cdot \xx_{ab} \text{ and } 
     \XX_{ab} \approx \AA_a \xx_{ab}
@@ -267,6 +270,17 @@ We can than define the SPH velocity gradient at point $a$ as:
 \end{equation}
 
 \todo[inline]{Do we know if this definition of velocity gradient approximates the real velocity gradient well?}
+
+If we choose not to approximate at all we get the following expression:
+\begin{equation}
+    \begin{aligned}
+    \diff \AA_a = - \AA_a \LL_a +
+    \left(\sum_b \nabla w_{ab} \cdot \diff \xx_{ab} \left(\XX_{ab} - \AA_a \xx_{ab}
+    \right) \otimes \xx_{ab}\right)\QQ_a^{-1} +\\
+    \left(\sum_b w_{ab} \left(\XX_{ab} - \AA_a \xx_{ab}
+    \right) \otimes \diff \xx_{ab}\right)\QQ_a^{-1}
+    \end{aligned}
+\end{equation}
 
 \end{subsection}
 \begin{subsection} {Equations of motion}
@@ -356,6 +370,34 @@ Particle distortion SPH-SHTC:
 \end{subequations}
 
 THe only thing to see now is whether is works or not xD 
+We have neglected some terms so here they are (using the notation $
+\ee_{ab} = \XX_{ab} - \AA_a \xx_{ab}$):
+
+\begin{equation}
+    \sum_a m_a \epsilon_{\AA_a} :
+    \left(\sum_b w_{ab} \ee_{ab} \otimes \diff \xx_{ab}\right)\QQ_a^{-1} =
+    \sum_{a,b} w_{ab} \left(m_a \Pi'_a \ee_{ab} - 
+    m_b \Pi'_b \ee_{ba}\right) \cdot \diff \xx_a
+\end{equation}
+
+\begin{equation}
+    \sum_a m_a \epsilon_{\AA_a} :
+    \left(\sum_b \nabla w_{ab} \cdot \diff \xx_{ab} 
+    \ee_{ab} \otimes \xx_{ab}\right)\QQ_a^{-1}
+    = \sum_{a,b} \left( \left(m_a \Pi'_a \ee_{ab} - m_b \Pi'_b \ee_{ba}\right) 
+    \cdot \xx_{ab}\right) \nabla w_{ab} \cdot \diff \xx_a
+\end{equation}
+
+where $\Pi'_a = c_s^2 \QQ_a^{-1} \text{dev}(\AA_a^T \AA_a) \AA_a^T$ also note that
+$\Pi_a = (\Pi'_a \AA_a)^T$ furthemore we will write 
+$\ss_{ab} = \left(m_a \Pi'_a \ee_{ab} - m_b \Pi'_b \ee_{ba}\right)$.
+
+The full form of the evolution equation for velocity then reads:
+\begin{equation}
+    \dot{\vv}_a = \sum_b m_b \left[ w_{ab} \left( \frac{\Pi_a}{m_b} + 
+    \frac{\Pi_b}{m_a}\right) \xx_{ab} - \left( \epsilon_{\rho_a} +
+    \epsilon_{\rho_b} \right) \nabla w_{ab} \right]\
+\end{equation}
 
 \end{subsection} 
 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2025.10.21)  28 OCT 2025 21:36
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2025.10.21)  30 OCT 2025 13:49
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -716,7 +716,7 @@ Package caption Info: New subtype `subfigure' on input line 239.
 Package caption Info: New subtype `subtable' on input line 239.
 \c@subtable=\count333
 )
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 118.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 119.
  (/usr/share/texlive/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) (/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
@@ -726,24 +726,24 @@ File: l3backend-pdftex.def 2023-01-16 L3 backend support: PDF output (pdfTeX)
 ) (./shtc-sph.aux)
 \openout1 = `shtc-sph.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 118.
-LaTeX Font Info:    ... okay on input line 118.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 118.
-LaTeX Font Info:    ... okay on input line 118.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 118.
-LaTeX Font Info:    ... okay on input line 118.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 118.
-LaTeX Font Info:    ... okay on input line 118.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 118.
-LaTeX Font Info:    ... okay on input line 118.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 118.
-LaTeX Font Info:    ... okay on input line 118.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 118.
-LaTeX Font Info:    ... okay on input line 118.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 118.
-LaTeX Font Info:    ... okay on input line 118.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 118.
-LaTeX Font Info:    ... okay on input line 118.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 119.
+LaTeX Font Info:    ... okay on input line 119.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 119.
+LaTeX Font Info:    ... okay on input line 119.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 119.
+LaTeX Font Info:    ... okay on input line 119.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 119.
+LaTeX Font Info:    ... okay on input line 119.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 119.
+LaTeX Font Info:    ... okay on input line 119.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 119.
+LaTeX Font Info:    ... okay on input line 119.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 119.
+LaTeX Font Info:    ... okay on input line 119.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 119.
+LaTeX Font Info:    ... okay on input line 119.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 119.
+LaTeX Font Info:    ... okay on input line 119.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -779,7 +779,7 @@ LaTeX Font Info:    ... okay on input line 118.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 118.
+Package hyperref Info: Link coloring OFF on input line 119.
 (./shtc-sph.out) (./shtc-sph.out)
 \@outlinefile=\write5
 \openout5 = `shtc-sph.out'.
@@ -807,40 +807,40 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 
 
-Package todonotes Warning: The length marginparwidth is less than 2cm and will most likely cause issues with the appearance of inserted todonotes. The issue can be solved by adding a line like \setlength {\marginparwidth }{2cm} prior to loading the todonotes package. on input line 118.
+Package todonotes Warning: The length marginparwidth is less than 2cm and will most likely cause issues with the appearance of inserted todonotes. The issue can be solved by adding a line like \setlength {\marginparwidth }{2cm} prior to loading the todonotes package. on input line 119.
 
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 149.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 150.
 (/usr/share/texlive/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 149.
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 150.
  (/usr/share/texlive/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 149.
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 150.
  (/usr/share/texlive/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 149.
+(Font)              <6> on input line 150.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 149.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 149.
+(Font)              <5> on input line 150.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 150.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 149.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 150.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 150.
+(Font)              <10.95> on input line 151.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 150.
+(Font)              <8> on input line 151.
 <distortion_grey_highres.png, id=19, 1277.77374pt x 556.0775pt>
 File: distortion_grey_highres.png Graphic file (type png)
 <use distortion_grey_highres.png>
-Package pdftex.def Info: distortion_grey_highres.png  used on input line 156.
+Package pdftex.def Info: distortion_grey_highres.png  used on input line 157.
 (pdftex.def)             Requested size: 411.14528pt x 178.92421pt.
 
 
@@ -853,7 +853,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}
 
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc} <./distortion_grey_highres.png>]
-Overfull \hbox (18.91486pt too wide) in paragraph at lines 204--205
+Overfull \hbox (18.91486pt too wide) in paragraph at lines 205--206
 []\OT1/lmr/bx/n/10.95 Supervisor\OT1/lmr/m/n/10.95 : Michal Pavelka (Math-e-mat-i-cal In-sti-tute of Charles Uni-ver-sity), pavelka@karlin.mff.cuni.cz 
  []
 
@@ -861,10 +861,10 @@ Overfull \hbox (18.91486pt too wide) in paragraph at lines 204--205
 <signature.png, id=48, 343.46138pt x 129.75208pt>
 File: signature.png Graphic file (type png)
 <use signature.png>
-Package pdftex.def Info: signature.png  used on input line 220.
+Package pdftex.def Info: signature.png  used on input line 221.
 (pdftex.def)             Requested size: 112.9705pt x 42.67912pt.
 
-Overfull \hbox (17.0pt too wide) in paragraph at lines 219--223
+Overfull \hbox (17.0pt too wide) in paragraph at lines 220--224
 [][] 
  []
 
@@ -876,11 +876,11 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-13.18872pt}.
 
 [2 <./signature.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 229--231
+Underfull \hbox (badness 10000) in paragraph at lines 230--232
 
  []
 
-Package hyperref Info: bookmark level for unknown todo defaults to 0 on input line 269.
+Package hyperref Info: bookmark level for unknown todo defaults to 0 on input line 272.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 25.18872pt, for example:
@@ -892,62 +892,42 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 pdfTeX warning (ext4): destination with the same identifier (name{equation.0.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.344     \begin{equation}
+l.358     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.0.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.344     \begin{equation}
+l.358     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.0.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.344     \begin{equation}
+l.358     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.0.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.344     \begin{equation}
+l.358     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.0.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.347     \begin{equation}
+l.361     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.0.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.347     \begin{equation}
+l.361     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.0.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.347     \begin{equation}
+l.361     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.0.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.347     \begin{equation}
-                          
-pdfTeX warning (ext4): destination with the same identifier (name{equation.0.3}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.352     \begin{equation}
-                          
-pdfTeX warning (ext4): destination with the same identifier (name{equation.0.3}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.352     \begin{equation}
-                          
-pdfTeX warning (ext4): destination with the same identifier (name{equation.0.3}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.352     \begin{equation}
-                          
-pdfTeX warning (ext4): destination with the same identifier (name{equation.0.3}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.352     \begin{equation}
+l.361     \begin{equation}
                           
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -957,15 +937,35 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-13.18872pt}.
 
 [4]
+pdfTeX warning (ext4): destination with the same identifier (name{equation.0.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.366     \begin{equation}
+                          
+pdfTeX warning (ext4): destination with the same identifier (name{equation.0.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.366     \begin{equation}
+                          
+pdfTeX warning (ext4): destination with the same identifier (name{equation.0.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.366     \begin{equation}
+                          
+pdfTeX warning (ext4): destination with the same identifier (name{equation.0.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.366     \begin{equation}
+                          
 <plate1.png, id=90, 1427.3325pt x 595.22375pt>
 File: plate1.png Graphic file (type png)
 <use plate1.png>
-Package pdftex.def Info: plate1.png  used on input line 367.
+Package pdftex.def Info: plate1.png  used on input line 409.
 (pdftex.def)             Requested size: 411.14528pt x 171.457pt.
 <plate2.png, id=91, 1427.3325pt x 595.22375pt>
 File: plate2.png Graphic file (type png)
 <use plate2.png>
-Package pdftex.def Info: plate2.png  used on input line 375.
+Package pdftex.def Info: plate2.png  used on input line 417.
 (pdftex.def)             Requested size: 411.14528pt x 171.457pt.
 
 
@@ -975,23 +975,31 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller to compensate:
 (fancyhdr)                \addtolength{\topmargin}{-13.18872pt}.
 
-[5 <./plate1.png> <./plate2.png>] (./shtc-sph.aux)
+[5 <./plate1.png>]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 25.18872pt, for example:
+(fancyhdr)                \setlength{\headheight}{25.18872pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+(fancyhdr)                \addtolength{\topmargin}{-13.18872pt}.
+
+[6 <./plate2.png>] (./shtc-sph.aux)
 Package rerunfilecheck Info: File `shtc-sph.out' has not changed.
 (rerunfilecheck)             Checksum: F2753750FBB39218E805324330B262E4;528.
  ) 
 Here is how much of TeX's memory you used:
- 28445 strings out of 476034
- 560247 string characters out of 5792863
+ 28450 strings out of 476034
+ 560305 string characters out of 5792863
  1871388 words of memory out of 6000000
  48330 multiletter control sequences out of 15000+600000
  562518 words of font info for 65 fonts, out of 8000000 for 9000
  1137 hyphenation exceptions out of 8191
- 84i,12n,80p,629b,919s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,12n,80p,629b,918s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam7.pfb>
-Output written on shtc-sph.pdf (5 pages, 2557594 bytes).
+Output written on shtc-sph.pdf (6 pages, 2560055 bytes).
 PDF statistics:
- 172 PDF objects out of 1000 (max. 8388607)
- 129 compressed objects within 2 object streams
- 41 named destinations out of 1000 (max. 500000)
+ 181 PDF objects out of 1000 (max. 8388607)
+ 137 compressed objects within 2 object streams
+ 46 named destinations out of 1000 (max. 500000)
  57 words of extra memory for PDF output out of 10000 (max. 10000000)
 
