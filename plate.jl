@@ -26,10 +26,10 @@ const c_s = 9046.59  #shear sound speed
 const c_0 = sqrt(c_l^2 + 4/3*c_s^2)  #total sound speed
 const rho0 = 1845.0   #density
 const nu = 1.0e-4    #artificial viscosity (surpresses noise but is not neccessary)
-const c_p = 10.0*c_l  #tensile penalty term
+const c_p = 0.0*c_l  #tensile penalty term
 
 const dr = W/40    #discretization step
-const h = (20.0+10*eps(Float64))dr    #support radius
+const h = (10.5+10*eps(Float64))dr    #support radius
 const h2 = h*h
 const vol = dr^2   #particle volume
 const m = rho0*vol #particle mass
@@ -93,11 +93,13 @@ end
     B::RealMatrix = MAT0  #derivative of energy wrt A
     e::Float64 = 0.       #fronorm squared of eta
     rho::Float64 = 0.0    #density
+    #C_rho::Float64 = 0.0
 
     P::RealMatrix = MAT0
     Q::RealMatrix = MAT0
     eps::Float64 = 0.0 
     Pi::RealMatrix = MAT0
+    PiCp::RealMatrix = MAT0
     # tensile penalty variables
     lambda::Float64 = 0.0
     C_lambda::Float64 = 0.0
@@ -120,7 +122,7 @@ end
 #----------------------------
 
 function make_geometry()
-    grid = Grid(dr, :square)
+    grid = Grid(dr, :hexagonal)
     rod = Rectangle(-L/2, -W/2, L/2, W/2)
     dom = BoundaryLayer(rod, grid, L + W)
     sys = ParticleSystem(Particle, dom, h)
@@ -131,6 +133,7 @@ function make_geometry()
     apply!(sys, find_lambda!)
     for p in sys.particles 
         p.C_lambda = -p.lambda
+        #p.C_rho = rho0 - p.rho
     end
 
     force_computation!(sys, 0.)
@@ -139,6 +142,7 @@ end
 
 function force_computation!(sys::ParticleSystem, t::Float64)
     apply!(sys, find_A!)
+    apply!(sys, find_lambda!)
     apply!(sys, find_Pi!)
     apply!(sys, find_f_new!)
 end
@@ -151,7 +155,7 @@ function init_velocity(x::RealVector)::RealVector
     a2 = 57.6455
     s = alpha*(x[1] + L/2)
     v = A*omega*(a1*(sinh(s) + sin(s)) - a2*(cosh(s) + cos(s)))
-    return v*VECY
+    return 0.1*v*VECY
 end
 
 #PHYSICS
@@ -167,14 +171,17 @@ end
 
 function find_lambda!(p::Particle, q::Particle, r::Float64) 
     p.lambda += m*wendland2h(h,r)
+    #p.rho += m*wendland2(h,r)
 end 
 
 function find_Pi!(p::Particle)
     invQ = inv(p.Q) 
     p.A = p.P*invQ
+    At = trans(p.A)
     # Pi 
-    G = trans(p.A)*p.A
+    G = At*p.A
     p.Pi = c_s^2*G*dev(G)*trans(invQ)
+    p.PiCp = c_s^2*invQ*dev(G)*At
     # epsilon_rho
     p.rho = rho0*det(p.A) 
     p.eps = c_0^2*rho0*(1-rho0/p.rho)/p.rho^2
@@ -192,10 +199,21 @@ function find_f_new!(p::Particle, q::Particle, r::Float64)
     #Pi = c_s^2*A^t*A*dev(A^t*A)*Q^{-1}
     p.f -= rDker*p.eps*x_pq
     p.f -= rDker*q.eps*x_pq
+    #Terms of size O(X-Ax) (energy will not be conserved if you remove this)
+    X_pq = p.X - q.X
+    e_pq = X_pq - p.A*x_pq
+    e_qp = -X_pq + q.A*x_pq 
+    s_pq = m*p.PiCp*e_pq - m*q.PiCp*e_qp
+
+    p.f -= ker/m^2*s_pq
+    p.f -= rDker*dot(s_pq, x_pq)/m^2*x_pq
 
     #anti-clumping force
     kerh = rDwendland2h(h,r)
     p.f += -m*kerh*(c_p/rho0)^2*(p.lambda + q.lambda)*x_pq
+
+    #artificial viscosity
+    p.f += 2*m*vol*rDker*nu*(p.v - q.v)
 end
 
 function update_v!(p::Particle)
@@ -212,6 +230,7 @@ function update_x!(p::Particle)
     p.P = MAT0
     p.Q = MAT0
     p.lambda = 0.0
+    #p.rho = 0.0
 end
 
 function find_e!(p::Particle, q::Particle, r::Float64)
@@ -231,12 +250,11 @@ end
 
 #TIME ITERATION
 #--------------
-
 function main()
     println("Simulation starting")
     sys = make_geometry()
-    out = new_pvd_file("results/plate")
-    csv_data = open("results/plate/plate.csv", "w")
+    out = new_pvd_file("results/plate2")
+    csv_data = open("results/plate2/plate.csv", "w")
 
     #select top-right corner
     p_sel = argmax(p -> abs(p.x[1]) + abs(p.x[2]), sys.particles) 
@@ -267,11 +285,11 @@ function main()
     save_pvd_file(out)
     close(csv_data)
     #plot result
-    data = CSV.read("results/plate/plate.csv", DataFrame; header=false)
+    data = CSV.read("results/plate2/plate.csv", DataFrame; header=false)
     p1 = plot(data[:,1], data[:,2], label = "plate-test", xlabel = "time", ylabel = "amplitude")
     p2 = plot(data[:,1], data[:,3], label = "plate-test", xlabel = "time", ylabel = "energy")
-    savefig(p1, "results/plate/amplitude.pdf")
-    savefig(p2, "results/plate/energy.pdf")
+    savefig(p1, "results/plate2/amplitude.pdf")
+    savefig(p2, "results/plate2/energy.pdf")
 end
 
 end

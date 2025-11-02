@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex shtc-sph"] 1761828075.46541 "shtc-sph.aux" "shtc-sph.bbl" "shtc-sph" 1761828567.89011 0
+["bibtex shtc-sph"] 1761828075.46541 "shtc-sph.aux" "shtc-sph.bbl" "shtc-sph" 1762114189.51452 0
   "./library.bib" 1761079261.49431 529836 c3b12ac802d179b49f12fb0c6b6ad96e ""
   "/usr/share/texlive/texmf-dist/bibtex/bst/base/abbrv.bst" 1737590400 20329 b5fed53e10044d0f8112183785c759b1 ""
-  "shtc-sph.aux" 1761828567.69604 3542 077b618f3a5dd400175ca6ccb57af744 "pdflatex"
+  "shtc-sph.aux" 1762114189.29342 3542 077b618f3a5dd400175ca6ccb57af744 "pdflatex"
   (generated)
   "shtc-sph.bbl"
   "shtc-sph.blg"
   (rewritten before read)
-["pdflatex"] 1761828566.92497 "/home/mmoncek/Documents/sfg-shtc/shtc_sph__Copy_/shtc-sph.tex" "shtc-sph.pdf" "shtc-sph" 1761828567.8903 0
-  "/home/mmoncek/Documents/sfg-shtc/shtc_sph__Copy_/shtc-sph.tex" 1761828566.73103 17998 2fab6d598fbd02a6053a3310dbdf11fe ""
+["pdflatex"] 1762114188.51474 "/home/mmoncek/Documents/sfg-shtc/shtc_sph__Copy_/shtc-sph.tex" "shtc-sph.pdf" "shtc-sph" 1762114189.51482 0
+  "/home/mmoncek/Documents/sfg-shtc/shtc_sph__Copy_/shtc-sph.tex" 1762114188.24443 18115 2573cf17f5074e0c8025d701aea224f0 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc" 1202520719 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1202520719 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc" 1202520719 2840 216e6e45ad352e2456e1149f28885bee ""
@@ -233,10 +233,10 @@
   "distortion_grey_highres.png" 1761079261.47531 649029 a3e0a32310204b72ac5cdc72d46190d6 ""
   "plate1.png" 1761681994.82568 915175 30266730c51f9afed4a3a4903e140253 ""
   "plate2.png" 1761681936.16897 913427 a5ac80ef2abbb02774c633bdea464a83 ""
-  "shtc-sph.aux" 1761828567.69604 3542 077b618f3a5dd400175ca6ccb57af744 "pdflatex"
+  "shtc-sph.aux" 1762114189.29342 3542 077b618f3a5dd400175ca6ccb57af744 "pdflatex"
   "shtc-sph.bbl" 1761828075.52087 842 4f8d33df479621351ce2e1833c8d8e5a "bibtex shtc-sph"
-  "shtc-sph.out" 1761828567.69604 528 f2753750fbb39218e805324330b262e4 "pdflatex"
-  "shtc-sph.tex" 1761828566.73103 17998 2fab6d598fbd02a6053a3310dbdf11fe ""
+  "shtc-sph.out" 1762114189.29342 528 f2753750fbb39218e805324330b262e4 "pdflatex"
+  "shtc-sph.tex" 1762114188.24443 18115 2573cf17f5074e0c8025d701aea224f0 ""
   "signature.png" 1761079261.66832 267231 f5af2c93f61d5217e1adc5a026df4089 ""
   (generated)
   "shtc-sph.aux"
