@@ -28,17 +28,18 @@ const c_s = 200.0  #shear sound speed
 const c_0 = sqrt(c_l^2 + 4/3*c_s^2)  #total sound speed
 const rho0 = 1.0   #density
 const nu = 1.0e-4    #artificial viscosity (surpresses noise but is not neccessary)
+const c_p = 0.0*c_l #tensile penalty coefficient 
 
 const dr = W/16    #discretization step
-const h = (2.5+10*eps(Float64))dr    #support radius
+const h = (10.5+10*eps(Float64))dr    #support radius
 const h2 = h*h
 const vol = dr^2   #particle volume
 const m = rho0*vol #particle mass
 
 const dt = 0.1h/c_0 #time step 
-const t_end = 1.5  #total simulation time
+const t_end = 2.0  #total simulation time
 const dt_plot = max(t_end/400, dt) #how often save txt data (cheap)
-const dt_frame = max(t_end/50, dt) #how often save pvd data (expensive)
+const dt_frame = max(t_end/200, dt) #how often save pvd data (expensive)
 
 #ALGEBRAIC TOOLS
 #----------------------------------------
@@ -98,14 +99,23 @@ end
     Q::RealMatrix = MAT0
     eps::Float64 = 0.0 
     Pi::RealMatrix = MAT0
-    # detH::Float64 = 0.
-    # A_new::RealMatrix = MAT0
-    # H_new::RealMatrix = MAT0
-    # Hi::RealMatrix = MAT0
-    # Hi_new::RealMatrix = MAT0
-    # A_tmp::RealMatrix = MAT0
-    # A_tmp_new::RealMatrix = MAT0
-    # normalizer::Float64 = 0.0
+    PiCp::RealMatrix = MAT0
+    # tensile penalty variables
+    lambda::Float64 = 0.0
+    C_lambda::Float64 = 0.0
+end
+
+#STRUCTURAL KERNELS
+#------------------
+
+@fastmath function wendland2h(h::Float64, r::Float64)::Float64
+    x = r/h
+    return x < 1.0 ? 14.0*(1.0 - x)^3*(14.0*x^2 - 3.0*x - 1.0)/(pi*h^2) : 0.
+end
+
+@fastmath function rDwendland2h(h::Float64, r::Float64)::Float64
+    x = r/h
+    return x < 1.0 ? 140.0*(1.0 - x)^2*(4.0 - 7.0*x)/(pi*h^4) : 0.
 end
 
 #CREATE INITIAL STATE
@@ -118,19 +128,17 @@ function make_geometry()
     sys = ParticleSystem(Particle, dom, h)
     generate_particles!(sys, grid, rod, x -> Particle(x=x))
     create_cell_list!(sys)
+
+    # tensile penalty initialization
+    apply!(sys, find_lambda!)
+    for p in sys.particles 
+        p.C_lambda = -p.lambda
+        #p.C_rho = rho0 - p.rho
+    end
+
     force_computation!(sys, 0.)
     return sys
 end
-
-# function force_computation!(sys::ParticleSystem, t::Float64)
-#     apply_ternary!(sys, find_A_new!)
-#     #apply!(sys, find_A!)
-#     apply!(sys, find_B!)
-#     apply!(sys, find_f!)
-#     if t < pull_time
-#         apply!(sys, pull!)
-#     end
-# end
 
 function force_computation!(sys::ParticleSystem, t::Float64)
     apply!(sys, find_A!)
@@ -163,36 +171,6 @@ end
 #     p.H_new -= ker*outer(x_qr, x_qr)
 # end 
 
-# function find_B!(p::Particle)
-#     #Hi = inv(p.H)
-#     #p.H_new /= p.normalizer
-#     #p.A_new /= p.normalizer
-    
-#     p.A = p.A_new
-#     p.H = p.H_new
-#     p.detH = det(p.H)
-
-#     Hi_new = inv(p.H_new)
-#     Hi = Hi_new
-
-#     #Store all the intermidiate matrices for debugging 
-#     #p.Hi = Hi
-#     p.Hi_new = Hi_new
-#     p.Hi = Hi_new
-    
-#     p.A_tmp = p.A
-#     p.A_tmp_new = p.A_new
-
-#     #p.A = p.A*Hi
-#     p.A_new = p.A_new*Hi_new
-#     p.A = p.A_new
-
-#     At = trans(p.A)
-#     G = At*p.A
-    
-#     P = c_l^2*(det(p.A)-1.0)
-#     p.B = m*(P*inv(At) + c_s^2*p.A*dev(G))*Hi
-# end
 
 # Extension of apply operator for ternary functions
 #--------------------------------------------------
@@ -278,12 +256,19 @@ function find_f!(p::Particle, q::Particle, r::Float64)
     p.f += 2*m*vol*rDker*nu*(p.v - q.v)
 end
 
+function find_lambda!(p::Particle, q::Particle, r::Float64) 
+    p.lambda += m*wendland2h(h,r)
+    #p.rho += m*wendland2(h,r)
+end 
+
 function find_Pi!(p::Particle)
     invQ = inv(p.Q) 
     p.A = p.P*invQ
+    At = trans(p.A)
     # Pi 
     G = trans(p.A)*p.A
     p.Pi = c_s^2*G*dev(G)*trans(invQ)
+    p.PiCp = c_s^2*invQ*dev(G)*At
     # epsilon_rho
     rho = rho0*det(p.A) 
     p.eps = c_0^2*rho0*(1-rho0/rho)/rho^2
@@ -301,6 +286,21 @@ function find_f_new!(p::Particle, q::Particle, r::Float64)
     #Pi = c_s^2*A^t*A*dev(A^t*A)*Q^{-1}
     p.f -= rDker*p.eps*x_pq
     p.f -= rDker*q.eps*x_pq
+    #Terms of size O(X-Ax) (energy will not be conserved if you remove this)
+    X_pq = p.X - q.X
+    e_pq = X_pq - p.A*x_pq
+    e_qp = -X_pq + q.A*x_pq 
+    s_pq = m*p.PiCp*e_pq - m*q.PiCp*e_qp
+
+    p.f -= ker/m^2*s_pq
+    p.f -= rDker*dot(s_pq, x_pq)/m^2*x_pq
+
+    #anti-clumping force
+    kerh = rDwendland2h(h,r)
+    p.f += -m*kerh*(c_p/rho0)^2*(p.lambda + q.lambda)*x_pq
+
+    #artificial viscosity
+    p.f += 2*m*vol*rDker*nu*(p.v - q.v)
 end
 
 function pull!(p::Particle)
@@ -328,9 +328,7 @@ function update_x!(p::Particle)
     p.e = 0.0
     p.P = MAT0
     p.Q = MAT0
-    #p.A_new = MAT0
-    #p.H_new = MAT0
-    #p.normalizer = 0.0
+    p.lambda = 0.0
 end
 
 function find_e!(p::Particle, q::Particle, r::Float64)
@@ -373,7 +371,8 @@ function main()
         end
         if (k % Int64(round(dt_frame/dt)) == 0)
             apply!(sys, find_e!)
-            save_frame!(out, sys, :v, :A, :e, :H, :P, :Q, :eps, :Pi)
+            save_frame!(out, sys, :v, :A, :e, :P, :Q, 
+                        :eps, :Pi, :lambda, :C_lambda)
         end
         #verlet scheme:
         apply!(sys, update_v!)

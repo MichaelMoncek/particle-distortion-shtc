@@ -1,11 +1,11 @@
 #=
 
-# Bending of berrylium plate 
+# Bending of an elastic rod
 
 =#
 
 
-module plate 
+module rod
 using SmoothedParticles
 using Parameters
 using Plots
@@ -16,26 +16,26 @@ import LinearAlgebra
 #CONSTANT PARAMETERS
 #-------------------------------
 
-const L = 0.06   #rod length
-const W = 0.01   #rod width
+const L = 0.06#5.0   #rod length
+const W = 0.01#0.5   #rod width
+const r_free = 1.0   #how much free space we want around the rod
 
+const pull_force = 0.0#1.0 #pulling force [N]
 const pull_time = 0.5  #for how long we pull
 
-const c_l = 9046.59   #longitudinal sound speed
-const c_s = 9046.59  #shear sound speed
+const c_l = 9046.59#20.0   #longitudinal sound speed
+const c_s = 9046.59#200.0  #shear sound speed
 const c_0 = sqrt(c_l^2 + 4/3*c_s^2)  #total sound speed
-const rho0 = 1845.0   #density
+const rho0 = 1845.0#1.0   #density
 const nu = 1.0e-4    #artificial viscosity (surpresses noise but is not neccessary)
-const c_p = 0.0*c_l  #tensile penalty term
+const c_p = 0.001*c_0  #tensile penalty coefficient
 
-const dr = W/40    #discretization step
-const h = (10.5+10*eps(Float64))dr    #support radius
-const h2 = h*h
-const vol = dr^2   #particle volume
-const m = rho0*vol #particle mass
-
-const dt = 0.05dr/c_0 #time step 
-const t_end = 3e-5  #total simulation time
+const dr = W/40#W/16    #discretization step
+const h = (10.5+10*eps(Float64))dr
+const vol = dr*dr
+const m = rho0*vol
+const dt = 0.05h/c_0#0.1h/c_0 #time step
+const t_end = 3e-5#5.0  #total simulation time
 const dt_plot = max(t_end/400, dt) #how often save txt data (cheap)
 const dt_frame = max(t_end/100, dt) #how often save pvd data (expensive)
 
@@ -85,6 +85,7 @@ end
 
 @with_kw mutable struct Particle <: AbstractParticle
 	x::RealVector         #position
+    # v::RealVector = VEC0  #velocity
     v::RealVector = init_velocity(x) #velocity
     f::RealVector = VEC0  #force
     X::RealVector = x     #Lag. position
@@ -92,17 +93,6 @@ end
     H::RealMatrix = MAT0  #correction matrix
     B::RealMatrix = MAT0  #derivative of energy wrt A
     e::Float64 = 0.       #fronorm squared of eta
-    rho::Float64 = 0.0    #density
-    #C_rho::Float64 = 0.0
-
-    P::RealMatrix = MAT0
-    Q::RealMatrix = MAT0
-    invQ::RealMatrix = MAT0
-    eQ::Float64 = 0.0
-    eps::Float64 = 0.0 
-    Pi::RealMatrix = MAT0
-    PiCp::RealMatrix = MAT0
-    # tensile penalty variables
     lambda::Float64 = 0.0
     C_lambda::Float64 = 0.0
 end
@@ -125,18 +115,18 @@ end
 
 function make_geometry()
     grid = Grid(dr, :square)
+    # grid = Grid(dr, :hexagonal)
+    # rod = Rectangle(0., .0, L, W)
+    # dom = Rectangle(-r_free, -r_free, L + r_free, W + r_free)
     rod = Rectangle(-L/2, -W/2, L/2, W/2)
     dom = BoundaryLayer(rod, grid, L + W)
     sys = ParticleSystem(Particle, dom, h)
     generate_particles!(sys, grid, rod, x -> Particle(x=x))
-    generate_particles!(sys, grid, rod, x -> Particle(x=x + 1e-5*RealVector(rand(),rand(),rand())))
     create_cell_list!(sys)
 
-    # tensile penalty initialization
     apply!(sys, find_lambda!)
-    for p in sys.particles 
+    for p in sys.particles
         p.C_lambda = -p.lambda
-        #p.C_rho = rho0 - p.rho
     end
 
     force_computation!(sys, 0.)
@@ -144,10 +134,13 @@ function make_geometry()
 end
 
 function force_computation!(sys::ParticleSystem, t::Float64)
-    apply!(sys, find_A!)
     apply!(sys, find_lambda!)
-    apply!(sys, find_Pi!)
-    apply!(sys, find_f_new!)
+    apply!(sys, find_A!)
+    apply!(sys, find_B!)
+    apply!(sys, find_f!)
+    if t < pull_time
+        apply!(sys, pull!)
+    end
 end
 
 function init_velocity(x::RealVector)::RealVector
@@ -168,60 +161,51 @@ function find_A!(p::Particle, q::Particle, r::Float64)
     ker = wendland2(h,r)
     x_pq = p.x - q.x
     X_pq = p.X - q.X
-    p.P += ker*outer(X_pq, x_pq)
-    p.Q += ker*outer(x_pq, x_pq)
+    p.A += -ker*outer(X_pq, x_pq)
+    p.H += -ker*outer(x_pq, x_pq)
 end
 
-function find_lambda!(p::Particle, q::Particle, r::Float64) 
-    p.lambda += m*wendland2h(h,r)
-    #p.rho += m*wendland2(h,r)
-end 
-
-function find_Pi!(p::Particle)
-    invQ = inv(p.Q) 
-    p.invQ = invQ
-    p.A = p.P*invQ
+function find_B!(p::Particle)
+    Hi = inv(p.H)
+    p.A = p.A*Hi
     At = trans(p.A)
-    # Pi 
     G = At*p.A
-    p.Pi = c_s^2*G*dev(G)*trans(invQ)
-    p.PiCp = c_s^2*invQ*dev(G)*At
-    # epsilon_rho
-    p.rho = rho0*det(p.A) 
-    p.eps = c_0^2*rho0*(1-rho0/p.rho)/p.rho^2
+    P = c_l^2*(det(p.A)-1.0)
+    p.B = m*(P*inv(At) + c_s^2*p.A*dev(G))*Hi
 end
 
-function find_f_new!(p::Particle, q::Particle, r::Float64) 
-    ker = wendland2(h, r) 
-    rDker = rDwendland2(h,r) 
-
+function find_f!(p::Particle, q::Particle, r::Float64)
+    ker = wendland2(h,r)
+    rDker = rDwendland2(h,r)
     x_pq = p.x - q.x
-    #force
-    p.f += ker*p.Pi/m*x_pq
-    p.f += ker*q.Pi/m*x_pq
-    #Pi = A^t*epsilon_A*Q^-t
-    #Pi = c_s^2*A^t*A*dev(A^t*A)*Q^{-1}
-    p.f -= rDker*p.eps*x_pq
-    p.f -= rDker*q.eps*x_pq
-    #Terms of size O(X-Ax) (energy will not be conserved if you remove this)
     X_pq = p.X - q.X
-    e_pq = X_pq - p.A*x_pq
-    e_qp = -X_pq + q.A*x_pq 
-    s_pq = m*p.PiCp*e_pq - m*q.PiCp*e_qp
-
-    p.f -= ker/m^2*s_pq
-    p.f -= rDker*dot(s_pq, x_pq)/m^2*x_pq
-
+    #force
+    p.f += -ker*(trans(p.A)*(p.B*x_pq))
+    p.f += -ker*(trans(q.A)*(q.B*x_pq))
+    #"eta" correction (remove this -> energy will not be conserved!)
+    k_pq = +trans(p.B)*(X_pq - p.A*x_pq)
+    k_qp = -trans(q.B)*(X_pq - q.A*x_pq)
+    p.f += rDker*dot(x_pq, k_pq)*x_pq + ker*k_pq
+    p.f -= rDker*dot(x_pq, k_qp)*x_pq + ker*k_qp
+    #artificial_viscosity
+    p.f += 2*m*vol*rDker*nu*(p.v - q.v)
     #anti-clumping force
     kerh = rDwendland2h(h,r)
     p.f += -m*kerh*(c_p/rho0)^2*(p.lambda + q.lambda)*x_pq
+end
 
-    #artificial viscosity
-    p.f += 2*m*vol*rDker*nu*(p.v - q.v)
+function pull!(p::Particle)
+    if p.X[1] > L-h
+        p.f += RealVector(0., (vol*pull_force)/(h*W), 0.)
+    end
 end
 
 function update_v!(p::Particle)
-    p.v += 0.5*dt*m*p.f#/m
+    p.v += 0.5*dt*p.f/m
+    # #dirichlet bc
+    # if p.X[1] < h
+    #     p.v = VEC0
+    # end
 end
 
 function update_x!(p::Particle)
@@ -230,19 +214,17 @@ function update_x!(p::Particle)
     p.H = MAT0
     p.A = MAT0
     p.f = VEC0
-    p.e = 0.0
-    p.P = MAT0
-    p.Q = MAT0
-    p.lambda = 0.0
-    p.invQ = MAT0
-    p.eQ = 0.0
-    #p.rho = 0.0
+    p.e = 0.
+    p.lambda = 0.
+end
+
+function find_lambda!(p::Particle, q::Particle, r::Float64)
+    p.lambda += m*wendland2h(h,r)
 end
 
 function find_e!(p::Particle, q::Particle, r::Float64)
     eta = inv(p.A)*(p.X - q.X) - (p.x - q.x)
     p.e += dot(eta, eta)
-    p.eQ = norm(p.A*p.invQ - MAT1)
 end
 
 function particle_energy(p::Particle)
@@ -257,11 +239,11 @@ end
 
 #TIME ITERATION
 #--------------
+
 function main()
-    println("Simulation starting")
     sys = make_geometry()
-    out = new_pvd_file("results/plate3")
-    csv_data = open("results/plate3/plate.csv", "w")
+    out = new_pvd_file("results/rod_original")
+    csv_data = open("results/rod_original/rod.csv", "w")
 
     #select top-right corner
     p_sel = argmax(p -> abs(p.x[1]) + abs(p.x[2]), sys.particles) 
@@ -279,10 +261,9 @@ function main()
         end
         if (k % Int64(round(dt_frame/dt)) == 0)
             apply!(sys, find_e!)
-            save_frame!(out, sys, :v, :A, :e, :P, :Q, :invQ,
-                        :eps, :Pi, :rho, :lambda, :C_lambda)
+            save_frame!(out, sys, :v, :A, :e)
         end
-        #verlet scheme
+        #verlet scheme:
         apply!(sys, update_v!)
         apply!(sys, update_x!)
         create_cell_list!(sys)
@@ -292,11 +273,11 @@ function main()
     save_pvd_file(out)
     close(csv_data)
     #plot result
-    data = CSV.read("results/plate3/plate.csv", DataFrame; header=false)
-    p1 = plot(data[:,1], data[:,2], label = "plate-test", xlabel = "time", ylabel = "amplitude")
-    p2 = plot(data[:,1], data[:,3], label = "plate-test", xlabel = "time", ylabel = "energy")
-    savefig(p1, "results/plate3/amplitude.pdf")
-    savefig(p2, "results/plate3/energy.pdf")
+    data = CSV.read("results/rod_original/rod.csv", DataFrame; header=false)
+    p1 = plot(data[:,1], data[:,2], label = "rod-test", xlabel = "time", ylabel = "amplitude")
+    p2 = plot(data[:,1], data[:,3], label = "rod-test", xlabel = "time", ylabel = "energy")
+    savefig(p1, "results/rod_original/amplitude.pdf")
+    savefig(p2, "results/rod_original/energy.pdf")
 end
 
 end
