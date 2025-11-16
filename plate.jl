@@ -15,6 +15,7 @@ import LinearAlgebra
 
 #CONSTANT PARAMETERS
 #-------------------------------
+const folder_name = "plate_fick"
 
 const L = 0.06   #rod length
 const W = 0.01   #rod width
@@ -23,18 +24,21 @@ const pull_time = 0.5  #for how long we pull
 
 const c_l = 9046.59   #longitudinal sound speed
 const c_s = 9046.59  #shear sound speed
-const c_0 = sqrt(c_l^2 + 4/3*c_s^2)  #total sound speed
+const c_0 = sqrt(c_l^2 + 4/3*c_s^2)  #total sound speed 
 const rho0 = 1845.0   #density
 const nu = 1.0e-4    #artificial viscosity (surpresses noise but is not neccessary)
-const c_p = 0.0*c_l  #tensile penalty term
+# const c_p = 0.0000001*1.0*c_l  #tensile penalty term
+const c_p = 0.0*0.0025*1.0*c_l  #tensile penalty term
+const c_shift = 0.000005*0.5           #particle shifting factor
 
 const dr = W/40    #discretization step
-const h = (10.5+10*eps(Float64))dr    #support radius
+const h = (3.5+10*eps(Float64))dr    #support radius
 const h2 = h*h
 const vol = dr^2   #particle volume
 const m = rho0*vol #particle mass
+const D = 0.0z5*0.5*h^2  #diffusion coefficient for shifting
 
-const dt = 0.05dr/c_0 #time step 
+const dt = 0.01dr/c_0 #time step 
 const t_end = 3e-5  #total simulation time
 const dt_plot = max(t_end/400, dt) #how often save txt data (cheap)
 const dt_frame = max(t_end/100, dt) #how often save pvd data (expensive)
@@ -86,14 +90,14 @@ end
 @with_kw mutable struct Particle <: AbstractParticle
 	x::RealVector         #position
     v::RealVector = init_velocity(x) #velocity
+    dv::RealVector = VEC0 #transport velocity
     f::RealVector = VEC0  #force
     X::RealVector = x     #Lag. position
     A::RealMatrix = MAT0  #distortion
-    H::RealMatrix = MAT0  #correction matrix
     B::RealMatrix = MAT0  #derivative of energy wrt A
     e::Float64 = 0.       #fronorm squared of eta
     rho::Float64 = 0.0    #density
-    #C_rho::Float64 = 0.0
+    C_rho::Float64 = 0.0
 
     P::RealMatrix = MAT0
     Q::RealMatrix = MAT0
@@ -102,9 +106,11 @@ end
     eps::Float64 = 0.0 
     Pi::RealMatrix = MAT0
     PiCp::RealMatrix = MAT0
-    # tensile penalty variables
-    lambda::Float64 = 0.0
-    C_lambda::Float64 = 0.0
+    # particle shifting (based on Fick's law)
+    gradC::RealVector = VEC0    #gradient of concentration
+#     # tensile penalty variables
+#     lambda::Float64 = 0.0
+#     C_lambda::Float64 = 0.0
 end
 
 #STRUCTURAL KERNELS
@@ -129,14 +135,13 @@ function make_geometry()
     dom = BoundaryLayer(rod, grid, L + W)
     sys = ParticleSystem(Particle, dom, h)
     generate_particles!(sys, grid, rod, x -> Particle(x=x))
-    generate_particles!(sys, grid, rod, x -> Particle(x=x + 1e-5*RealVector(rand(),rand(),rand())))
     create_cell_list!(sys)
 
     # tensile penalty initialization
-    apply!(sys, find_lambda!)
+    apply!(sys, find_rho!)
     for p in sys.particles 
-        p.C_lambda = -p.lambda
-        #p.C_rho = rho0 - p.rho
+        # p.C_lambda = -p.lambda
+        p.C_rho = rho0 - p.rho
     end
 
     force_computation!(sys, 0.)
@@ -145,9 +150,9 @@ end
 
 function force_computation!(sys::ParticleSystem, t::Float64)
     apply!(sys, find_A!)
-    apply!(sys, find_lambda!)
+    apply!(sys, find_rho!)
     apply!(sys, find_Pi!)
-    apply!(sys, find_f_new!)
+    apply!(sys, find_f!)
 end
 
 function init_velocity(x::RealVector)::RealVector
@@ -172,9 +177,9 @@ function find_A!(p::Particle, q::Particle, r::Float64)
     p.Q += ker*outer(x_pq, x_pq)
 end
 
-function find_lambda!(p::Particle, q::Particle, r::Float64) 
-    p.lambda += m*wendland2h(h,r)
-    #p.rho += m*wendland2(h,r)
+function find_rho!(p::Particle, q::Particle, r::Float64) 
+    # p.lambda += m*wendland2h(h,r)
+    p.rho += m*wendland2(h,r)
 end 
 
 function find_Pi!(p::Particle)
@@ -187,72 +192,89 @@ function find_Pi!(p::Particle)
     p.Pi = c_s^2*G*dev(G)*trans(invQ)
     p.PiCp = c_s^2*invQ*dev(G)*At
     # epsilon_rho
-    p.rho = rho0*det(p.A) 
+    #p.rho = rho0*det(p.A) 
     p.eps = c_0^2*rho0*(1-rho0/p.rho)/p.rho^2
 end
 
-function find_f_new!(p::Particle, q::Particle, r::Float64) 
+function find_f!(p::Particle, q::Particle, r::Float64) 
     ker = wendland2(h, r) 
     rDker = rDwendland2(h,r) 
 
     x_pq = p.x - q.x
     #force
-    p.f += ker*p.Pi/m*x_pq
-    p.f += ker*q.Pi/m*x_pq
+    p.f += m^2*ker*p.Pi/m*x_pq
+    p.f += m^2*ker*q.Pi/m*x_pq
     #Pi = A^t*epsilon_A*Q^-t
     #Pi = c_s^2*A^t*A*dev(A^t*A)*Q^{-1}
-    p.f -= rDker*p.eps*x_pq
-    p.f -= rDker*q.eps*x_pq
+    p.f -= m^2*rDker*p.eps*x_pq
+    p.f -= m^2*rDker*q.eps*x_pq
     #Terms of size O(X-Ax) (energy will not be conserved if you remove this)
     X_pq = p.X - q.X
     e_pq = X_pq - p.A*x_pq
     e_qp = -X_pq + q.A*x_pq 
     s_pq = m*p.PiCp*e_pq - m*q.PiCp*e_qp
 
-    p.f -= ker/m^2*s_pq
-    p.f -= rDker*dot(s_pq, x_pq)/m^2*x_pq
+    p.f -= m^2*ker/m^2*s_pq
+    p.f -= m^2*dot(s_pq, x_pq)/m^2*rDker*x_pq
 
-    #anti-clumping force
-    kerh = rDwendland2h(h,r)
-    p.f += -m*kerh*(c_p/rho0)^2*(p.lambda + q.lambda)*x_pq
+    # #anti-clumping force
+    # kerh = rDwendland2h(h,r)
+    # p.f += -m*kerh*(c_p/rho0)^2*(p.lambda + q.lambda)*x_pq
+    # #m/s^2 = kg/m^3*(m/s)^2*(m^2/kg) = 1/m*(m/s)^2= m/s^2
+    # # c_p = m/s
+    # # #rho = kg/m^3
 
-    #artificial viscosity
-    p.f += 2*m*vol*rDker*nu*(p.v - q.v)
+    # #artificial viscosity
+    # p.f += 2*m*vol*rDker*nu*(p.v - q.v)
+    # # particle shifting 
+    # p.dv += 2*c_shift*vol*ker*(q.rho/(p.rho + q.rho))*(q.v-p.v)
+    # particle diffusion
+    f_shift = 0.2*(wendland2(h,r)/wendland2(h,dr))^4
+    gradC = vol*(1+f_shift)*rDker*x_pq
+    p.dv += -D*gradC
 end
 
 function update_v!(p::Particle)
-    p.v += 0.5*dt*m*p.f#/m
+    # p.v += 0.5*dt*m*p.f#/m
+    p.v += 0.5*dt*p.f/m
+    p.v += p.dv
+    # p.v += -D*p.gradC
+    #m/s += s*(m/s^2)
 end
 
 function update_x!(p::Particle)
     p.x += dt*p.v
     #reset vars
-    p.H = MAT0
     p.A = MAT0
     p.f = VEC0
     p.e = 0.0
     p.P = MAT0
     p.Q = MAT0
-    p.lambda = 0.0
+    # p.lambda = 0.0
     p.invQ = MAT0
     p.eQ = 0.0
+    p.gradC = VEC0
     #p.rho = 0.0
 end
 
 function find_e!(p::Particle, q::Particle, r::Float64)
     eta = inv(p.A)*(p.X - q.X) - (p.x - q.x)
     p.e += dot(eta, eta)
-    p.eQ = norm(p.A*p.invQ - MAT1)
+    FI3 = RealMatrix(1.0, 0.0, 0.0,
+                     0.0, 1.0, 0.0,
+                     0.0, 0.0, 0.0)
+    p.eQ = norm(p.Q*p.invQ - FI3)
 end
 
 function particle_energy(p::Particle)
-    d = abs(det(p.A))
+    #d = abs(det(p.A))
     G = trans(p.A)*p.A
     G0 = dev(G)
     E_kinet = 0.5*m*dot(p.v, p.v)
     E_shear = 0.25*m*c_s^2*LinearAlgebra.norm(G0,2)^2
-    E_press = m*c_l^2*(d - 1.0 - log(d))
-    return E_kinet + E_shear + E_press
+    #E_press = m*c_l^2*(d - 1.0 - log(d))
+    E_vol = 0.5*m*c_0^2*(rho0/p.rho - 1)^2
+    return E_kinet + E_shear + E_vol#E_press
 end 
 
 #TIME ITERATION
@@ -260,11 +282,23 @@ end
 function main()
     println("Simulation starting")
     sys = make_geometry()
-    out = new_pvd_file("results/plate3")
-    csv_data = open("results/plate3/plate.csv", "w")
+    out = new_pvd_file("results/"*folder_name)
+    csv_data = open("results/"*folder_name*"/plate.csv", "w")
 
     #select top-right corner
     p_sel = argmax(p -> abs(p.x[1]) + abs(p.x[2]), sys.particles) 
+    for k = 1:50
+        t = k*dt
+         #verlet scheme
+        apply!(sys, update_v!)
+        apply!(sys, update_x!)
+        create_cell_list!(sys)
+        force_computation!(sys, t)
+        apply!(sys, update_v!)
+    end
+
+    E0 = sum(p -> particle_energy(p), sys.particles) 
+    println("Initial energy E0 = ", E0)
     
     @time for k = 0 : Int64(round(t_end/dt))
         t = k*dt
@@ -272,15 +306,15 @@ function main()
             println("t = ", k*dt)
             println("N = ", length(sys.particles))
             E = sum(p -> particle_energy(p), sys.particles)
-            println("E = ", E)
+            println("E = ", E/E0)
             println("h = ", p_sel.x[2])
             println()
-            write(csv_data, string(k*dt,",",p_sel.x[2],",",E,"\n"))
+            write(csv_data, string(k*dt,",",p_sel.x[2],",",E/E0-1,"\n"))
         end
         if (k % Int64(round(dt_frame/dt)) == 0)
             apply!(sys, find_e!)
-            save_frame!(out, sys, :v, :A, :e, :P, :Q, :invQ,
-                        :eps, :Pi, :rho, :lambda, :C_lambda)
+            save_frame!(out, sys, :v, :A, :e, :P, :Q, :invQ, :eQ,
+                        :eps, :Pi, :rho, :dv)
         end
         #verlet scheme
         apply!(sys, update_v!)
@@ -292,11 +326,11 @@ function main()
     save_pvd_file(out)
     close(csv_data)
     #plot result
-    data = CSV.read("results/plate3/plate.csv", DataFrame; header=false)
+    data = CSV.read("results/"*folder_name*"/plate.csv", DataFrame; header=false)
     p1 = plot(data[:,1], data[:,2], label = "plate-test", xlabel = "time", ylabel = "amplitude")
     p2 = plot(data[:,1], data[:,3], label = "plate-test", xlabel = "time", ylabel = "energy")
-    savefig(p1, "results/plate3/amplitude.pdf")
-    savefig(p2, "results/plate3/energy.pdf")
+    savefig(p1, "results/"*folder_name*"/amplitude.pdf")
+    savefig(p2, "results/"*folder_name*"/energy.pdf")
 end
 
 end

@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2025.10.21)  7 NOV 2025 17:50
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2025.11.10)  16 NOV 2025 12:33
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/home/mmoncek/Documents/sfg-shtc/shtc_sph__Copy_/shtc-sph.tex
-(/home/mmoncek/Documents/sfg-shtc/shtc_sph__Copy_/shtc-sph.tex
+**/home/mmoncek/Documents/sfg-shtc/final_report/shtc-sph.tex
+(/home/mmoncek/Documents/sfg-shtc/final_report/shtc-sph.tex
 LaTeX2e <2022-11-01> patch level 1
 L3 programming layer <2023-02-22> (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2022/07/02 v1.4n Standard LaTeX document class
@@ -809,40 +809,6 @@ Package caption Info: End \AtBeginDocument code.
 
 Package todonotes Warning: The length marginparwidth is less than 2cm and will most likely cause issues with the appearance of inserted todonotes. The issue can be solved by adding a line like \setlength {\marginparwidth }{2cm} prior to loading the todonotes package. on input line 119.
 
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 150.
-(/usr/share/texlive/texmf-dist/tex/latex/lm/omllmm.fd
-File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 150.
- (/usr/share/texlive/texmf-dist/tex/latex/lm/omslmsy.fd
-File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 150.
- (/usr/share/texlive/texmf-dist/tex/latex/lm/omxlmex.fd
-File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 150.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 150.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 150.
- (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Trying to load font information for U+msb on input line 150.
- (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 151.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 151.
-<distortion_grey_highres.png, id=19, 1277.77374pt x 556.0775pt>
-File: distortion_grey_highres.png Graphic file (type png)
-<use distortion_grey_highres.png>
-Package pdftex.def Info: distortion_grey_highres.png  used on input line 157.
-(pdftex.def)             Requested size: 411.14528pt x 178.92421pt.
-
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 25.18872pt, for example:
@@ -852,20 +818,35 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}
 
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc} <./distortion_grey_highres.png>]
-Overfull \hbox (18.91486pt too wide) in paragraph at lines 205--206
-[]\OT1/lmr/bx/n/10.95 Supervisor\OT1/lmr/m/n/10.95 : Michal Pavelka (Math-e-mat-i-cal In-sti-tute of Charles Uni-ver-sity), pavelka@karlin.mff.cuni.cz 
- []
+]
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 239.
+ (/usr/share/texlive/texmf-dist/tex/latex/lm/omllmm.fd
+File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 239.
+ (/usr/share/texlive/texmf-dist/tex/latex/lm/omslmsy.fd
+File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 239.
+ (/usr/share/texlive/texmf-dist/tex/latex/lm/omxlmex.fd
+File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10.95> on input line 239.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <8> on input line 239.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <6> on input line 239.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 239.
+ (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 239.
+ (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+Underfull \hbox (badness 10000) in paragraph at lines 305--308
 
-(./shtc-sph.bbl)
-<signature.png, id=48, 343.46138pt x 129.75208pt>
-File: signature.png Graphic file (type png)
-<use signature.png>
-Package pdftex.def Info: signature.png  used on input line 221.
-(pdftex.def)             Requested size: 112.9705pt x 42.67912pt.
-
-Overfull \hbox (17.0pt too wide) in paragraph at lines 220--224
-[][] 
  []
 
 
@@ -875,12 +856,9 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller to compensate:
 (fancyhdr)                \addtolength{\topmargin}{-13.18872pt}.
 
-[2 <./signature.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 230--232
+[2{/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}]
+Package hyperref Info: bookmark level for unknown todo defaults to 0 on input line 320.
 
- []
-
-Package hyperref Info: bookmark level for unknown todo defaults to 0 on input line 272.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 25.18872pt, for example:
@@ -889,46 +867,72 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-13.18872pt}.
 
 [3]
-pdfTeX warning (ext4): destination with the same identifier (name{equation.0.1}) has been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.358     \begin{equation}
+l.405     \begin{equation}
                           
-pdfTeX warning (ext4): destination with the same identifier (name{equation.0.1}) has been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.358     \begin{equation}
+l.405     \begin{equation}
                           
-pdfTeX warning (ext4): destination with the same identifier (name{equation.0.1}) has been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.358     \begin{equation}
+l.405     \begin{equation}
                           
-pdfTeX warning (ext4): destination with the same identifier (name{equation.0.1}) has been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.358     \begin{equation}
+l.405     \begin{equation}
                           
-pdfTeX warning (ext4): destination with the same identifier (name{equation.0.2}) has been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.361     \begin{equation}
+l.408     \begin{equation}
                           
-pdfTeX warning (ext4): destination with the same identifier (name{equation.0.2}) has been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.361     \begin{equation}
+l.408     \begin{equation}
                           
-pdfTeX warning (ext4): destination with the same identifier (name{equation.0.2}) has been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.361     \begin{equation}
+l.408     \begin{equation}
                           
-pdfTeX warning (ext4): destination with the same identifier (name{equation.0.2}) has been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.361     \begin{equation}
+l.408     \begin{equation}
                           
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.413     \begin{equation}
+                          
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.413     \begin{equation}
+                          
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.413     \begin{equation}
+                          
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.413     \begin{equation}
+                          
+<plate1.png, id=68, 1427.3325pt x 595.22375pt>
+File: plate1.png Graphic file (type png)
+<use plate1.png>
+Package pdftex.def Info: plate1.png  used on input line 459.
+(pdftex.def)             Requested size: 411.14528pt x 171.457pt.
+
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 25.18872pt, for example:
@@ -937,45 +941,12 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-13.18872pt}.
 
 [4]
-pdfTeX warning (ext4): destination with the same identifier (name{equation.0.3}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.366     \begin{equation}
-                          
-pdfTeX warning (ext4): destination with the same identifier (name{equation.0.3}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.366     \begin{equation}
-                          
-pdfTeX warning (ext4): destination with the same identifier (name{equation.0.3}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.366     \begin{equation}
-                          
-pdfTeX warning (ext4): destination with the same identifier (name{equation.0.3}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.366     \begin{equation}
-                          
-<plate1.png, id=90, 1427.3325pt x 595.22375pt>
-File: plate1.png Graphic file (type png)
-<use plate1.png>
-Package pdftex.def Info: plate1.png  used on input line 411.
-(pdftex.def)             Requested size: 411.14528pt x 171.457pt.
-<plate2.png, id=91, 1427.3325pt x 595.22375pt>
+<plate2.png, id=83, 1427.3325pt x 595.22375pt>
 File: plate2.png Graphic file (type png)
 <use plate2.png>
-Package pdftex.def Info: plate2.png  used on input line 419.
+Package pdftex.def Info: plate2.png  used on input line 467.
 (pdftex.def)             Requested size: 411.14528pt x 171.457pt.
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 25.18872pt, for example:
-(fancyhdr)                \setlength{\headheight}{25.18872pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-(fancyhdr)                \addtolength{\topmargin}{-13.18872pt}.
-
-[5 <./plate1.png>]
+ (./shtc-sph.bbl)
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 25.18872pt, for example:
@@ -983,23 +954,23 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller to compensate:
 (fancyhdr)                \addtolength{\topmargin}{-13.18872pt}.
 
-[6 <./plate2.png>] (./shtc-sph.aux)
+[5 <./plate1.png> <./plate2.png>] (./shtc-sph.aux)
 Package rerunfilecheck Info: File `shtc-sph.out' has not changed.
-(rerunfilecheck)             Checksum: F2753750FBB39218E805324330B262E4;528.
+(rerunfilecheck)             Checksum: 71426DF97AAA5CB40DF64CF9AB9AF5D4;474.
  ) 
 Here is how much of TeX's memory you used:
- 28450 strings out of 476034
- 560305 string characters out of 5792863
+ 28409 strings out of 476034
+ 559620 string characters out of 5792863
  1871388 words of memory out of 6000000
- 48330 multiletter control sequences out of 15000+600000
- 562518 words of font info for 65 fonts, out of 8000000 for 9000
+ 48305 multiletter control sequences out of 15000+600000
+ 555586 words of font info for 59 fonts, out of 8000000 for 9000
  1137 hyphenation exceptions out of 8191
- 84i,12n,80p,629b,918s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam7.pfb>
-Output written on shtc-sph.pdf (6 pages, 2560189 bytes).
+ 84i,12n,80p,601b,917s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmsy8.pfb>
+Output written on shtc-sph.pdf (5 pages, 1833994 bytes).
 PDF statistics:
- 181 PDF objects out of 1000 (max. 8388607)
- 137 compressed objects within 2 object streams
- 46 named destinations out of 1000 (max. 500000)
- 57 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 162 PDF objects out of 1000 (max. 8388607)
+ 125 compressed objects within 2 object streams
+ 38 named destinations out of 1000 (max. 500000)
+ 55 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,0 +1,13 @@
+\begin{thebibliography}{1}
+
+\bibitem{hutter-pavelka}
+M.~Hütter and M.~Pavelka.
+\newblock Particle-based approach to the eulerian distortion field and its dynamics.
+\newblock {\em Continuum Mechanics and Thermodynamics}, 35(5):1943-- 1967, 2023.
+
+\bibitem{kincl-unified}
+O.~Kincl, I.~Peshkov, M.~Pavelka, and V.~Klika.
+\newblock Unified description of fluids and solids in smoothed particle hydrodynamics.
+\newblock {\em Applied Mathematics and Computation}, 439:127579, 2023.
+
+\end{thebibliography}

@@ -139,125 +139,173 @@
 %\end{enumerate}
 \begin{center}
     \vspace*{\fill}
-    {\Huge\bfseries Application}
+    {\Huge\bfseries Exploring alternative formulations of Smoothed Particle Hydrodynamics for complex fluids and solids}
     \vspace*{\fill}
+\end{center}
+\begin{center}
+    \textbf{Michael Monček}\\
+    % \vspace{0.5cm}
+    % \textit{Mathematical Institute of Charles University, Prague, Czechia}\\
+    % \vspace{0.5cm}
+    \textbf{Supervisor:} \textbf{Michal Pavelka}\\
+    % \vspace{0.5cm}
+    % \textit{Mathematical Institute of Charles University, Prague, Czechia}\\
+    % \vspace{0.5cm}
+    % \textbf{Date:} May 14, 2025
 \end{center}
 %\clearpage
 
-I am applying for the Student Faculty Grant "Exploring alternative formulations of Smoothed Particle Hydrodynamics for complex fluids and solids" under the Mathematical Institute of Charles University.
-\vspace{\fill}
-\begin{itemize}
+% I am applying for the Student Faculty Grant "Exploring alternative formulations of Smoothed Particle Hydrodynamics for complex fluids and solids" under the Mathematical Institute of Charles University.
+% \vspace{\fill}
+% \begin{itemize}
 
-\item \textbf{Applicant}: Michael Monček, $3^{\text{rd}}$ year Bachelor student of Mathematical Modelling, intending to continue with a Master’s degree in Mathematical Modelling in Physics and Technology at the Mathematical Institute of Charles University.
+% \item \textbf{Applicant}: Michael Monček, $3^{\text{rd}}$ year Bachelor student of Mathematical Modelling, intending to continue with a Master’s degree in Mathematical Modelling in Physics and Technology at the Mathematical Institute of Charles University.
 
 
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\linewidth]{distortion_grey_highres.png}
-    \caption{The distortion field in the flow around cylinder benchmark simulated using SHTC-SPH.}
-    \label{fig:enter-label}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.85\linewidth]{distortion_grey_highres.png}
+%     \caption{The distortion field in the flow around cylinder benchmark simulated using SHTC-SPH.}
+%     \label{fig:enter-label}
+% \end{figure}
 
-\item \textbf{Introduction}: Complex fluids and solids can be described by the Symmetric Hyperbolic Thermodynamically Compatible (SHTC) equations. These equations have a Hamiltonian structure and are advantageous in problems with large deformations and shock waves. One of the state variables in the SHTC equations is the distortion field (close to the inverse of the deformation gradient). Recently, a new numerical method solving the SHTC equations was developed based on the Smoothed Particle hydrodynamics (SPH) \cite{kincl-unified}. 
+% \item \textbf{Introduction}: Complex fluids and solids can be described by the Symmetric Hyperbolic Thermodynamically Compatible (SHTC) equations. These equations have a Hamiltonian structure and are advantageous in problems with large deformations and shock waves. One of the state variables in the SHTC equations is the distortion field (close to the inverse of the deformation gradient). Recently, a new numerical method solving the SHTC equations was developed based on the Smoothed Particle hydrodynamics (SPH) \cite{kincl-unified}. 
+
+% However, in a later work \cite{hutter-pavelka}, an alternative definition of the discrete distortion that is useful when adding noise to the SHTC equations (to be applied in continuum physics of nanomaterials) was developed. In this definition, the discrete distortion is defined as the minimizer of the following functional, 
+% \begin{equation*}
+% 	D = \sum_\alpha\sum_\beta w_\alpha w_\beta ||\mathbf{R}_{\alpha\beta} - \mathbf{A} \cdot \mathbf{r}_{\alpha\beta}||^2,
+% \end{equation*}
+% where $\mathbf{R}_{\alpha\beta}$ is the difference between the Lagrangian positions of the particles $\alpha$ and $\beta$, $\mathbf{r}_{\alpha\beta}$ is the difference between Eulerian positions, and $w_\alpha(\mathbf{r})$ is a weight kernel of particle $\alpha$ (for instance the SPH kernel). The minimization of this functional leads to a discrete distortion field $\mathbf{A}$ that may be more suitable for SPH simulations of SHTC equations. 
+
+% If the numerical SPH-based method becomes compatible with the new definition, it would be possible to simulate nanomembranes and other nanomaterials, where fluctuations play an important role, by the method. 
+
+% 	\item \textbf{Goal}: 
+% 	\begin{itemize}
+% 	\item Reformulation of the numerical framework from \cite{kincl-unified} to the new definition of the distortion field.
+% 	\item Comparison of the two formulations of the SHTC equations in SPH simulations.
+% 	\end{itemize}
+
+
+% \item \textbf{Specific tasks and Work Plan}: 
+% \begin{enumerate}
+% \item \textbf{July – December 2025}: %Use the definition of distortion from \cite{hutter-pavelka} to reformulate the SPH method from \cite{kincl-unified}.
+% Reformulation of the SPH method to incorporate the new definition of distortion
+% \item \textbf{July – December 2025}: As the formulation of the discrete dynamics in \cite{kincl-unified} is simplified, an attempt to use the full system of equations without neglecting the denominator of the discrete distortion matrix.
+
+% \item \textbf{January – April 2026}: Comparative simulations of benchmark problems simulated in \cite{kincl-unified}, for instance the Beryllium plate benchmark or lid-driven cavity. 
+% \item \textbf{April – May 2026}: If the tests are successful, extension to fluid-structure interaction problems
+% (e.g. Turek-Hron bechmark \cite{turek-hron}).
+
+% \item \textbf{May – July 2026}: Final analysis, documentation, and preparation of research output.
+% \end{enumerate}
+
+% \item \textbf{Project Duration}:
+% \begin{itemize*}
+% \item \textbf{Start Date}: July 1, 2025
+% \item \textbf{End Date}: July 1, 2026
+% \end{itemize*}
+
+% \item \textbf{Relation to Bachelor’s Thesis}:
+% The topic of this project is related to the applicant's Bachelor thesis, which concerns numerical simulation of
+% fluid-structure interaction problems using the numerical method developed in \cite{kincl-unified}.
+% The SFG project is designed to go beyond the scope of the thesis by exploring new formulations and applications.
+% This project also serves as a foundation for future research in the applicant’s planned Master’s studies at the Mathematical Institute of Charles University.
+
+
+% \item \textbf{Supervisor}: Michal Pavelka (Mathematical Institute of Charles University), pavelka@karlin.mff.cuni.cz
+
+% \end{itemize}
+
+
+
+
+
+
+
+
+% \vspace{2cm}
+
+% \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r}
+% Prague, May 14, 2025 & \includegraphics[height=1.5cm]{signature.png} \\
+% & Michael Monček
+% \end{tabular*}
+
+\newpage
+\begin{section}{Introduction}
+   Complex fluids and solids can be described by the Symmetric Hyperbolic Thermodynamically Compatible (SHTC) equations. These equations have a Hamiltonian structure and are advantageous in problems with large deformations and shock waves. One of the state variables in the SHTC equations is the distortion field (close to the inverse of the deformation gradient). Recently, a new numerical method solving the SHTC equations was developed based on the Smoothed Particle hydrodynamics (SPH) \cite{kincl-unified}. 
 
 However, in a later work \cite{hutter-pavelka}, an alternative definition of the discrete distortion that is useful when adding noise to the SHTC equations (to be applied in continuum physics of nanomaterials) was developed. In this definition, the discrete distortion is defined as the minimizer of the following functional, 
 \begin{equation*}
-	D = \sum_\alpha\sum_\beta w_\alpha w_\beta ||\mathbf{R}_{\alpha\beta} - \mathbf{A} \cdot \mathbf{r}_{\alpha\beta}||^2,
+    D_{\xx}(\AA) = \sum_a \sum_b w_a(\xx) w_b(\xx) \| \XX_{ab} - \AA(\xx) \xx_{ab} \|^2
 \end{equation*}
-where $\mathbf{R}_{\alpha\beta}$ is the difference between the Lagrangian positions of the particles $\alpha$ and $\beta$, $\mathbf{r}_{\alpha\beta}$ is the difference between Eulerian positions, and $w_\alpha(\mathbf{r})$ is a weight kernel of particle $\alpha$ (for instance the SPH kernel). The minimization of this functional leads to a discrete distortion field $\mathbf{A}$ that may be more suitable for SPH simulations of SHTC equations. 
+where $\XX_{ab}$ is the difference between the Lagrangian positions of the particles $a$ and $b$,
+$\xx_{ab}$ is the difference between Eulerian positions, and $w_a(\xx)$ is a weight kernel of particle $a$ (for instance the SPH kernel) and $\AA(\xx)$ is a matrix representation
+of the distortion field.
 
-If the numerical SPH-based method becomes compatible with the new definition, it would be possible to simulate nanomembranes and other nanomaterials, where fluctuations play an important role, by the method. 
-
-	\item \textbf{Goal}: 
-	\begin{itemize}
-	\item Reformulation of the numerical framework from \cite{kincl-unified} to the new definition of the distortion field.
-	\item Comparison of the two formulations of the SHTC equations in SPH simulations.
-	\end{itemize}
-
-
-\item \textbf{Specific tasks and Work Plan}: 
-\begin{enumerate}
-\item \textbf{July – December 2025}: %Use the definition of distortion from \cite{hutter-pavelka} to reformulate the SPH method from \cite{kincl-unified}.
-Reformulation of the SPH method to incorporate the new definition of distortion
-\item \textbf{July – December 2025}: As the formulation of the discrete dynamics in \cite{kincl-unified} is simplified, an attempt to use the full system of equations without neglecting the denominator of the discrete distortion matrix.
-
-\item \textbf{January – April 2026}: Comparative simulations of benchmark problems simulated in \cite{kincl-unified}, for instance the Beryllium plate benchmark or lid-driven cavity. 
-\item \textbf{April – May 2026}: If the tests are successful, extension to fluid-structure interaction problems
-(e.g. Turek-Hron bechmark \cite{turek-hron}).
-
-\item \textbf{May – July 2026}: Final analysis, documentation, and preparation of research output.
-\end{enumerate}
-
-\item \textbf{Project Duration}:
-\begin{itemize*}
-\item \textbf{Start Date}: July 1, 2025
-\item \textbf{End Date}: July 1, 2026
-\end{itemize*}
-
-\item \textbf{Relation to Bachelor’s Thesis}:
-The topic of this project is related to the applicant's Bachelor thesis, which concerns numerical simulation of
-fluid-structure interaction problems using the numerical method developed in \cite{kincl-unified}.
-The SFG project is designed to go beyond the scope of the thesis by exploring new formulations and applications.
-This project also serves as a foundation for future research in the applicant’s planned Master’s studies at the Mathematical Institute of Charles University.
+This approach is a counterpart to the one used in \cite{kincl-unified} as we are not evolving the distortion field in time according to the SHTC equations 
+but rather defining it as a minimizer of the functional above at each time step. 
+An advantage of this approach is that it in theory it is possible to add fluctuations to the model, which would enable us to simulate nanomembranes and other nanomaterials, where 
+fluctuations play a crucial role. 
 
 
-\item \textbf{Supervisor}: Michal Pavelka (Mathematical Institute of Charles University), pavelka@karlin.mff.cuni.cz
+% The minimization of this functional leads to a discrete distortion field $\mathbf{A}$ that may be more suitable for SPH simulations of SHTC equations. 
 
-\end{itemize}
+% If the numerical SPH-based method becomes compatible with the new definition, it would be possible to simulate nanomembranes and other nanomaterials, where fluctuations play an important role, by the method. 
+\end{section}
 
-
-
-
-
-%%% Bibliography
-\bibliographystyle{abbrv}  % ama, nar, alpha, plain, chicago, abbrv, siam
-\bibliography{library.bib}
-
-
-\vspace{2cm}
-
-\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r}
-Prague, May 14, 2025 & \includegraphics[height=1.5cm]{signature.png} \\
-& Michael Monček
-\end{tabular*}
-
-\newpage
-
-In our alternative formulation, the distortion field $\AA$ at point $\xx$ is defined as a minimizer of the following functional:
+\begin{section}{Methods}
+    While it is possible to take the minimizer of the functional $D_{\xx}(\AA)$ directly resulting in 
+the distortion field $\AA$ defined as:
 \begin{equation}
-    D_{\xx}(\AA) = \sum_a \sum_b w_a(\xx) w_b(\xx) \| \XX_{ab} - \AA \xx_{ab} \|^2
-\end{equation}
-where $w_a(\xx) = w(\xx - \xx_a)$ and $\|\vv\|^2 = \vv \cdot \vv$ is the standard vector product.\\
+    \AA(\xx) = \left( \sum_{a,b} w_a w_b \XX_{ab} \otimes \xx_{ab} \right) 
+    \left( \sum_{a,b} w_a w_b \xx_{ab} \otimes \xx_{ab} \right)^{-1}
+\end{equation} 
+as suggested in Pavelka et al. \cite{hutter-pavelka}. It is worth noticing that in a particle method such as SPH,
+this definition becomes computationally expensive as it requires to sum over all particle pairs 
+$(a,b)$ in $\text{supp }w_a(\xx) \cap \text{supp }w_b(\xx)$.
 
-Evaluating the sufficient condition for the minimum of $D_{\xx}(\AA)$ yields:
+To alleviate this issue, we can slighlty modify this definition by considering only the diagonal terms of the weight kernels
+resulting in the following definition of the distortion field $\AA_a$ at point $\xx_a$ occupied by particle $a$ that is still 
+fully compatible with the SHTC equations under the same assumptions as in \cite{hutter-pavelka}:
+ 
+% In our alternative formulation, the distortion field $\AA$ at point $\xx$ is defined as a minimizer of the following functional:
+% \begin{equation}
+%     D_{\xx}(\AA) = \sum_a \sum_b w_a(\xx) w_b(\xx) \| \XX_{ab} - \AA \xx_{ab} \|^2
+% \end{equation}
+% where $w_a(\xx) = w(\xx - \xx_a)$ and $\|\vv\|^2 = \vv \cdot \vv$ is the standard vector product.\\
+
+% Evaluating the sufficient condition for the minimum of $D_{\xx}(\AA)$ yields:
+% \begin{equation}
+%     \frac{\diff D_{\xx}(\AA)}{\diff \AA} = \frac{\diff}{\diff\AA} \sum_a \sum_b w_a(\xx) w_b(\xx) \left( \XX_{ab} - \AA \xx_{ab} \right)^T \left( \XX_{ab} - \AA \xx_{ab} \right) =
+%     \sum_a \sum_b w_a(\xx) w_b(\xx) \frac{\diff}{\diff \AA} \left(
+%     \right)
+% \end{equation}
+% \begin{subsection} {Time evolution of the distortion field}
 \begin{equation}
-    \frac{\diff D_{\xx}(\AA)}{\diff \AA} = \frac{\diff}{\diff\AA} \sum_a \sum_b w_a(\xx) w_b(\xx) \left( \XX_{ab} - \AA \xx_{ab} \right)^T \left( \XX_{ab} - \AA \xx_{ab} \right) =
-    \sum_a \sum_b w_a(\xx) w_b(\xx) \frac{\diff}{\diff \AA} \left(
-    \right)
-\end{equation}
-\begin{subsection} {Time evolution of the distortion field}
-The distortion field at point $a$ can be explicitely written as \begin{equation}
     \AA_a = \PP_a \QQ_a^{-1}
 \end{equation}
 where \begin{equation}
     \PP_a = \left( \sum_b w_{ab} \XX_{ab} \otimes \xx_{ab} \right) \text{ and }
     \QQ_a =  \left( \sum_b w_{ab} \xx_{ab} \otimes \xx_{ab} \right)
 \end{equation}
-The differential of the distortion field is then \begin{equation}
-    \diff \AA = \diff \PP \QQ^{-1} + \PP \diff \QQ^{-1} =
-    \diff \PP \QQ^{-1} - \PP \QQ^{-1} \diff \QQ \QQ^{-1} 
+The differential of the distortion field with respect to position $\xx_a$ is then equal to:
+\begin{equation}
+    \diff \AA_a = \diff \PP_a \QQ_a^{-1} + \PP_a \diff \QQ_a^{-1} =
+    \diff \PP_a \QQ_a^{-1} - \PP_a \QQ_a^{-1} \diff \QQ_a \QQ_a^{-1} 
 \end{equation}
-
-If we use the approximations \begin{equation}
+Which under the assumptions from \cite{hutter-pavelka}:
+\begin{equation}
     \dot{\xx}_a \approx \dot{\xx}_b + \nabla \vv \Big|_a \cdot \xx_{ab} \text{ and } 
     \XX_{ab} \approx \AA_a \xx_{ab}
 \end{equation} 
-this expression simplifies to: 
+simplifies to: 
 \begin{equation}
-    \diff \AA_a = - \AA_a \LL_a = - \AA_a \nabla \vv \Big|_a
+    \diff \AA_a = - \AA_a \nabla \vv(\xx) \Big|_{\xx_a} = - \AA_a \LL_a 
 \end{equation}
+giving us the evolution equation for the distortion field
 which is the evolution equation for the distortion field in the SHTC equations.\\
+
 On the other hand if we do not choose to approximate $\dot{\xx}_a$ we get the following evolution equation: 
 \begin{equation}
     \diff \AA_a = - \AA_a \left( \sum_b w_{ab} \diff \xx_{ab} \otimes \xx_{ab}\right)
@@ -281,8 +329,7 @@ If we choose not to approximate at all we get the following expression:
     \right) \otimes \diff \xx_{ab}\right)\QQ_a^{-1}
     \end{aligned}
 \end{equation}
-
-\end{subsection}
+\end{section}
 \begin{subsection} {Equations of motion}
 Let $U_h = \sum_b \epsilon_b$ be the discrete total energy of the system, $\epsilon_b$ is the specific energy 
 density of particle $b$. We assuem that the specific energy density depends on the density $\rho$ and the 
@@ -403,6 +450,7 @@ The full form of the evolution equation for velocity then reads:
 
 \end{subsection} 
 
+
 \begin{subsection} {Beryllium plate}
 Remember the terms we neglected earlier because they were small? They were not that small after all, lets
 take a look at what happens in the Beryllium plate benchmark withouth them.
@@ -430,5 +478,9 @@ take a look at what happens in the Beryllium plate benchmark withouth them.
 \todo[inline]{TODO: Add the missing terms to the evolutoin equation for distorion to 
 see what happens.}
 \end{subsection}
+
+%%% Bibliography
+\bibliographystyle{abbrv}  % ama, nar, alpha, plain, chicago, abbrv, siam
+\bibliography{library.bib}
 
 \end{document}
