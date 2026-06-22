@@ -27,7 +27,6 @@ const c_s = 9046.59  #shear sound speed
 const c_0 = sqrt(c_l^2 + 4/3*c_s^2)  #total sound speed 
 const rho0 = 1845.0   #density
 const nu = 1.0e-4    #artificial viscosity (surpresses noise but is not neccessary)
-# const c_p = 0.0000001*1.0*c_l  #tensile penalty term
 const c_p = 0.0*0.0025*1.0*c_l  #tensile penalty term
 const c_shift = 0.000005*0.5           #particle shifting factor
 
@@ -39,7 +38,7 @@ const m = rho0*vol #particle mass
 const D = 0.05*0.5*h^2  #diffusion coefficient for shifting
 
 const dt = 0.01dr/c_0 #time step 
-const t_end = 3e-5  #total simulation time
+const t_end = 3e-5/100  #total simulation time
 const dt_plot = max(t_end/400, dt) #how often save txt data (cheap)
 const dt_frame = max(t_end/100, dt) #how often save pvd data (expensive)
 
@@ -89,6 +88,7 @@ end
 
 @with_kw mutable struct Particle <: AbstractParticle
 	x::RealVector         #position
+    Ex::RealVector = VEC0
     v::RealVector = init_velocity(x) #velocity
     dv::RealVector = VEC0 #transport velocity
     f::RealVector = VEC0  #force
@@ -106,13 +106,9 @@ end
     pressure::Float64 = 0.0 
     Pi::RealMatrix = MAT0
     PiCp::RealMatrix = MAT0
-    # particle shifting (based on Fick's law)
-    gradC::RealVector = VEC0    #gradient of concentration
+    gradC::RealVector = VEC0
     v_shift::RealVector = VEC0
     v_shift_fick::RealVector = VEC0
-#     # tensile penalty variables
-#     lambda::Float64 = 0.0
-#     C_lambda::Float64 = 0.0
 end
 
 #STRUCTURAL KERNELS
@@ -139,10 +135,8 @@ function make_geometry()
     generate_particles!(sys, grid, rod, x -> Particle(x=x))
     create_cell_list!(sys)
 
-    # tensile penalty initialization
     apply!(sys, find_rho!)
     for p in sys.particles 
-        # p.C_lambda = -p.lambda
         p.C_rho = rho0 - p.rho
     end
 
@@ -180,7 +174,6 @@ function find_A!(p::Particle, q::Particle, r::Float64)
 end
 
 function find_rho!(p::Particle, q::Particle, r::Float64) 
-    # p.lambda += m*wendland2h(h,r)
     p.rho += m*wendland2(h,r)
 end 
 
@@ -189,13 +182,13 @@ function find_Pi!(p::Particle)
     p.invQ = invQ
     p.A = p.P*invQ
     At = trans(p.A)
-    # Pi 
     G = At*p.A
+    # Π_a = c_s² * A^T*A * dev(A^T*A) * Q^{-T}   [Eq. 15]
     p.Pi = c_s^2*G*dev(G)*trans(invQ)
+    # Π'_a = c_s² * Q^{-1} * dev(A^T*A) * A^T
     p.PiCp = c_s^2*invQ*dev(G)*At
-    # epsilon_rho
-    #p.rho = rho0*det(p.A) 
-    p.pressure = c_0^2*rho0*(1-rho0/p.rho)#/p.rho^2
+    # P = ρ² * ε_ρ = c_0² * ρ_0 * (1 - ρ_0/ρ)
+    p.pressure = c_0^2*rho0*(1.0 - rho0/p.rho)
 end
 
 function find_f!(p::Particle, q::Particle, r::Float64) 
@@ -203,16 +196,17 @@ function find_f!(p::Particle, q::Particle, r::Float64)
     rDker = rDwendland2(h,r) 
 
     x_pq = p.x - q.x
-    #force
+
+    # shear force: m_b * w_ab * (Π_a/m_b + Π_b/m_a) * x_ab
     p.f += m^2*ker*p.Pi/m*x_pq
     p.f += m^2*ker*q.Pi/m*x_pq
-    #Pi = A^t*epsilon_A*Q^-t
-    #Pi = c_s^2*A^t*A*dev(A^t*A)*Q^{-1}
-    # p.f -= m^2*rDker*p.eps*x_pq
-    # p.f -= m^2*rDker*q.eps*x_pq
+
+    # bulk force: -m_b * (ε_ρa + ε_ρb) * ∇w_ab
+    # with ε_ρ = P/ρ², P = c_0²*ρ_0*(1 - ρ_0/ρ)
     p.f -= m^2*rDker*p.pressure/p.rho^2*x_pq
     p.f -= m^2*rDker*q.pressure/q.rho^2*x_pq
-    #Terms of size O(X-Ax) (energy will not be conserved if you remove this)
+
+    # O(X - Ax) correction terms (required for energy conservation)
     X_pq = p.X - q.X
     e_pq = X_pq - p.A*x_pq
     e_qp = -X_pq + q.A*x_pq 
@@ -221,70 +215,27 @@ function find_f!(p::Particle, q::Particle, r::Float64)
     p.f -= m^2*ker/m^2*s_pq
     p.f -= m^2*dot(s_pq, x_pq)/m^2*rDker*x_pq
 
-    # #anti-clumping force
-    # kerh = rDwendland2h(h,r)
-    # p.f += -m*kerh*(c_p/rho0)^2*(p.lambda + q.lambda)*x_pq
-    # #m/s^2 = kg/m^3*(m/s)^2*(m^2/kg) = 1/m*(m/s)^2= m/s^2
-    # # c_p = m/s
-    # # #rho = kg/m^3
-
-    # #artificial viscosity
-    # p.f += 2*m*vol*rDker*nu*(p.v - q.v)
-    # # particle shifting 
-    # p.dv += 2*c_shift*vol*ker*(q.rho/(p.rho + q.rho))*(q.v-p.v)
-    #println(2*c_shift*vol*ker*(q.rho/(p.rho + q.rho))*(q.v-p.v))
-
-    # particle shifting via diffusion
-    #f_shift = 0.2*(wendland2(h,r)/wendland2(h,dr))^4
-    #gradC = vol*(1+f_shift)*rDker*x_pq
-    # gradC = vol*rDker*x_pq
-    # p.dv += -D/dt*gradC
-    #write down the shifts
-    # p.v_shift += 2*c_shift*vol*ker*(q.rho/(p.rho + q.rho))*(q.v-p.v)
-    # p.v_shift_fick += -D*gradC
-
-    # Lind et al. PST: accumulate concentration gradient
-    # ∇C_i = Σ_j V_j * (1 + 0.2*(W/W0)^4) * ∇W_ij
-    ker0 = wendland2(h, dr)   # W(Δx) — kernel at one particle spacing
-    f_shift = 0.2*(wendland2(h,r)/ker0)^4
-    gradC = vol*(1.0 + f_shift)*rDker*x_pq   # x_pq = p.x - q.x
-    p.gradC += gradC
-    #println(p.dv)
+    # artificial viscosity
+    p.f += 2*m*vol*rDker*nu*(p.v - q.v)
 end
 
 function update_v!(p::Particle)
-    # p.v += 0.5*dt*m*p.f#/m
     p.v += 0.5*dt*p.f/m
-    # p.v += p.dv
-    # p.v += -D*p.gradC
-    #m/s += s*(m/s^2)
 end
 
 function update_x!(p::Particle)
-    # p.x += dt*p.v
-    # Lind PST displacement: δr = -0.5*h²*∇C, limited to 0.2h
-    if c_shift > 0.0
-        shift = -0.0005*h^2*p.gradC
-        shift_norm = norm(shift)
-        if shift_norm > 0.2*h
-            shift = 0.2*h * shift/shift_norm
-        end
-        p.dv = shift
-        p.x += dt*p.v + shift       # apply displacement once
-    else
-        p.x += dt*p.v
-    end
-    #reset vars
-    p.A = MAT0
-    p.f = VEC0
-    p.e = 0.0
-    p.P = MAT0
-    p.Q = MAT0
-    # p.lambda = 0.0
+    p.x += dt*p.v
+    # reset ALL per-step accumulators — including rho which must start
+    # from zero each step so find_rho! gives the correct summation
+    p.A    = MAT0
+    p.f    = VEC0
+    p.e    = 0.0
+    p.P    = MAT0
+    p.Q    = MAT0
     p.invQ = MAT0
-    p.eQ = 0.0
+    p.eQ   = 0.0
     p.gradC = VEC0
-    #p.rho = 0.0
+    p.rho  = 0.0    # critical fix: was missing, caused density to accumulate
 end
 
 function find_e!(p::Particle, q::Particle, r::Float64)
@@ -297,22 +248,16 @@ function find_e!(p::Particle, q::Particle, r::Float64)
 end
 
 function particle_energy(p::Particle)
-    #d = abs(det(p.A))
     G = trans(p.A)*p.A
     G0 = dev(G)
     E_kinet = 0.5*m*dot(p.v, p.v)
     E_shear = 0.25*m*c_s^2*LinearAlgebra.norm(G0,2)^2
-    #E_press = m*c_l^2*(d - 1.0 - log(d))
     E_vol = 0.5*m*c_0^2*(rho0/p.rho - 1)^2
-    return E_kinet + E_shear + E_vol#E_press
-end 
+    return E_kinet + E_shear + E_vol
+end
 
 #TIME ITERATION
 #--------------
-#function test()
-#    #using Revise + includet will modify your files in REPL on run
-#    println("i still work")
-#end
 function main()
     println("Simulation starting")
     println("revise working")
@@ -320,18 +265,8 @@ function main()
     out = new_pvd_file("results/"*folder_name)
     csv_data = open("results/"*folder_name*"/plate.csv", "w")
 
-    #select top-right corner
     p_sel = argmax(p -> abs(p.x[1]) + abs(p.x[2]), sys.particles) 
-    # for k = 1:50
-    #     t = k*dt
-    #      #verlet scheme
-    #     apply!(sys, update_v!)
-    #     apply!(sys, update_x!)
-    #     create_cell_list!(sys)
-    #     force_computation!(sys, t)
-    #     apply!(sys, update_v!)
-    # end
-    #
+
     E0 = sum(p -> particle_energy(p), sys.particles) 
     println("Initial energy E0 = ", E0)
     
@@ -349,7 +284,7 @@ function main()
         if (k % Int64(round(dt_frame/dt)) == 0)
             apply!(sys, find_e!)
             save_frame!(out, sys, :v, :A, :e, :P, :Q, :invQ, :eQ,
-                        :pressure, :Pi, :rho, :dv, :gradC)#:v_shift, :v_shift_fick)
+                        :pressure, :Pi, :rho, :dv, :gradC)
         end
         #verlet scheme
         apply!(sys, update_v!)
@@ -360,7 +295,6 @@ function main()
     end
     save_pvd_file(out)
     close(csv_data)
-    #plot result
     data = CSV.read("results/"*folder_name*"/plate.csv", DataFrame; header=false)
     p1 = plot(data[:,1], data[:,2], label = "plate-test", xlabel = "time", ylabel = "amplitude")
     p2 = plot(data[:,1], data[:,3], label = "plate-test", xlabel = "time", ylabel = "energy")

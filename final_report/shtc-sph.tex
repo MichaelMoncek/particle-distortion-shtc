@@ -1,3 +1,4 @@
+% p:q
 % Unofficial ERC Starting Grant LaTeX template 
 % Source: http://www.arj.no/2013/02/03/erc-stg-latex/
 %
@@ -255,6 +256,142 @@ fluctuations play a crucial role.
 \end{section}
 
 \begin{section}{Methods}
+\begin{itemize}
+    \item distortion as an error estimator (compare different definitions)
+    \item comparison with Ondra's SPH
+\end{itemize}
+\begin{subsection}{Distortion as a minimization problem}
+    In this section we will define the distortion field as a minimizer of the following minimization problem:
+    \begin{equation}\label{ls_problem}
+        \AA(x) = \underset{\AA \in \mathbb{R}^{d\times d}}{\text{argmin}} \sum_b w(\xx - \xx_b) \| \AA(\xx - \xx_b) - (\XX - \XX_b)\|^2
+    \end{equation}
+    The term
+    \begin{equation}
+    e_{b}(\xx) := \|\AA(\xx - \xx_b) - (\XX - \XX_b)\|
+    \end{equation}
+    plays the role of the error by which we fail to approximate the linearized relation:
+     \begin{equation}
+        \AA(x) d\xx - d\XX = 0
+    \end{equation}
+    The equation \Ref{ls_problem} can be than written compactly as:
+
+    \begin{equation}
+        \AA(x) =  \underset{\AA \in \mathbb{R}^{d\times d}}{\text{argmin}} \sum_{b} w(\xx - \xx_b) e_b(\xx)^2 
+    \end{equation}
+    which is a weighted least squares problem. 
+    
+    Evaluated at position $\xx_a$ associated with particle $a$ we get the following:
+    \begin{equation}
+        \AA_{a} = \underset{\AA \in \mathbb{R}^{d\times d}}{\text{argmin}} \sum_{b} w_{ab} \|\AA \xx_{ab} - \XX_{ab}\|^2
+    \end{equation}
+
+    Next we will prove that \Ref{ls_problem} has a solution:
+    \newtheorem{LS_problem}{Lemma: (LS problem)}
+
+    \begin{LS_problem}
+        \text{The LS problem } \Ref{ls_problem} \text{ has a solution.}
+    \end{LS_problem}
+    \textbf{Proof:}\\
+    Let $I(\AA_a) :=  \frac{1}{2} \sum_{b} w_{ab} |\ \AA_{a}\xx_{ab} - \XX_{ab}\|^2$ and observe that 
+    $I(\AA_a)$ is a differentiable and coercive function meaning: 
+    \begin{equation}
+        I(\AA_a)/\|\AA_a\| \rightarrow + \infty
+    \end{equation}
+    This implies existence of global minimum. %The neccessary condition for existence of a min 
+    
+    We can also compute this minimum explicitely:\\
+    Lets denote $\AA_{a}\xx_{ab} - \XX_{ab} =: e_{ab}$ and lets take the Gatteaux derivative of $I(\AA_a)$ in the direction $\diff \AA_a$
+    \begin{equation}
+        \begin{aligned}
+        \text{D}I(\AA_{a})[\diff \AA_a] := \lim_{\lambda \rightarrow 0+} 
+        \frac{I(\AA_{a} + \lambda \diff \AA_a) - I(\AA_a)}{\lambda} =\\ 
+        \lim_{\lambda \rightarrow 0+} \sum_{b} w_{ab} \left[ 
+        \left( e_{ab} + \lambda \diff \AA_a \xx_{ab}, e_{ab} + 
+        \lambda \diff \AA_a \xx_{ab} \right) - \left( e_{ab}, e_{ab} \right) \right] = \\
+        \lim_{\lambda \rightarrow 0+} \frac{1}{2\lambda} \sum_{b}w_{ab} \left( 2(e_{ab}, \lambda \diff \AA_a \xx_{ab}\right) +
+        \lambda^{2} \left( \diff \AA_{a} \xx_ab, \diff \AA_{a} \xx_ab \right)  =\\
+        \sum_{b} w_{ab} \left( \AA_{a}\xx_{ab} - \XX_{ab} \right) \cdot \diff \AA_{a} \xx_{ab} = \\
+        \diff \AA_{a} : \left( \sum_{b} w_{ab} \left( \AA_{a} \xx_{ab} - \XX_{ab} \right) \cdot \xx_{ab}  \right) 
+        \end{aligned}
+    \end{equation}
+    Which immediately implies:
+    \begin{equation}
+        \AA_a = \PP_a \QQ_a^{-1}
+    \end{equation}
+    where \begin{equation}
+        \PP_a = \left( \sum_b w_{ab} \XX_{ab} \otimes \xx_{ab} \right) \text{ and }
+        \QQ_a =  \left( \sum_b w_{ab} \xx_{ab} \otimes \xx_{ab} \right)
+    \end{equation}
+    
+
+    We can also generalize this and use the definition from Pavelka \& Hutter \cite{hutter-pavelka} where we hope to
+    achieve better precision at the cost of summing over all particle pairs instead of singletons.
+    \begin{equation}
+        \AA^{double}(x) = \underset{\AA \in \mathbb{R}^{d\times d}}{\text{argmin}} \sum_b \sum_{c} w(\xx - \xx_b) w(\xx - \xx_c)
+        \| \AA\xx_{bc} - \XX_{bc}\|^2
+    \end{equation}
+    Evaluated at position $\xx_a$ associated with particle $a$ we get the following:
+    \begin{equation}
+        \AA^{double}_a = \underset{\AA \in \mathbb{R}^{d\times d}}{\text{argmin}} \sum_b \sum_{c} w_{ab} w_{ac}
+        \| \AA\xx_{bc} - \XX_{bc}\|^2
+    \end{equation}
+    Following the same procedure as in the first example we get the explicit formula for 
+    $\AA^{double}$ in this case:
+    \begin{equation}
+        \AA^{double}(\xx) = \left( \sum_{a,b} w_a w_b \XX_{ab} \otimes \xx_{ab} \right) 
+        \left( \sum_{a,b} w_a w_b \xx_{ab} \otimes \xx_{ab} \right)^{-1}
+    \end{equation} 
+    Evaluated at position $\xx_a$ associated with particle $a$ we get the following:
+    \begin{equation}
+        \AA^{double}_a = \PP^{double}_a (\QQ^{double}_a)^{-1}
+    \end{equation}
+    where
+    \begin{equation}
+        \PP^{double}_a = \left( \sum_{b,c} w_{ab} w_{ac} \XX_{bc} \otimes \xx_{bc} \right) \text{ and } 
+        \QQ^{double}_a = \left( \sum_{b,c} w_{ab} w_{ac} \xx_{bc} \otimes \xx_{bc} \right)
+    \end{equation} 
+    % To deal with the computational complexity that is quadratic in this case we can make the following observation:
+    We can make the following interesting observation that allows us to rewrite $\AA^double_{a}$ in an alternative way:
+
+    \textbf{Notice:} 
+    \begin{equation}
+        \xx_{bc} \otimes \xx_{bc} = (\xx_{b} - \xx_{c}) \otimes (\xx_{b}- \xx_c) =
+        \xx_{b} \otimes \xx_{b} + \xx_{c} \otimes \xx_{c} - \xx_{b} \otimes \xx_{c} - \xx_{c} \otimes \xx_b
+    \end{equation}
+    Therefore we have:
+    \begin{equation}
+        \begin{aligned}
+        \QQ^{double}_a = \sum_{b,c} w_{ab} w_{ac} \left( 
+        \xx_{b} \otimes \xx_{b} + \xx_{c} \otimes \xx_{c} - \xx_{b} \otimes \xx_{c} - \xx_{c} \otimes \xx_b \right) =\\
+        2 \left( \sum_{b} w_{ab} \right) \left( \sum_{b} w_{ab} \xx_{b} \otimes \xx_{b} \right) 
+        - 2 \left( \sum_{b} w_{ab} \xx_b \right) \otimes \left( \sum_{b} w_{ab} \xx_b \right)
+        \end{aligned}
+    \end{equation}
+    which after introducing the notation: $\bar \xx_{a} := (\sum_{b} w_{ab} \xx_b) / (\sum_{b} w_{ab})$ and realizing that
+    $\sum_{b} w_{ab} (\xx_{b} - \bar \xx_a) = 0$ can be written as:
+    \begin{equation}
+        \QQ^{double}_a = 2 \left( \sum_{b} w_{ab} \right) \left( \sum_{b} (\xx_{b} - \bar \xx_a) \otimes  (\xx_{b} - \bar \xx_a) \right) 
+    \end{equation}
+    And similarly:
+    \begin{equation}
+        \PP^{double}_a = 2 \left( \sum_{b} w_{ab} \right) \left( \sum_{b} (\XX_{b} - \bar \XX_a) \otimes  (\xx_{b} - \bar \xx_a) \right) 
+    \end{equation}
+    We can also get rid of the prefactor $2 \left( \sum_{b} w_{ab} \right)$ as it will not change the value of $\AA^{double}_a$ 
+    and simply write:
+    \begin{equation}
+        \AA^{double}_a = \left( \sum_{b} (\XX_{b} - \bar \XX_a) \otimes  (\xx_{b} - \bar \xx_a) \right)
+        \left( \sum_{b} (\xx_{b} - \bar \xx_a) \otimes  (\xx_{b} - \bar \xx_a) \right)^{-1}
+    \end{equation}
+    Notice that to compute $\AA^{double}_a$ from this definition we only need to know 
+    $\bar \xx_{a} := (\sum_{b} w_{ab} \xx_b) / (\sum_{b} w_{ab})$ which can be precomputed.
+    
+    Next we will make an observation about the order of approximation of $\AA_{a}$ and $\AA^double_a$.
+    
+    \newtheorem{MLS_problem}{Lemma: (MLS problem)}
+    
+\end{subsection}
+
+\begin{subsection}{Particle distortion field}
     While it is possible to take the minimizer of the functional $D_{\xx}(\AA)$ directly resulting in 
 the distortion field $\AA$ defined as:
 \begin{equation}
@@ -296,31 +433,17 @@ The differential of the distortion field with respect to position $\xx_a$ is the
 \end{equation}
 Which under the assumptions from \cite{hutter-pavelka}:
 \begin{equation}
-    \dot{\xx}_a \approx \dot{\xx}_b + \nabla \vv \Big|_a \cdot \xx_{ab} \text{ and } 
+    \dot{\xx}_a \approx \dot{\xx}_b + \nabla \vv \Big|_{\xx_a} \cdot \xx_{ab} \text{ and } 
     \XX_{ab} \approx \AA_a \xx_{ab}
 \end{equation} 
 simplifies to: 
 \begin{equation}
-    \diff \AA_a = - \AA_a \nabla \vv(\xx) \Big|_{\xx_a} = - \AA_a \LL_a 
+    \diff \AA_a = - \AA_a \nabla \vv(\xx) \Big|_{\xx_a}% = - \AA_a \LL_a 
 \end{equation}
 giving us the evolution equation for the distortion field
 which is the evolution equation for the distortion field in the SHTC equations.\\
-
-On the other hand if we do not choose to approximate $\dot{\xx}_a$ we get the following evolution equation: 
-\begin{equation}
-    \diff \AA_a = - \AA_a \left( \sum_b w_{ab} \diff \xx_{ab} \otimes \xx_{ab}\right)
-    \left( \sum_b w_{ab} \xx_{ab} \otimes \xx_{ab}\right)^{-1}
-\end{equation}
-We can than define the SPH velocity gradient at point $a$ as: 
-\begin{equation}
-    \LL_a := \left( \sum_b w_{ab} \vv_{ab} \otimes \xx_{ab}\right)
-    \left( \sum_b w_{ab} \xx_{ab} \otimes \xx_{ab}\right)^{-1}
-\end{equation}
-
-\todo[inline]{Do we know if this definition of velocity gradient approximates the real velocity gradient well?}
-
-If we choose not to approximate at all we get the following expression:
-\begin{equation}
+Computing $\diff \AA_a$ directly without any approximations yields:
+\begin{equation}\label{eq:dA_full}
     \begin{aligned}
     \diff \AA_a = - \AA_a \LL_a +
     \left(\sum_b \nabla w_{ab} \cdot \diff \xx_{ab} \left(\XX_{ab} - \AA_a \xx_{ab}
@@ -329,11 +452,26 @@ If we choose not to approximate at all we get the following expression:
     \right) \otimes \diff \xx_{ab}\right)\QQ_a^{-1}
     \end{aligned}
 \end{equation}
-\end{section}
+where:
+\begin{equation}
+    \LL_a := \left( \sum_b w_{ab} \vv_{ab} \otimes \xx_{ab}\right)
+    \left( \sum_b w_{ab} \xx_{ab} \otimes \xx_{ab}\right)^{-1}
+\end{equation}
+and it can be seen as an SPH approximation of the velocity gradient at point $\xx_a$.
+If we neglect the terms containing $\XX_{ab} - \AA_a \xx_{ab}$ this reduces to:
+\begin{equation}\label{eq:dA}
+    \diff \AA_a = - \AA_a \LL_a%\left( \sum_b w_{ab} \diff \xx_{ab} \otimes \xx_{ab}\right)
+%    \left( \sum_b w_{ab} \xx_{ab} \otimes \xx_{ab}\right)^{-1}
+\end{equation}
+It remains to see whether this approximation is justified in practice, which we will discuss later.
+
+\end{subsection}
 \begin{subsection} {Equations of motion}
-Let $U_h = \sum_b \epsilon_b$ be the discrete total energy of the system, $\epsilon_b$ is the specific energy 
-density of particle $b$. We assuem that the specific energy density depends on the density $\rho$ and the 
-distortion field $\AA$. The total differential of the total energy is then: 
+    In this section we will derive the equations of motion using equations \ref{eq:dA} and \ref{eq:dA_full}.
+
+First let $U_h = \sum_b \epsilon_b$ be the total energy of the particle system, let $\epsilon_b$ be the specific energy 
+density of particle $b$. We assume that the specific energy density depends on the density $\rho$ and the 
+distortion field $\AA$ ie. $\epsilon_b = \epsilon_b(\rho_b, \AA_b)$. Using \ref{eq:dA} we can calculate the differential of the energy $U_h$ as: 
 \begin{equation}
     \begin{aligned} 
     \diff U_h = \sum_a m_a \epsilon_{\AA_a} : \diff \AA_a + \sum_a m_a \epsilon_{\rho_a} \diff \rho_a
@@ -363,8 +501,8 @@ Using Newton's second law $m \dot{\vv} = - \frac{\diff U}{\diff \xx}$ we get the
     \epsilon_{\rho_b} \right) \nabla w_{ab} \right] 
 \end{equation} 
 %{
-\todo[inline]{These equations are different from the equations Ondra originally proposed
- and from those in the example code rod.jl something is wrong here.} 
+% \todo[inline]{These equations are different from the equations Ondra originally proposed
+%  and from those in the example code rod.jl something is wrong here.} 
 
 Let us assume that the inner energy $\epsilon$ decomposes into bulk and shear part as $\epsilon(\rho, \AA) = 
 \epsilon_0(\rho) + \epsilon_s(\AA)$. 
@@ -448,8 +586,19 @@ The full form of the evolution equation for velocity then reads:
     \ss_{ab} \cdot \xx_{ab} \frac{1}{m_a m_b} \nabla w_{ab} \right)\right]
 \end{equation}
 
+\begin{subsubsection} {The full evolution equations for $\AA$}
+    Here we will try to derive the full evolution equations for the general form of $\AA$ from Pavelka a Hutter \cite{hutter-pavelka}.
+    The distortion field $\AA$ is assumed to have the following full form:
+    \begin{equation}
+        \AA(\xx) = \left( \sum_{a,b} w_a w_b \XX_{ab} \otimes \xx_{ab} \right) 
+        \left( \sum_{a,b} w_a w_b \xx_{ab} \otimes \xx_{ab} \right)^{-1}
+    \end{equation} 
+    \end{subsubsection}
+
+
 \end{subsection} 
 
+\end{section}
 
 \begin{subsection} {Beryllium plate}
 Remember the terms we neglected earlier because they were small? They were not that small after all, lets
