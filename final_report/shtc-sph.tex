@@ -322,6 +322,12 @@ fluctuations play a crucial role.
         \PP_a = \left( \sum_b w_{ab} \XX_{ab} \otimes \xx_{ab} \right) \text{ and }
         \QQ_a =  \left( \sum_b w_{ab} \xx_{ab} \otimes \xx_{ab} \right)
     \end{equation}
+    Notice that the matrix $\QQ_a$ is positive definite and hence invertible (unless $\xx_{ab} = 0$ for all $a, b$).
+    To prove it, we need to show that $\vv \cdot \QQ_{a} \vv > 0 $ for each  nonzero $\vv$.
+    \begin{equation}
+        \vv \cdot \QQ_{a} \vv = \vv \cdot  \left( \sum_b w_{ab} \xx_{ab} \otimes \xx_{ab} \right) \vv =
+        \sum_{b} w_{ab} (\xx_{ab} \cdot \vv)^2 > 0
+    \end{equation}
     
 
     We can also generalize this and use the definition from Pavelka \& Hutter \cite{hutter-pavelka} where we hope to
@@ -330,7 +336,7 @@ fluctuations play a crucial role.
         \AA^{double}(x) = \underset{\AA \in \mathbb{R}^{d\times d}}{\text{argmin}} \sum_b \sum_{c} w(\xx - \xx_b) w(\xx - \xx_c)
         \| \AA\xx_{bc} - \XX_{bc}\|^2
     \end{equation}
-    Evaluated at position $\xx_a$ associated with particle $a$ we get the following:
+    Evaluated at position $\xx_a$ associated with particle $a$ we get the following: 
     \begin{equation}
         \AA^{double}_a = \underset{\AA \in \mathbb{R}^{d\times d}}{\text{argmin}} \sum_b \sum_{c} w_{ab} w_{ac}
         \| \AA\xx_{bc} - \XX_{bc}\|^2
@@ -385,26 +391,77 @@ fluctuations play a crucial role.
     Notice that to compute $\AA^{double}_a$ from this definition we only need to know 
     $\bar \xx_{a} := (\sum_{b} w_{ab} \xx_b) / (\sum_{b} w_{ab})$ which can be precomputed.
     
-    Next we will make an observation about the order of approximation of $\AA_{a}$ and $\AA^double_a$.
+    Next we will make an observation about the order of approximation of $\AA_{a}$ and $\AA^{double}_a$:
+    Lets start with the following taylor expansion:
+    \begin{equation}
+        \XX_{b} = \XX_{a} + \AA(\xx_a) \xx_{ba} + \frac{1}{2} \nabla \AA(\xx_a) [\xx_{ba}, \xx_{ba}] + O(h^3)
+    \end{equation}
+    we can plug it in the definition of $\PP_a$ to get:
+    \begin{equation}
+        \begin{aligned}
+        \PP_{a} = \sum_{b} w_{ab} \left( \AA(\xx_a) \xx_{ba} + 
+        \frac{1}{2} \nabla \AA(\xx_a) [\xx_{ba}, \xx_{ba}] + O(h^3) \right) \otimes \xx_{ab} = \\
+        \AA(\xx_a) \left( \sum_{b} w_{ab} \xx_{ab} \otimes \xx_{ab} + O(h^3) \right) = 
+        \AA(\xx_a) \QQ_{a} + O(h^3)
+        \end{aligned}
+    \end{equation}
+    And finally from the definition of $\AA_a$ and using the fact that $\QQ_a^{-1} = O(h^2)$ we get:
+    \begin{equation}
+        \AA_{a} = \PP_{a} \QQ_a^{-1} = \left( \AA(\xx_a) + O(h^3) \right) \QQ_a^{-1} = \AA(\xx_a) + O(h)
+    \end{equation}
+   
+    For $\AA^{double}$ we can proceed similarly 
+    (using the notation $\nabla \AA^{double}(\xx_a) =: \mathbf{H}(\xx_a)$):
+    \begin{equation}
+        \begin{aligned}
+            \XX_{ba} = \AA(\xx_a) \xx_{ba} + \frac{1}{2} \mathbf{H}(\xx_a)[\xx_{ba}, \xx_{ba}] + O(h^3) \\ 
+            \XX_{ca} = \AA(\xx_a) \xx_{ca} + \frac{1}{2} \mathbf{H}(\xx_a)[\xx_{ca}, \xx_{ca}] + O(h^3) 
+        \end{aligned}
+    \end{equation}
+    taking the difference of these two expansions we get:
+    \begin{equation}
+            \XX_{bc} = \AA(\xx_a) \xx_{bc} + \frac{1}{2} \left( \mathbf{H}(\xx_a)[\xx_{ba}, \xx_{ba}]
+            - \mathbf{H}(\xx_a)[\xx_{ca}, \xx_{ca}] \right) + O(h^3)  
+    \end{equation}
+    pluggin this in the definition of $\PP^{double}_a$ and swapping the indecees in the last step we get:
+    \begin{equation}
+        \begin{aligned}
+        \PP^{double}_a = \left( \sum_{b,c} w_{ab} w_{ac} \AA(\xx_a) \xx_{bc} \otimes \xx_{bc}
+        + w_{ab} w_{ac} \frac{1}{2} \left( \mathbf{H}(\xx_a)[\xx_{ba}, \xx_{ba}]
+            - \mathbf{H}(\xx_a)[\xx_{ca}, \xx_{ca}] \right) \otimes \xx_{bc} \right) + O(h^4) = \\
+            \AA(\xx_a) \QQ_a^{double} + \sum_{b,c} w_{ab} w_{ac} \frac{1}{2} 
+            \left( \mathbf{H}(\xx_a)[\xx_{ba}, \xx_{ba}]
+            - \mathbf{H}(\xx_a)[\xx_{ca}, \xx_{ca}] \right) \otimes \xx_{bc} + O(h^4) =
+            \AA(\xx_a) \QQ_a^{double} + O(h^4)
+        \end{aligned}
+    \end{equation}
+    Finally we get:
+    \begin{equation}
+        \AA^{double} = \PP^{double}_a (\QQ^{double}_a)^{-1} = \AA(\xx_a) + O(h^2)
+    \end{equation}
+    
+     
+
+    
     
     \newtheorem{MLS_problem}{Lemma: (MLS problem)}
     
 \end{subsection}
 
 \begin{subsection}{Particle distortion field}
-    While it is possible to take the minimizer of the functional $D_{\xx}(\AA)$ directly resulting in 
-the distortion field $\AA$ defined as:
-\begin{equation}
-    \AA(\xx) = \left( \sum_{a,b} w_a w_b \XX_{ab} \otimes \xx_{ab} \right) 
-    \left( \sum_{a,b} w_a w_b \xx_{ab} \otimes \xx_{ab} \right)^{-1}
-\end{equation} 
-as suggested in Pavelka et al. \cite{hutter-pavelka}. It is worth noticing that in a particle method such as SPH,
-this definition becomes computationally expensive as it requires to sum over all particle pairs 
-$(a,b)$ in $\text{supp }w_a(\xx) \cap \text{supp }w_b(\xx)$.
-
-To alleviate this issue, we can slighlty modify this definition by considering only the diagonal terms of the weight kernels
-resulting in the following definition of the distortion field $\AA_a$ at point $\xx_a$ occupied by particle $a$ that is still 
-fully compatible with the SHTC equations under the same assumptions as in \cite{hutter-pavelka}:
+%     While it is possible to take the minimizer of the functional $D_{\xx}(\AA)$ directly resulting in 
+% the distortion field $\AA$ defined as:
+% \begin{equation}
+%     \AA(\xx) = \left( \sum_{a,b} w_a w_b \XX_{ab} \otimes \xx_{ab} \right) 
+%     \left( \sum_{a,b} w_a w_b \xx_{ab} \otimes \xx_{ab} \right)^{-1}
+% \end{equation} 
+% as suggested in Pavelka et al. \cite{hutter-pavelka}. It is worth noticing that in a particle method such as SPH,
+% this definition becomes computationally expensive as it requires to sum over all particle pairs 
+% $(a,b)$ in $\text{supp }w_a(\xx) \cap \text{supp }w_b(\xx)$.
+%
+% To alleviate this issue, we can slighlty modify this definition by considering only the diagonal terms of the weight kernels
+% resulting in the following definition of the distortion field $\AA_a$ at point $\xx_a$ occupied by particle $a$ that is still 
+% fully compatible with the SHTC equations under the same assumptions as in \cite{hutter-pavelka}:
  
 % In our alternative formulation, the distortion field $\AA$ at point $\xx$ is defined as a minimizer of the following functional:
 % \begin{equation}
@@ -419,14 +476,15 @@ fully compatible with the SHTC equations under the same assumptions as in \cite{
 %     \right)
 % \end{equation}
 % \begin{subsection} {Time evolution of the distortion field}
-\begin{equation}
-    \AA_a = \PP_a \QQ_a^{-1}
-\end{equation}
-where \begin{equation}
-    \PP_a = \left( \sum_b w_{ab} \XX_{ab} \otimes \xx_{ab} \right) \text{ and }
-    \QQ_a =  \left( \sum_b w_{ab} \xx_{ab} \otimes \xx_{ab} \right)
-\end{equation}
-The differential of the distortion field with respect to position $\xx_a$ is then equal to:
+% \begin{equation}
+%     \AA_a = \PP_a \QQ_a^{-1}
+% \end{equation}
+% where \begin{equation}
+%     \PP_a = \left( \sum_b w_{ab} \XX_{ab} \otimes \xx_{ab} \right) \text{ and }
+%     \QQ_a =  \left( \sum_b w_{ab} \xx_{ab} \otimes \xx_{ab} \right)
+% \end{equation}
+In this section we will compute the differential of the distortion field wrt a small perturbation in particle possition. 
+Utilizing the definition of $\AA_a$ the differential of the distortion field with respect to position $\xx_a$ is then equal to:
 \begin{equation}
     \diff \AA_a = \diff \PP_a \QQ_a^{-1} + \PP_a \diff \QQ_a^{-1} =
     \diff \PP_a \QQ_a^{-1} - \PP_a \QQ_a^{-1} \diff \QQ_a \QQ_a^{-1} 
