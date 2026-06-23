@@ -115,6 +115,7 @@
 
 \renewcommand{\ss}{\mathbf{s}}
 
+\newcommand{\pd}{\partial}
 %%% COMMANDS %%%
 
 \begin{document}
@@ -483,7 +484,7 @@ fluctuations play a crucial role.
 %     \PP_a = \left( \sum_b w_{ab} \XX_{ab} \otimes \xx_{ab} \right) \text{ and }
 %     \QQ_a =  \left( \sum_b w_{ab} \xx_{ab} \otimes \xx_{ab} \right)
 % \end{equation}
-In this section we will compute the differential of the distortion field wrt a small perturbation in particle possition. 
+Next we will compute the differential of the distortion field wrt a small perturbation in particle possition. 
 Utilizing the definition of $\AA_a$ the differential of the distortion field with respect to position $\xx_a$ is then equal to:
 \begin{equation}
     \diff \AA_a = \diff \PP_a \QQ_a^{-1} + \PP_a \diff \QQ_a^{-1} =
@@ -515,21 +516,76 @@ where:
     \LL_a := \left( \sum_b w_{ab} \vv_{ab} \otimes \xx_{ab}\right)
     \left( \sum_b w_{ab} \xx_{ab} \otimes \xx_{ab}\right)^{-1}
 \end{equation}
-and it can be seen as an SPH approximation of the velocity gradient at point $\xx_a$.
-If we neglect the terms containing $\XX_{ab} - \AA_a \xx_{ab}$ this reduces to:
-\begin{equation}\label{eq:dA}
-    \diff \AA_a = - \AA_a \LL_a%\left( \sum_b w_{ab} \diff \xx_{ab} \otimes \xx_{ab}\right)
-%    \left( \sum_b w_{ab} \xx_{ab} \otimes \xx_{ab}\right)^{-1}
+% and it can be seen as an SPH approximation of the velocity gradient at point $\xx_a$.
+% If we neglect the terms containing $\XX_{ab} - \AA_a \xx_{ab}$ this reduces to:
+% \begin{equation}\label{eq:dA}
+%     \diff \AA_a = - \AA_a \LL_a%\left( \sum_b w_{ab} \diff \xx_{ab} \otimes \xx_{ab}\right)
+% %    \left( \sum_b w_{ab} \xx_{ab} \otimes \xx_{ab}\right)^{-1}
+% \end{equation}
+% It remains to see whether this approximation is justified in practice, which we will discuss later.
+The explicit formulas for $\diff \PP_{a}$ and $\diff \QQ_a$ are:
+\begin{equation}
+    \begin{aligned}
+    \diff \PP_{a} = \sum_{b} w_{ab} \XX_{ab} \otimes \diff \xx_{ab} +
+    \sum_{b} \nabla w_{ab} \cdot \diff \xx_{ab} \XX_{ab} \otimes \xx_{ab} \\
+    \diff \QQ_{a} = \sum_{b} \nabla w_{ab} \cdot \diff \xx_{ab} \xx_{ab} \otimes \xx_{ab} + 
+    \sum_{b} w_{ab} \xx_{ab} \otimes \diff \xx_{ab} + 
+    \sum_{b} w_{ab} \diff \xx_{ab} \otimes \xx_{ab}
+    \end{aligned}
 \end{equation}
-It remains to see whether this approximation is justified in practice, which we will discuss later.
 
 \end{subsection}
 \begin{subsection} {Equations of motion}
-    In this section we will derive the equations of motion using equations \ref{eq:dA} and \ref{eq:dA_full}.
+    In this section we will derive the equations of motion.% using equations \ref{eq:dA} and \ref{eq:dA_full}.
 
-First let $U_h = \sum_b \epsilon_b$ be the total energy of the particle system, let $\epsilon_b$ be the specific energy 
-density of particle $b$. We assume that the specific energy density depends on the density $\rho$ and the 
-distortion field $\AA$ ie. $\epsilon_b = \epsilon_b(\rho_b, \AA_b)$. Using \ref{eq:dA} we can calculate the differential of the energy $U_h$ as: 
+\textbf{Density}
+
+To proceed we will need the differential of the SPH density
+\begin{equation}
+    \rho_{a}= \sum_{b}w_{ab} m_b
+\end{equation}
+A straightforward computation yields:
+\begin{equation}
+    \diff \rho_{a}= \sum_{b} m_{b} \nabla w_{ab} \cdot \diff \xx_{ab}
+\end{equation}
+
+
+\textbf{Energy}
+
+Let $U = \sum_b \epsilon_b$ be the total energy of the particle system, where $\epsilon_b$ is the specific energy 
+density of particle $b$. 
+We will assume that the specific energy density depends on the density $\rho$ and the 
+distortion field $\AA$ ie. $\epsilon_b = \epsilon_b(\rho_b, \AA_b)$. 
+
+
+We will also assume that the inner energy $\epsilon$ decomposes additively into bulk and shear part as $\epsilon(\rho, \AA) = 
+\epsilon_0(\rho) + \epsilon_s(\AA)$.
+
+We will use the following quadratic relation for the bulk component:
+\begin{equation}
+    \begin{aligned}
+    \epsilon_0(\rho) = c_0^2 / 2 \left(\frac{\rho_0}{\rho} - 1\right)^2\\
+    \epsilon_0'(\rho) = c_0^2 \left(\frac{\rho_0}{\rho} - 1\right)
+    \left(- \rho_0 / \rho^2 \right) = c_0^2 \rho_0 \left( \frac{1}{\rho^2}
+    - \frac{\rho_0}{\rho^3}\right)
+    \end{aligned}
+\end{equation}
+For the shear component we will use the following equation:
+\begin{equation}
+    \begin{aligned}
+    \epsilon_s(\AA) = \frac{c_s^2}{4}\| \text{dev}(\AA^T\AA) \|^2_F\\
+    \epsilon_s'(\AA) = c_s^2 \AA \text{dev}(\AA^T\AA)
+    \end{aligned}
+\end{equation}
+
+
+Next we will compute the differential of the energy:
+\begin{equation}
+    \diff U = \sum_{a} m_{a} \left( \frac{\pd \epsilon_a}{\pd \rho} \diff \rho_a + 
+    \frac{\pd \epsilon_a}{\pd \AA}: \diff \AA_{a}\right) 
+\end{equation}
+
+Using \ref{eq:dA} we can calculate the differential of the energy $U_h$ as: 
 \begin{equation}
     \begin{aligned} 
     \diff U_h = \sum_a m_a \epsilon_{\AA_a} : \diff \AA_a + \sum_a m_a \epsilon_{\rho_a} \diff \rho_a
@@ -561,25 +617,6 @@ Using Newton's second law $m \dot{\vv} = - \frac{\diff U}{\diff \xx}$ we get the
 %{
 % \todo[inline]{These equations are different from the equations Ondra originally proposed
 %  and from those in the example code rod.jl something is wrong here.} 
-
-Let us assume that the inner energy $\epsilon$ decomposes into bulk and shear part as $\epsilon(\rho, \AA) = 
-\epsilon_0(\rho) + \epsilon_s(\AA)$. 
-We will use the following quadratic relation for the bulk component:
-\begin{equation}
-    \begin{aligned}
-    \epsilon_0(\rho) = c_0^2 / 2 \left(\frac{\rho_0}{\rho} - 1\right)^2\\
-    \epsilon_0'(\rho) = c_0^2 \left(\frac{\rho_0}{\rho} - 1\right)
-    \left(- \rho_0 / \rho^2 \right) = c_0^2 \rho_0 \left( \frac{1}{\rho^2}
-    - \frac{\rho_0}{\rho^3}\right)
-    \end{aligned}
-\end{equation}
-For the shear component we will use the following equation:
-\begin{equation}
-    \begin{aligned}
-    \epsilon_s(\AA) = \frac{c_s^2}{4}\| \text{dev}(\AA^T\AA) \|^2_F\\
-    \epsilon_s'(\AA) = c_s^2 \AA \text{dev}(\AA^T\AA)
-    \end{aligned}
-\end{equation}
 We can than write the $\Pi_a$ as:
 \begin{equation}
     \Pi_a = c_s^2 \AA^T_a \AA_a \text{dev}(\AA_a^T \AA_a) \QQ_a^{-T} 
