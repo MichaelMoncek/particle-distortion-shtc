@@ -579,107 +579,171 @@ For the shear component we will use the following equation:
 \end{equation}
 
 
-Next we will compute the differential of the energy:
+Next we will compute the differential of the energy and split it into 
+the bulk part $\diff U_{0}$ and the shear part $\diff U_s$ as: 
+
 \begin{equation}
     \diff U = \sum_{a} m_{a} \left( \frac{\pd \epsilon_a}{\pd \rho} \diff \rho_a + 
-    \frac{\pd \epsilon_a}{\pd \AA}: \diff \AA_{a}\right) 
+    \frac{\pd \epsilon_a}{\pd \AA}: \diff \AA_{a}\right) = \diff U_{0} + \diff U_{s}
 \end{equation}
 
-Using \ref{eq:dA} we can calculate the differential of the energy $U_h$ as: 
+For the bulk part we get the following:
 \begin{equation}
-    \begin{aligned} 
-    \diff U_h = \sum_a m_a \epsilon_{\AA_a} : \diff \AA_a + \sum_a m_a \epsilon_{\rho_a} \diff \rho_a
-    = \sum_a m_a \epsilon_{\rho_a} \left( \sum_b m_b \diff \xx_{ab} \cdot \nabla w_{ab} \right)
-    + \sum_a m_a \epsilon_{\AA_a} : \left( - \diff \AA_a \right) \\
-    = \sum_{a,b} m_a m_b  \left( \epsilon_{\rho_a} \nabla w_{ab} \cdot \diff 
-    \xx_{ab} - \frac{1}{m_b} \epsilon_{\AA_a} : \AA_a 
-    \left( w_{ab} \diff \xx_{ab} \otimes \xx_{ab}\right) \QQ_a^{-1}
-    \right) \\
-    = -\sum_{a,b} m_a m_b \left(\frac{1}{m_b} w_{ab} \Pi_a \xx_{ab} - 
-    \epsilon_{\rho_a} \nabla w_{ab}  \right) \cdot \diff \xx_{ab}\\
-    = -\sum_{a,b} m_a m_b \left(\frac{1}{m_b} w_{ab} \Pi_a \xx_{ab} - 
-    \epsilon_{\rho_a} \nabla w_{ab}  \right) \cdot \left(\diff \xx_a - \diff \xx_b\right)\\
-    = -\sum_{a,b} m_a m_b \left(\frac{1}{m_b} w_{ab} \Pi_a \xx_{ab} - 
-    \epsilon_{\rho_a} \nabla w_{ab}  \right) \cdot \diff \xx_a \\
-    - \sum_{b,a} m_b m_a \left(\frac{1}{m_a} w_{ba} \Pi_b \xx_{ab} - 
-    \epsilon_{\rho_b} \nabla w_{ab}  \right) \cdot \diff \xx_a\\ 
-    = -\sum_{a,b} m_a m_b \left[ w_{ab} \left( \frac{\Pi_a}{m_b} + \frac{\Pi_b}{m_a} \right) \xx_{ab} 
-    - \left( \epsilon_{\rho_a} + \epsilon_{\rho_b} \right) 
-    \nabla w_{ab} \right] \cdot \diff \xx_a
+    \diff U_{0} = \sum_{a} m_{a} \frac{\pd \epsilon_a}{\pd \rho} \diff \rho_{a}= 
+    \sum_{a,b} m_{a} m_{b} \pd_{\rho} \epsilon_{a} \nabla w_{ab} \cdot 
+    \left( \diff \xx_{a} - \diff \xx_{b} \right) =
+    \sum_{a,b} m_{a} m_{b} \left( \pd_{\rho} \epsilon_{a} + \pd_{\rho} \epsilon_b \right) 
+    \nabla w_{ab} \cdot \diff \xx_a
+\end{equation}
+
+And for the shear part we will get:
+\begin{equation}
+    \begin{aligned}
+    \diff U_{s} = \sum_{a} m_{a} \frac{\pd \epsilon_a}{\pd \AA}: \diff \AA_{a} = 
+    \sum_{a} m_{a} \left( \pd_{\AA} \epsilon_{a} : \left( 
+    \diff \PP_a \QQ_a^{-1} - \PP_a \QQ_a^{-1} \diff \QQ_a \QQ_a^{-1} \right)  \right) =\\
+    \sum_{a} m_{a} \left( \pd_{\AA} \epsilon_{a} : 
+    \diff \PP_a \QQ_a^{-1} - \pd_{\AA} \epsilon_{a} : \AA_{a} \diff \QQ_a \QQ_a^{-1} \right) = 
+    \sum_{a} m_{a} \left( (A) - (B)  \right) 
     \end{aligned}
-\end{equation} where $\Pi_a = \AA_a^T \epsilon_{\AA_a} \QQ_a^{-T}$.\\ 
-Using Newton's second law $m \dot{\vv} = - \frac{\diff U}{\diff \xx}$ we get the following equations of motion: 
-\begin{equation} 
-    m_a \dot{\vv}_a = \sum_b m_a m_b \left[ w_{ab} \left( \frac{\Pi_a}{m_b} + \frac{\Pi_b}{m_a}\right) 
-    \xx_{ab} - \left( \epsilon_{\rho_a} +
-    \epsilon_{\rho_b} \right) \nabla w_{ab} \right] 
-\end{equation} 
-%{
-% \todo[inline]{These equations are different from the equations Ondra originally proposed
-%  and from those in the example code rod.jl something is wrong here.} 
-We can than write the $\Pi_a$ as:
+\end{equation}
+The first part labeled $(A)$ yields:
 \begin{equation}
-    \Pi_a = c_s^2 \AA^T_a \AA_a \text{dev}(\AA_a^T \AA_a) \QQ_a^{-T} 
+    \begin{aligned}
+    \sum_{a} m_{a} (A) = \sum_{a} m_{a} \left[ \pd_{\AA} \epsilon_{a} : 
+    \diff \PP_a \QQ_a^{-1} \right] = 
+    \sum_{a} m_{a} \left[ \pd_{\AA} \epsilon_{a}  \QQ_a^{-1} :
+    \diff \PP_a  \right] = \\
+    \sum_{a} m_{a} \left[ \AA_a^{-T} \SS_{a}:
+    \left( \sum_{b} w_{ab} \XX_{ab} \otimes \diff \xx_{ab} +
+    \sum_{b} \nabla w_{ab} \cdot \diff \xx_{ab} \XX_{ab} 
+    \otimes \xx_{ab} \right) \right] =\\
+    \sum_{a} m_{a} \left[ \left( \sum_{b} w_{ab} \SS_a^{T} \AA_a^{-1} \XX_{ab} 
+    \cdot \diff \xx_{ab} +
+    \sum_{b} \nabla w_{ab} \cdot \diff \xx_{ab} \XX_{ab} 
+    \cdot \AA_a^{-T} \SS_{a} \xx_{ab} \right) \right] =\\
+    \sum_{a, b} m_{a} \left( w_{ab} \SS_a^{T} \AA_a^{-1} \XX_{ab} +
+    \nabla w_{ab} 
+    \AA_a^{-T} \SS_{a} \xx_{ab} \right) 
+    \cdot \left( \diff \xx_{a}- \diff \xx_b \right)  =\\
+    \sum_{a, b} \left[ w_{ab} \left( m_{a} \SS_a^{T} \AA_a^{-1} +
+    m_{b} \SS_b^{T} \AA_b^{-1} \right) \XX_{ab} +
+    \nabla w_{ab} \XX_{ab} \cdot \left(
+    m_{a} \AA_a^{-T} \SS_{a} +
+    m_{b} \AA_b^{-T} \SS_{b} \right) \xx_{ab} \right]
+    \cdot \diff \xx_{a}
+    \end{aligned}
+\end{equation}
+And the second part labeled $(B)$ yields:
+\begin{equation}
+    \begin{aligned}
+    \sum_{a} m_{a} (B) = \sum_{a} m_{a} \left[ 
+    \pd_{\AA} \epsilon_{a} : \AA_{a} \diff \QQ_a \QQ_a^{-1} \right] = 
+    \sum_{a} m_{a} \left[ 
+    \AA_a^{T} \pd_{\AA} \epsilon_{a} \QQ_a^{-1} : 
+    \diff \QQ_{a} \right] =
+    \sum_{a} m_{a} \left[ \SS_{a} : \diff \QQ_{a} \right]= \\
+    \sum_{a} m_{a} \left[ \SS_{a} :  \left( 
+    \sum_{b} \nabla w_{ab} \cdot \diff \xx_{ab} \xx_{ab} \otimes \xx_{ab} + 
+    \sum_{b} w_{ab} \xx_{ab} \otimes \diff \xx_{ab} + 
+    \sum_{b} w_{ab} \diff \xx_{ab} \otimes \xx_{ab} \right) \right] =\\
+    \sum_{a} m_{a} \left[ \left( \sum_{b} \nabla w_{ab} \cdot \diff \xx_{ab} 
+    \xx_{ab} \cdot \SS_{a}\xx_{ab} + 
+    \sum_{b} w_{ab} \SS_{a}^T \xx_{ab} \cdot \diff \xx_{ab} + 
+    \sum_{b} w_{ab} \diff \xx_{ab} \cdot \SS_{a} \xx_{ab} \right) \right] =\\
+    \sum_{a} m_a \left[ \left( \sum_{b} \nabla w_{ab} 
+    \xx_{ab} \cdot \SS_{a}\xx_{ab} + 
+    \sum_{b} w_{ab} \SS_{a}^T \xx_{ab} + 
+    \sum_{b} w_{ab} \cdot \SS_{a} \xx_{ab} \right)
+    \cdot \left( \diff \xx_{a} - \diff \xx_{b} \right) \right] =\\
+    \sum_{a,b} \left[ \nabla w_{ab} 
+    \xx_{ab} \cdot \left( m_{a} \SS_{a} + m_{b} \SS_{b} \right) \xx_{ab} + 
+    w_{ab} \left( m_{a} \SS_{a}^T + m_{b} \SS_{b}^T \right) \xx_{ab} + 
+w_{ab} \left( m_{a} \SS_{a} + m_{b} \SS_{b} \right) \xx_{ab} \right]
+    \cdot \diff \xx_{a} 
+    \end{aligned}
+\end{equation}
+Finally, putting these terms back together we get:
+\begin{equation}
+    \begin{aligned}
+    \sum_{a} m_{a} \left( (A) - (B) \right) = \\
+    \sum_{a,b} \bigg( w_{ab} \left[ 
+    m_{a} \SS_a^{T} \left( \AA_a^{-1} \XX_{ab} - \xx_{ab} \right) +
+    m_{b} \SS_b^{T} \left( \AA_b^{-1} \XX_{ab} - \xx_{ab} \right) \right] + \\
+    \sum_{a,b} \nabla w_{ab} \left[ \left( \AA_a^{-1} \XX_{ab} - \xx_{ab} \right)
+    \cdot \left( m_{a} \SS_{a} \xx_{ab} \right) +
+     \left( \AA_b^{-1} \XX_{ab} - \xx_{ab} \right)
+    \cdot \left( m_{b} \SS_{b} \xx_{ab} \right) 
+    \right] + \\
+    - \sum_{a,b} w_{ab} \left( m_{a} \SS_{a} + m_{b} \SS_b \right) \xx_{ab}
+    \bigg) \cdot \diff \xx_a
+    \end{aligned}
 \end{equation}
 
-We can treat the density $\rho$ in two ways. The first one is the standard SPH density approximation:
+We will further employ the notation $e_{ab} = \AA_a^{-1} \XX_{ab} - \xx_{ab}$ and 
+with that the full differential of energy $\diff U$ reads:
+
 \begin{equation}
-    \rho_a = \sum_b m_b w_{ab}
-\end{equation}
-The second way is the following relation:
-\begin{equation}
-    \rho_a = \rho_0 \det(\AA_a)
+    \begin{aligned}
+    \diff U = 
+    \sum_{a,b} \bigg( m_{a} m_{b} 
+    \left( \pd_{\rho} \epsilon_{a} + \pd_{\rho} \epsilon_b \right) 
+    \nabla w_{ab} -
+    \sum_{a,b} w_{ab} \left( m_{a} \SS_{a} + m_{b} \SS_b \right) \xx_{ab} +\\
+    w_{ab} \left[ m_{a} \SS_a^{T} e_{ab} -
+    m_{b} \SS_b^{T} e_{ba} \right] + 
+    \sum_{a,b} \nabla w_{ab} \left[ e_{ab} 
+    \cdot \left( m_{a} \SS_{a} \xx_{ab} \right) + 
+    e_{ba} \cdot \left( m_{b} \SS_{b} \xx_{ab} \right) 
+    \right] \bigg) \cdot \diff \xx_a
+    \end{aligned}
 \end{equation}
 
-With this we have derived the following system of equations for the 
-Particle distortion SPH-SHTC:
+
+Using Newton's second law $m \dot{\vv} = - \frac{\diff U}{\diff \xx}$ 
+we get the following equations of motion: 
+\begin{equation}
+    \begin{aligned}
+    m_{a} \dot \vv_{a} = -   
+    \sum_{a,b} \bigg( m_{a} m_{b} 
+    \left( \pd_{\rho} \epsilon_{a} + \pd_{\rho} \epsilon_b \right) 
+    \nabla w_{ab} -
+    \sum_{a,b} w_{ab} \left( m_{a} \SS_{a} + m_{b} \SS_b \right) \xx_{ab} +\\
+    w_{ab} \left[ m_{a} \SS_a^{T} e_{ab} -
+    m_{b} \SS_b^{T} e_{ba} \right] + 
+    \sum_{a,b} \nabla w_{ab} \left[ e_{ab} 
+    \cdot \left( m_{a} \SS_{a} \xx_{ab} \right) + 
+    e_{ba} \cdot \left( m_{b} \SS_{b} \xx_{ab} \right) 
+    \right] \bigg) 
+    \end{aligned}
+\end{equation}
+
+% \textbf{Notice that the units of each term are the same, so the expression should be correct.}
+\todo[inline]{TODO: Add dimensional analysis, the units are the same so we have at least some
+hope that we ended up with something meaningful}
+    Here we are presented with two options, we can either work with the full system, or we can hope 
+that the contribution of $e_{ab} = \AA_a^{-1} \XX_{ab} - \xx_{ab} a$ will be very small (which should
+be the case) and we can work with significantly simplier system given by:
 
 \begin{subequations}
     \begin{equation}
         \dot{\xx}_a = \vv_a\\
     \end{equation}
+    % \begin{equation}
+    %     \dot{\vv}_a = \sum_b m_b \left[ w_{ab} \left( \frac{\Pi_a}{m_b} + 
+    %     \frac{\Pi_b}{m_a}\right) \xx_{ab} - \left( \epsilon_{\rho_a} +
+    %     \epsilon_{\rho_b} \right) \nabla w_{ab} \right]\\
+    % \end{equation}
+    %
     \begin{equation}
-        \dot{\vv}_a = \sum_b m_b \left[ w_{ab} \left( \frac{\Pi_a}{m_b} + 
-        \frac{\Pi_b}{m_a}\right) \xx_{ab} - \left( \epsilon_{\rho_a} +
-        \epsilon_{\rho_b} \right) \nabla w_{ab} \right]\\
+        \dot \vv_a = \sum_{b} m_{b} \left( w_{ab} \left( \frac{\SS_a}{m_b} + \frac{\SS_b}{m_a} \right) -
+        \left( \pd_{\rho} \epsilon_{a} + \pd_{\rho} \epsilon_{b} \right) \nabla w_{ab} \right)
     \end{equation}
     \begin{equation} 
         \AA_a = \left( \sum_b w_{ab} \XX_{ab} \otimes \xx_{ab} \right) 
         \left( \sum_b w_{ab} \xx_{ab} \otimes \xx_{ab} \right)^{-1}
     \end{equation}
 \end{subequations}
-
-THe only thing to see now is whether is works or not xD 
-We have neglected some terms so here they are (using the notation $
-\ee_{ab} = \XX_{ab} - \AA_a \xx_{ab}$):
-
-\begin{equation}
-    \sum_a m_a \epsilon_{\AA_a} :
-    \left(\sum_b w_{ab} \ee_{ab} \otimes \diff \xx_{ab}\right)\QQ_a^{-1} =
-    \sum_{a,b} w_{ab} \left(m_a \Pi'_a \ee_{ab} - 
-    m_b \Pi'_b \ee_{ba}\right) \cdot \diff \xx_a
-\end{equation}
-
-\begin{equation}
-    \sum_a m_a \epsilon_{\AA_a} :
-    \left(\sum_b \nabla w_{ab} \cdot \diff \xx_{ab} 
-    \ee_{ab} \otimes \xx_{ab}\right)\QQ_a^{-1}
-    = \sum_{a,b} \left( \left(m_a \Pi'_a \ee_{ab} - m_b \Pi'_b \ee_{ba}\right) 
-    \cdot \xx_{ab}\right) \nabla w_{ab} \cdot \diff \xx_a
-\end{equation}
-
-where $\Pi'_a = c_s^2 \QQ_a^{-1} \text{dev}(\AA_a^T \AA_a) \AA_a^T$ also note that
-$\Pi_a = (\Pi'_a \AA_a)^T$ furthemore we will write 
-$\ss_{ab} = \left(m_a \Pi'_a \ee_{ab} - m_b \Pi'_b \ee_{ba}\right)$.
-
-The full form of the evolution equation for velocity then reads:
-\begin{equation}
-    \dot{\vv}_a = \sum_b m_b \left[ w_{ab} \left( \frac{\Pi_a}{m_b} + 
-    \frac{\Pi_b}{m_a}\right) \xx_{ab} - \left( \epsilon_{\rho_a} +
-    \epsilon_{\rho_b} \right) \nabla w_{ab} - 
-    \left( w_{ab} \frac{1}{m_a m_b} \ss_{ab} + 
-    \ss_{ab} \cdot \xx_{ab} \frac{1}{m_a m_b} \nabla w_{ab} \right)\right]
-\end{equation}
 
 \begin{subsubsection} {The full evolution equations for $\AA$}
     Here we will try to derive the full evolution equations for the general form of $\AA$ from Pavelka a Hutter \cite{hutter-pavelka}.
@@ -688,14 +752,123 @@ The full form of the evolution equation for velocity then reads:
         \AA(\xx) = \left( \sum_{a,b} w_a w_b \XX_{ab} \otimes \xx_{ab} \right) 
         \left( \sum_{a,b} w_a w_b \xx_{ab} \otimes \xx_{ab} \right)^{-1}
     \end{equation} 
-    \end{subsubsection}
 
+    \todo[inline]{TODO: The evolution for $\AA^{double}$ be it the full or the simplified form.}
+\end{subsubsection}
 
+% Using \ref{eq:dA} we can calculate the differential of the energy $U_h$ 
+% \begin{equation}
+%     \begin{aligned} 
+%     \diff U_h = \sum_a m_a \epsilon_{\AA_a} : \diff \AA_a + \sum_a m_a \epsilon_{\rho_a} \diff \rho_a
+%     = \sum_a m_a \epsilon_{\rho_a} \left( \sum_b m_b \diff \xx_{ab} \cdot \nabla w_{ab} \right)
+%     + \sum_a m_a \epsilon_{\AA_a} : \left( - \diff \AA_a \right) \\
+%     = \sum_{a,b} m_a m_b  \left( \epsilon_{\rho_a} \nabla w_{ab} \cdot \diff 
+%     \xx_{ab} - \frac{1}{m_b} \epsilon_{\AA_a} : \AA_a 
+%     \left( w_{ab} \diff \xx_{ab} \otimes \xx_{ab}\right) \QQ_a^{-1}
+%     \right) \\
+%     = -\sum_{a,b} m_a m_b \left(\frac{1}{m_b} w_{ab} \Pi_a \xx_{ab} - 
+%     \epsilon_{\rho_a} \nabla w_{ab}  \right) \cdot \diff \xx_{ab}\\
+%     = -\sum_{a,b} m_a m_b \left(\frac{1}{m_b} w_{ab} \Pi_a \xx_{ab} - 
+%     \epsilon_{\rho_a} \nabla w_{ab}  \right) \cdot \left(\diff \xx_a - \diff \xx_b\right)\\
+%     = -\sum_{a,b} m_a m_b \left(\frac{1}{m_b} w_{ab} \Pi_a \xx_{ab} - 
+%     \epsilon_{\rho_a} \nabla w_{ab}  \right) \cdot \diff \xx_a \\
+%     - \sum_{b,a} m_b m_a \left(\frac{1}{m_a} w_{ba} \Pi_b \xx_{ab} - 
+%     \epsilon_{\rho_b} \nabla w_{ab}  \right) \cdot \diff \xx_a\\ 
+%     = -\sum_{a,b} m_a m_b \left[ w_{ab} \left( \frac{\Pi_a}{m_b} + \frac{\Pi_b}{m_a} \right) \xx_{ab} 
+%     - \left( \epsilon_{\rho_a} + \epsilon_{\rho_b} \right) 
+%     \nabla w_{ab} \right] \cdot \diff \xx_a
+%     \end{aligned}
+% \end{equation} where $\Pi_a = \AA_a^T \epsilon_{\AA_a} \QQ_a^{-T}$.\\ 
+% Using Newton's second law $m \dot{\vv} = - \frac{\diff U}{\diff \xx}$ we get the following equations of motion: 
+% \begin{equation} 
+%     m_a \dot{\vv}_a = \sum_b m_a m_b \left[ w_{ab} \left( \frac{\Pi_a}{m_b} + \frac{\Pi_b}{m_a}\right) 
+%     \xx_{ab} - \left( \epsilon_{\rho_a} +
+%     \epsilon_{\rho_b} \right) \nabla w_{ab} \right] 
+% \end{equation} 
+%{
+% \todo[inline]{These equations are different from the equations Ondra originally proposed
+%  and from those in the example code rod.jl something is wrong here.} 
+% We can than write the $\Pi_a$ as:
+% \begin{equation}
+%     \Pi_a = c_s^2 \AA^T_a \AA_a \text{dev}(\AA_a^T \AA_a) \QQ_a^{-T} 
+% \end{equation}
+%
+% We can treat the density $\rho$ in two ways. The first one is the standard SPH density approximation:
+% \begin{equation}
+%     \rho_a = \sum_b m_b w_{ab}
+% \end{equation}
+% The second way is the following relation:
+% \begin{equation}
+%     \rho_a = \rho_0 \det(\AA_a)
+% \end{equation}
+%
+% With this we have derived the following system of equations for the 
+% Particle distortion SPH-SHTC:
+%
+% \begin{subequations}
+%     \begin{equation}
+%         \dot{\xx}_a = \vv_a\\
+%     \end{equation}
+%     \begin{equation}
+%         \dot{\vv}_a = \sum_b m_b \left[ w_{ab} \left( \frac{\Pi_a}{m_b} + 
+%         \frac{\Pi_b}{m_a}\right) \xx_{ab} - \left( \epsilon_{\rho_a} +
+%         \epsilon_{\rho_b} \right) \nabla w_{ab} \right]\\
+%     \end{equation}
+%     \begin{equation} 
+%         \AA_a = \left( \sum_b w_{ab} \XX_{ab} \otimes \xx_{ab} \right) 
+%         \left( \sum_b w_{ab} \xx_{ab} \otimes \xx_{ab} \right)^{-1}
+%     \end{equation}
+% \end{subequations}
+%
+% THe only thing to see now is whether is works or not xD 
+% We have neglected some terms so here they are (using the notation $
+% \ee_{ab} = \XX_{ab} - \AA_a \xx_{ab}$):
+%
+% \begin{equation}
+%     \sum_a m_a \epsilon_{\AA_a} :
+%     \left(\sum_b w_{ab} \ee_{ab} \otimes \diff \xx_{ab}\right)\QQ_a^{-1} =
+%     \sum_{a,b} w_{ab} \left(m_a \Pi'_a \ee_{ab} - 
+%     m_b \Pi'_b \ee_{ba}\right) \cdot \diff \xx_a
+% \end{equation}
+%
+% \begin{equation}
+%     \sum_a m_a \epsilon_{\AA_a} :
+%     \left(\sum_b \nabla w_{ab} \cdot \diff \xx_{ab} 
+%     \ee_{ab} \otimes \xx_{ab}\right)\QQ_a^{-1}
+%     = \sum_{a,b} \left( \left(m_a \Pi'_a \ee_{ab} - m_b \Pi'_b \ee_{ba}\right) 
+%     \cdot \xx_{ab}\right) \nabla w_{ab} \cdot \diff \xx_a
+% \end{equation}
+%
+% where $\Pi'_a = c_s^2 \QQ_a^{-1} \text{dev}(\AA_a^T \AA_a) \AA_a^T$ also note that
+% $\Pi_a = (\Pi'_a \AA_a)^T$ furthemore we will write 
+% $\ss_{ab} = \left(m_a \Pi'_a \ee_{ab} - m_b \Pi'_b \ee_{ba}\right)$.
+%
+% The full form of the evolution equation for velocity then reads:
+% \begin{equation}
+%     \dot{\vv}_a = \sum_b m_b \left[ w_{ab} \left( \frac{\Pi_a}{m_b} + 
+%     \frac{\Pi_b}{m_a}\right) \xx_{ab} - \left( \epsilon_{\rho_a} +
+%     \epsilon_{\rho_b} \right) \nabla w_{ab} - 
+%     \left( w_{ab} \frac{1}{m_a m_b} \ss_{ab} + 
+%     \ss_{ab} \cdot \xx_{ab} \frac{1}{m_a m_b} \nabla w_{ab} \right)\right]
+% \end{equation}
+%
+% \begin{subsubsection} {The full evolution equations for $\AA$}
+%     Here we will try to derive the full evolution equations for the general form of $\AA$ from Pavelka a Hutter \cite{hutter-pavelka}.
+%     The distortion field $\AA$ is assumed to have the following full form:
+%     \begin{equation}
+%         \AA(\xx) = \left( \sum_{a,b} w_a w_b \XX_{ab} \otimes \xx_{ab} \right) 
+%         \left( \sum_{a,b} w_a w_b \xx_{ab} \otimes \xx_{ab} \right)^{-1}
+%     \end{equation} 
+%     \end{subsubsection}
+%
+%
 \end{subsection} 
 
 \end{section}
 
 \begin{subsection} {Beryllium plate}
+    In this section we will compare different definitions of $\AA$ and different systems.
+
 Remember the terms we neglected earlier because they were small? They were not that small after all, lets
 take a look at what happens in the Beryllium plate benchmark withouth them.
 \begin{figure}[H]

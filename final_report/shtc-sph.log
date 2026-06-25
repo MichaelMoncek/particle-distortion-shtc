@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2026.4.4)  23 JUN 2026 14:29
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2026.4.4)  25 JUN 2026 15:02
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -892,70 +892,6 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 [5]
 
-LaTeX Warning: Reference `eq:dA' on page 6 undefined on input line 588.
-
-
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.638     \begin{equation}
-                          
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.638     \begin{equation}
-                          
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.638     \begin{equation}
-                          
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.638     \begin{equation}
-                          
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.641     \begin{equation}
-                          
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.641     \begin{equation}
-                          
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.641     \begin{equation}
-                          
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.641     \begin{equation}
-                          
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.646     \begin{equation}
-                          
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.646     \begin{equation}
-                          
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.646     \begin{equation}
-                          
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.646     \begin{equation}
-                          
-
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 25.18872pt, for example:
 (fancyhdr)                \setlength{\headheight}{25.18872pt}.
@@ -963,23 +899,80 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-13.18872pt}.
 
 [6]
+Package hyperref Info: bookmark level for unknown todo defaults to 0 on input line 723.
+
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.729     \begin{equation}
+                          
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.729     \begin{equation}
+                          
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.729     \begin{equation}
+                          
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.729     \begin{equation}
+                          
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.738     \begin{equation}
+                          
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.738     \begin{equation}
+                          
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.738     \begin{equation}
+                          
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.738     \begin{equation}
+                          
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.742     \begin{equation}
+                          
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.742     \begin{equation}
+                          
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.742     \begin{equation}
+                          
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.742     \begin{equation}
+                          
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 684.
+(hyperref)                removing `math shift' on input line 748.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 684.
+(hyperref)                removing `math shift' on input line 748.
 
-<plate1.png, id=131, 1427.3325pt x 595.22375pt>
+<plate1.png, id=129, 1427.3325pt x 595.22375pt>
 File: plate1.png Graphic file (type png)
 <use plate1.png>
-Package pdftex.def Info: plate1.png  used on input line 703.
-(pdftex.def)             Requested size: 411.14528pt x 171.457pt.
-<plate2.png, id=133, 1427.3325pt x 595.22375pt>
-File: plate2.png Graphic file (type png)
-<use plate2.png>
-Package pdftex.def Info: plate2.png  used on input line 711.
+Package pdftex.def Info: plate1.png  used on input line 876.
 (pdftex.def)             Requested size: 411.14528pt x 171.457pt.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -988,8 +981,12 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller to compensate:
 (fancyhdr)                \addtolength{\topmargin}{-13.18872pt}.
 
-[7 <./plate1.png>]
-Package hyperref Info: bookmark level for unknown todo defaults to 0 on input line 723.
+[7]
+<plate2.png, id=144, 1427.3325pt x 595.22375pt>
+File: plate2.png Graphic file (type png)
+<use plate2.png>
+Package pdftex.def Info: plate2.png  used on input line 884.
+(pdftex.def)             Requested size: 411.14528pt x 171.457pt.
  (./shtc-sph.bbl)
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -998,26 +995,23 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller to compensate:
 (fancyhdr)                \addtolength{\topmargin}{-13.18872pt}.
 
-[8 <./plate2.png>] (./shtc-sph.aux)
-
-LaTeX Warning: There were undefined references.
-
+[8 <./plate1.png> <./plate2.png>] (./shtc-sph.aux)
 Package rerunfilecheck Info: File `shtc-sph.out' has not changed.
 (rerunfilecheck)             Checksum: 17342DE48F38964B559901CAAFA1CF6D;1163.
  ) 
 Here is how much of TeX's memory you used:
- 28473 strings out of 476034
- 560255 string characters out of 5792865
- 1871388 words of memory out of 6000000
- 48331 multiletter control sequences out of 15000+600000
+ 28477 strings out of 476034
+ 560337 string characters out of 5792865
+ 1875388 words of memory out of 6000000
+ 48334 multiletter control sequences out of 15000+600000
  562518 words of font info for 65 fonts, out of 8000000 for 9000
  1137 hyphenation exceptions out of 8191
- 84i,12n,80p,555b,917s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,12n,80p,555b,1031s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on shtc-sph.pdf (8 pages, 1867128 bytes).
+Output written on shtc-sph.pdf (8 pages, 1867947 bytes).
 PDF statistics:
- 238 PDF objects out of 1000 (max. 8388607)
- 192 compressed objects within 2 object streams
- 71 named destinations out of 1000 (max. 500000)
+ 239 PDF objects out of 1000 (max. 8388607)
+ 193 compressed objects within 2 object streams
+ 72 named destinations out of 1000 (max. 500000)
  79 words of extra memory for PDF output out of 10000 (max. 10000000)
 

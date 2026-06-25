@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex shtc-sph"] 1782216345.92085 "shtc-sph.aux" "shtc-sph.bbl" "shtc-sph" 1782217754.59298 0
+["bibtex shtc-sph"] 1782392523.7754 "shtc-sph.aux" "shtc-sph.bbl" "shtc-sph" 1782392524.66382 0
   "./library.bib" 1763288639.34346 529836 c3b12ac802d179b49f12fb0c6b6ad96e ""
   "/usr/share/texlive/texmf-dist/bibtex/bst/base/abbrv.bst" 1764115200 20329 b5fed53e10044d0f8112183785c759b1 ""
-  "shtc-sph.aux" 1782217754.39304 3313 ea7a0dbbb7d330a7c00a2256113aeae3 "pdflatex"
+  "shtc-sph.aux" 1782392524.43789 3773 a61297e41cb61189ae4ca8ed12b825de "pdflatex"
   (generated)
   "shtc-sph.bbl"
   "shtc-sph.blg"
   (rewritten before read)
-["pdflatex"] 1782217753.84041 "shtc-sph.tex" "shtc-sph.pdf" "shtc-sph" 1782217754.59319 0
+["pdflatex"] 1782392523.84298 "shtc-sph.tex" "shtc-sph.pdf" "shtc-sph" 1782392524.66412 0
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc" 1202520719 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1202520719 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc" 1202520719 2840 216e6e45ad352e2456e1149f28885bee ""
@@ -233,10 +233,10 @@
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1775255385 7759955 af9c3bb2c69100a220b8f67e30e6b244 ""
   "plate1.png" 1763288639.34545 915175 30266730c51f9afed4a3a4903e140253 ""
   "plate2.png" 1763288639.34746 913427 a5ac80ef2abbb02774c633bdea464a83 ""
-  "shtc-sph.aux" 1782217754.39304 3313 ea7a0dbbb7d330a7c00a2256113aeae3 "pdflatex"
-  "shtc-sph.bbl" 1782216345.98185 500 cd84268e40f17ef5df8693677512bfcb "bibtex shtc-sph"
-  "shtc-sph.out" 1782217754.39448 1163 17342de48f38964b559901caafa1cf6d "pdflatex"
-  "shtc-sph.tex" 1782217753.24005 33838 32901bd2085551a4102ab02103088ecf ""
+  "shtc-sph.aux" 1782392524.43789 3773 a61297e41cb61189ae4ca8ed12b825de "pdflatex"
+  "shtc-sph.bbl" 1782392523.8359 500 cd84268e40f17ef5df8693677512bfcb "bibtex shtc-sph"
+  "shtc-sph.out" 1782392524.43965 1163 17342de48f38964b559901caafa1cf6d "pdflatex"
+  "shtc-sph.tex" 1782392520.97596 41766 5f1a348eb1195ac29b733921ff465d39 ""
   (generated)
   "shtc-sph.aux"
   "shtc-sph.log"
