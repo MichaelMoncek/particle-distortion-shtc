@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex shtc-sph"] 1782480375.35016 "shtc-sph.aux" "shtc-sph.bbl" "shtc-sph" 1782480425.50503 0
+["bibtex shtc-sph"] 1782480375.35016 "shtc-sph.aux" "shtc-sph.bbl" "shtc-sph" 1782480924.45162 0
   "./library.bib" 1763288639.34346 529836 c3b12ac802d179b49f12fb0c6b6ad96e ""
   "/usr/share/texlive/texmf-dist/bibtex/bst/base/abbrv.bst" 1764115200 20329 b5fed53e10044d0f8112183785c759b1 ""
-  "shtc-sph.aux" 1782480425.28619 3590 0efb4c4b3cad18566f3f24f158c9b688 "pdflatex"
+  "shtc-sph.aux" 1782480924.20043 3590 0efb4c4b3cad18566f3f24f158c9b688 "pdflatex"
   (generated)
   "shtc-sph.bbl"
   "shtc-sph.blg"
   (rewritten before read)
-["pdflatex"] 1782480424.72399 "shtc-sph.tex" "shtc-sph.pdf" "shtc-sph" 1782480425.50522 0
+["pdflatex"] 1782480923.61992 "shtc-sph.tex" "shtc-sph.pdf" "shtc-sph" 1782480924.45195 0
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc" 1202520719 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1202520719 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc" 1202520719 2840 216e6e45ad352e2456e1149f28885bee ""
@@ -234,10 +234,10 @@
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1775255385 7759955 af9c3bb2c69100a220b8f67e30e6b244 ""
   "plate1.png" 1763288639.34545 915175 30266730c51f9afed4a3a4903e140253 ""
   "plate2.png" 1763288639.34746 913427 a5ac80ef2abbb02774c633bdea464a83 ""
-  "shtc-sph.aux" 1782480425.28619 3590 0efb4c4b3cad18566f3f24f158c9b688 "pdflatex"
+  "shtc-sph.aux" 1782480924.20043 3590 0efb4c4b3cad18566f3f24f158c9b688 "pdflatex"
   "shtc-sph.bbl" 1782480375.41758 500 cd84268e40f17ef5df8693677512bfcb "bibtex shtc-sph"
-  "shtc-sph.out" 1782480425.28719 1178 00e95e89ebbf605c7993f90aa6a6aed1 "pdflatex"
-  "shtc-sph.tex" 1782480423.18321 49638 02e4f49aa8e51e5cf4b02c317276a55c ""
+  "shtc-sph.out" 1782480924.20189 1178 00e95e89ebbf605c7993f90aa6a6aed1 "pdflatex"
+  "shtc-sph.tex" 1782480923.51743 49643 99a81a40d16d704b296eb31b24032d78 ""
   (generated)
   "shtc-sph.aux"
   "shtc-sph.log"

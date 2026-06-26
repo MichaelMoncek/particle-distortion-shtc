@@ -816,8 +816,9 @@ We can identify the error term $e_{abc} := \XX_{bc} - \Ad_{a} \xx_{bc}$ and work
 system in case its small. The simplified differential of $\Ad$ is than:
 
 \begin{equation}
-    \diff \Ad_{a} = - \left( \sum_{b,c} w_{ab} w_{ac} \dxx_{bc} \otimes \xx_{bc} \right)
-        \left( \sum_{b,c} w_{ab} w_{ac} \xx_{bc} \otimes \xx_{bc} \right)^{-1}
+    \diff \Ad_{a} = - \Ad_{a} 
+    \left( \sum_{b,c} w_{ab} w_{ac} \dxx_{bc} \otimes \xx_{bc} \right)
+    \left( \sum_{b,c} w_{ab} w_{ac} \xx_{bc} \otimes \xx_{bc} \right)^{-1}
 \end{equation}
 
 
@@ -861,7 +862,7 @@ And for the shear part we will get:
     \sum_{c} w_{bc} \xx_{a} \right) \right) \cdot \dxx_{a} =
     \left( \sum_{a,b} 
     m_{b} w_{ab} 2 W_a \Sd_{b} \left( \bar \xx_{b} -
-    \xx_{a} \right) \right) \cdot \dxx_{a} =\\
+    \xx_{a} \right) \right) \cdot \dxx_{a}
     % - \sum_{a,b,c} \left( \cdots \right)  \cdot \dxx_{ba} 
     % + \sum_{a,b,c} \left( \cdots \right)  \cdot \dxx_{ca} =\\
     % - \sum_{a,b,c} (\cdots) \cdot \left( \dxx_{b} - \dxx_a \right) 
@@ -880,7 +881,7 @@ we get the following equations of motion for $\Ad_a$:
     m_{a} \dot \vv_{a} = -   
     \sum_{b} \bigg( m_{a} m_{b} 
     \left( \pd_{\rho} \epsilon_{a} + \pd_{\rho} \epsilon_b \right) 
-    \nabla w_{ab} +
+    \nabla w_{ab} -
     m_{b} w_{ab} 2 W_a \Sd_{b} \left( \xx_{a} -
     \bar \xx_{b} \right) \bigg)
     \end{aligned}
