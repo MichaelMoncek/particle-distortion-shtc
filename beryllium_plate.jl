@@ -16,7 +16,7 @@ import LinearAlgebra
 include("algebra.jl")
 #CONSTANT PARAMETERS
 #-------------------------------
-const folder_name = "beryllium_plate_02"
+const folder_name = "final_report/simple_A_simplified_02"
 
 const L = 0.06   #rod length
 const W = 0.01   #rod width
@@ -110,6 +110,7 @@ end
     # Omega::Float64 = 0.0
     # h::Float64 = h
     # Diagnostics
+    error::RealVector = VEC0
     f_corr::RealVector = VEC0
     f_lin::RealVector = VEC0
     f_shear::RealVector = VEC0
@@ -186,12 +187,15 @@ end
 
 function force_computation!(sys::ParticleSystem, t::Float64)
     apply!(sys, find_rho!)
-    apply!(sys, find_avg!)
+    # apply!(sys, find_avg!)
     apply!(sys, find_A!)
     # apply!(sys, find_A_new!)
     # apply_ternary!(sys, find_A_new_double_sum!)
-    apply!(sys, find_Pi!)
-    apply!(sys, find_f!)
+    # apply!(sys, find_Pi!)
+    apply!(sys, find_stress!)
+    apply!(sys, find_e!)
+    # apply!(sys, find_f!)
+    apply!(sys, find_force!)
 end
 
 function init_velocity(x::RealVector)::RealVector
@@ -202,7 +206,7 @@ function init_velocity(x::RealVector)::RealVector
     a2 = 57.6455
     s = alpha*(x[1] + L/2)
     v = A*omega*(a1*(sinh(s) + sin(s)) - a2*(cosh(s) + cos(s)))
-    return 0.10*v*VECY
+    return 0.1*v*VECY
 end
 
 
@@ -319,6 +323,40 @@ function find_Pi!(p::Particle)
     p.condQ_new = LinearAlgebra.cond(p.Q_new)
     p.condQ_double_sum = LinearAlgebra.cond(p.Q_double_sum)
 end
+
+function find_stress!(p::Particle)
+    p.rho += p.C_rho
+    invQ = inv(p.Q) 
+    p.invQ = invQ
+    p.A = p.P*invQ
+    At = trans(p.A)
+
+    G = At*p.A
+    devG = dev(G)
+    p.G = G
+    p.norm_devG = norm(devG)
+    # Π_a = c_s² * A^T*A * dev(A^T*A) * Q^{-T}   [Eq. 15]
+    # p.Pi = c_s^2*G*devG*trans(invQ)
+    #  Q is symmetric
+    # p.S = p.A*devG*trans(invQ)
+    # p.Pi = G*devG*trans(invQ)
+    # p.S = p.A*devG*invQ
+    p.Pi = G*devG*invQ
+    # Π'_a = c_s² * Q^{-1} * dev(A^T*A) * A^T
+    # p.PiCp = c_s^2*invQ*dev(G)*At
+    # P = ρ² * ε_ρ = c_0² * ρ_0 * (1 - ρ_0/ρ)
+    # ill-conditioned formula 
+    # pressure =  c_0^2*rho0*(1.0 - rho0/p.rho)
+    # pressure =  (c_0/p.rho)^2*(rho0/p.rho)*(p.rho - rho0)/p.rho
+    pressure =  c_0^2*rho0*(p.rho - rho0)/p.rho^3
+    p.pressure = pressure
+    # p.pressure = pressure/p.rho^2
+    # Diagnostics
+    p.condQ = LinearAlgebra.cond(p.Q)#LinearAlgebra.cond(p.Q[1:2,1:2])
+    p.condP = LinearAlgebra.cond(p.P)#LinearAlgebra.cond(p.P[1:2,1:2])
+    # p.condQ_new = LinearAlgebra.cond(p.Q_new)
+    # p.condQ_double_sum = LinearAlgebra.cond(p.Q_double_sum)
+end
 #
 # function find_h!(p::Particle)
 #     # finalize Omega
@@ -330,6 +368,31 @@ end
 #     end
 #     p.h = clamp(h_new, 0.5h, 3.0h)
 # end
+
+function find_force!(p::Particle, q::Particle, r::Float64) 
+    ker = wendland2(h, r)
+    rDker = rDwendland2(h,r)
+    x_pq = p.x - q.x
+
+    # force_shear_p = m*c_s^2*ker*p.Pi/m*x_pq
+    force_shear_p = m*c_s^2*ker*p.Pi*x_pq
+    p.f += force_shear_p
+    # force_shear_p = m*c_s^2*ker*p.Pi/m*x_pq
+    force_shear_q = m*c_s^2*ker*q.Pi*x_pq
+    p.f += force_shear_q
+
+    p.f += -m^2*rDker*p.pressure*x_pq
+    p.f += -m^2*rDker*q.pressure*x_pq
+    
+    # The additional force component of order o(e_pq) = o(inv(p.A)*X_pq - x_pq)
+    force_geom_p = ker*m*trans(p.Pi)*p.error
+    force_geom_p += rDker*m*dot(p.error, p.Pi*x_pq)*x_pq
+
+    force_geom_q = ker*m*trans(q.Pi)*q.error
+    force_geom_q += rDker*m*dot(q.error, q.Pi*x_pq)*x_pq
+
+    p.f += force_geom_p + force_geom_q
+end
 
 function find_f!(p::Particle, q::Particle, r::Float64) 
     # ker = wendland2(h, r) / (0.5*(p.neigh + q.neigh))
@@ -401,6 +464,7 @@ end
 # end
 
 function update_v!(p::Particle)
+    # p.v += 0.5*dt*p.f/m
     p.v += 0.5*dt*p.f/m
     # p.v += c_s^2*0.5*dt*p.f/m
 end
@@ -438,6 +502,7 @@ end
 function find_e!(p::Particle, q::Particle, r::Float64)
     eta = inv(p.A)*(p.X - q.X) - (p.x - q.x)
     p.e += dot(eta, eta)
+    p.error = eta
     # FI3 = RealMatrix(1.0, 0.0, 0.0,
     #                  0.0, 1.0, 0.0,
     #                  0.0, 0.0, 0.0)
@@ -551,7 +616,7 @@ function main()
         end
         if (k % Int64(round(dt_frame/dt)) == 0)
             apply!(sys, find_e!)
-            save_frame!(out, sys, :v, :A, :e, :P, :Q, :invQ, :eQ,
+            save_frame!(out, sys, :v, :A, :e, :P, :Q, :invQ, :eQ, :error,
                         :pressure, :Pi, :rho, :C_rho, :lambda, :C_lambda, :ker_sum,
                         :A_new, :A_error, :Q_new, :P_new, :condQ_new,
                         :A_double_sum, :A_single_double_sum_error, :Q_double_sum, :P_double_sum, :condQ_double_sum,

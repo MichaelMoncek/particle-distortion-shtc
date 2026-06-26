@@ -116,6 +116,12 @@
 \renewcommand{\ss}{\mathbf{s}}
 
 \newcommand{\pd}{\partial}
+\newcommand{\Ad}{\mathbf{A}^{double}}
+\newcommand{\Qd}{\mathbf{Q}^{double}}
+\newcommand{\invQd}{\left(\mathbf{Q}^{double}\right)^{-1}}
+\newcommand{\Pd}{\mathbf{P}^{double}}
+\newcommand{\dxx}{\text{d}\mathbf{x}}
+\newcommand{\Sd}{\mathbf{S}^{double}}
 %%% COMMANDS %%%
 
 \begin{document}
@@ -535,7 +541,7 @@ The explicit formulas for $\diff \PP_{a}$ and $\diff \QQ_a$ are:
 \end{equation}
 
 \end{subsection}
-\begin{subsection} {Equations of motion}
+\begin{subsection} {Equations of motion for $\AA$}
     In this section we will derive the equations of motion.% using equations \ref{eq:dA} and \ref{eq:dA_full}.
 
 \textbf{Density}
@@ -743,17 +749,190 @@ be the case) and we can work with significantly simplier system given by:
         \AA_a = \left( \sum_b w_{ab} \XX_{ab} \otimes \xx_{ab} \right) 
         \left( \sum_b w_{ab} \xx_{ab} \otimes \xx_{ab} \right)^{-1}
     \end{equation}
+    \text{ where }
+    \begin{equation}
+        \SS_{a} = c_s^{2} \AA_a^{T} \AA_{a} \text{dev}(\AA_a^{T} \AA_a) \QQ_a^{-1}
+        \quad \text{ and } \quad
+        \pd_{\rho} \epsilon_{a} = c_0^2 \rho_{0} \left( \frac{1}{\rho_a^2} + \frac{\rho_0}{\rho_a^3} \right) 
+    \end{equation}
+    
 \end{subequations}
 
-\begin{subsubsection} {The full evolution equations for $\AA$}
-    Here we will try to derive the full evolution equations for the general form of $\AA$ from Pavelka a Hutter \cite{hutter-pavelka}.
-    The distortion field $\AA$ is assumed to have the following full form:
+
+\begin{subsubsection} {Evolution equations for $\Ad$}
+Here we will try to derive the full evolution equations 
+for the general form of $\AA$ 
+from Pavelka a Hutter \cite{hutter-pavelka}:
+% The distortion field $\AA$ is assumed to have the following full form:
+    % \begin{equation}
+    %     \AA(\xx) = \left( \sum_{a,b} w_a w_b \XX_{ab} \otimes \xx_{ab} \right) 
+    %     \left( \sum_{a,b} w_a w_b \xx_{ab} \otimes \xx_{ab} \right)^{-1}
+    % \end{equation} 
+
+\begin{equation}
+    \Ad_{a} := \Pd \invQd = \left( \sum_{b,c} w_{ab} w_{ac} \XX_{bc} \otimes \xx_{bc} \right) 
+    \left( \sum_{b,c} w_{ab} w_{ac} \xx_{bc} \otimes \xx_{bc} \right)^{-1}
+\end{equation} 
+
+Next, analogously to the previous section we can write the differential of $\AA_a$ in 
+the following manner:
+\begin{equation}
+    \diff \AA_{a} = \diff \left( \Pd_{a} \invQd_{a} \right) = \diff \Pd \Qd -
+    \Ad \diff \Qd \invQd
+\end{equation}
+where $\Pd_{a}$ and $\Qd_a$ are:
+\begin{equation}
+    \begin{aligned}
+        \diff \Pd_{a} = 2 \sum_{b,c} \left( \nabla w_{ab} \cdot \dxx_{ab} \right) 
+        w_{ab} \XX_{bc} \otimes \xx_{bc} + 
+        \sum_{b,c} w_{ab} w_{ac} \XX_{bc} \otimes \dxx_{bc}\\
+        \diff \Qd_{a} = 2 \sum_{b,c} \left( \nabla w_{ab} \cdot \dxx_{ab} \right) 
+        w_{ac} \xx_{bc} \otimes \xx_{bc} + 
+        \sum_{b,c} w_{ab} w_{ac} \xx_{bc} \otimes \dxx_{bc} + 
+        \sum_{b,c} w_{ab} w_{ac} \dxx_{bc} \otimes \xx_{bc}\\
+    \end{aligned}
+\end{equation}
+plugging this in the previous expression we get:
+\begin{equation}
+    \begin{aligned}
+        \diff \Ad_{a} = 2 \sum_{b,c} \left( \nabla w_{ab} \cdot \dxx_{ab} \right) 
+        w_{ab} \XX_{bc} \otimes \xx_{bc} + 
+        \sum_{b,c} w_{ab} w_{ac} \XX_{bc} \otimes \dxx_{bc} \invQd -\\
+        \Ad_{a} \left( 2 \sum_{b,c} \left( \nabla w_{ab} \cdot \dxx_{ab} \right) 
+        w_{ac} \xx_{bc} \otimes \xx_{bc} + 
+        \sum_{b,c} w_{ab} w_{ac} \xx_{bc} \otimes \dxx_{bc} + 
+        \sum_{b,c} w_{ab} w_{ac} \dxx_{bc} \otimes \xx_{bc} \right) =\\
+        2 \left( \sum_{b,c} \left( \nabla w_{ab} \cdot \dxx_{ab} \right) 
+        w_{ac} \left( \XX_{bc} - \Ad_{a} \xx_{bc} \right) \otimes
+        \xx_{bc}\right) \invQd + \\
+        \left( \sum_{b,c} w_{ab} w_{ac} 
+        \left( \XX_{bc} - \Ad_{a} \xx_{bc} \right) \otimes
+        \dxx_{bc}\right) \invQd + \\
+        - \Ad_{a} \left( \sum_{b,c} w_{ab} w_{ac} \dxx_{bc} \otimes \xx_bc \right) \invQd
+        % w_{ab} \XX_{bc} \otimes \xx_{bc}  
+    \end{aligned}
+\end{equation}
+We can identify the error term $e_{abc} := \XX_{bc} - \Ad_{a} \xx_{bc}$ and work with the simplified
+system in case its small. The simplified differential of $\Ad$ is than:
+
+\begin{equation}
+    \diff \Ad_{a} = - \left( \sum_{b,c} w_{ab} w_{ac} \dxx_{bc} \otimes \xx_{bc} \right)
+        \left( \sum_{b,c} w_{ab} w_{ac} \xx_{bc} \otimes \xx_{bc} \right)^{-1}
+\end{equation}
+
+
+
+Next we will compute the differential of the energy as in the previous section.
+We will continue as in the case for $\AA$ and split it into 
+the bulk part $\diff U_{0}$ and the shear part $\diff U_s$ as: 
+
+\begin{equation}
+    \diff U = \sum_{a} m_{a} \left( \frac{\pd \epsilon_a}{\pd \rho} \diff \rho_a + 
+    \frac{\pd \epsilon_a}{\pd \AA}: \diff \Ad_{a}\right) = \diff U_{0} + \diff U_{s}
+\end{equation}
+
+For the bulk part we get the same expression as for $\AA$ : 
+\begin{equation}
+    \diff U_{0} = \sum_{a,b} m_{a} m_{b} \left( \pd_{\rho} \epsilon_{a} + \pd_{\rho} \epsilon_b \right) 
+    \nabla w_{ab} \cdot \diff \xx_a
+\end{equation}
+
+And for the shear part we will get:
+\begin{equation}
+    \begin{aligned}
+    \diff U_{s} = \sum_{a} m_{a} \frac{\pd \epsilon_a}{\pd \AA}: \diff \Ad_{a} = 
+    \sum_{a} m_{a} \left( 
+    - \pd_{\AA} \epsilon_{a} : \Ad_{a} \diff \Qd_a \invQd \right) = \\
+    - \sum_{a} m_{a} \left(\Ad_a\right)^T \pd_{\AA} \epsilon_{a} \invQd :
+    \left( \sum_{b,c} w_{ab} w_{ac} \dxx_{bc} \otimes \xx_{bc} \right) =\\
+    - \sum_{a} m_{a} \Sd_a :
+    \left( \sum_{b,c} w_{ab} w_{ac} \dxx_{bc} \otimes \xx_{bc} \right) =\\
+    - \sum_{a,b,c} m_{a} w_{ab} w_{ac} \Sd_{a} \xx_{bc} \cdot \dxx_{bc} =  
+    - \sum_{a,b,c} m_{a} w_{ab} w_{ac} \Sd_{a} \xx_{bc} \cdot \dxx_{b} +
+    \sum_{a,b,c} m_{a} w_{ab} w_{ac} \Sd_{a} \xx_{bc} \cdot \dxx_{c} =  \\
+    - \sum_{b,a,c} m_{b} w_{ab} w_{bc} \Sd_{b} \xx_{ac} \cdot \dxx_{a} +
+    \sum_{c,b,a} m_{c} w_{cb} w_{ac} \Sd_{c} \xx_{ba} \cdot \dxx_{a} =  \\
+    \sum_{a,b,c} \left( m_{b} w_{ab} w_{bc} \Sd_{b} \xx_{ca} +
+    m_{c} w_{cb} w_{ac} \Sd_{c} \xx_{ba}  \right) \cdot \dxx_{a} =
+    2 \left( \sum_{a,b,c} 
+    m_{b} w_{bc} w_{ab} \Sd_{b} \xx_{ca} \right) \cdot \dxx_{a} =\\
+    2 \left( \sum_{a,b} 
+    m_{b} w_{ab} \Sd_{b} \left( \sum_c w_{bc} \xx_{c} -
+    \sum_{c} w_{bc} \xx_{a} \right) \right) \cdot \dxx_{a} =
+    \left( \sum_{a,b} 
+    m_{b} w_{ab} 2 W_a \Sd_{b} \left( \bar \xx_{b} -
+    \xx_{a} \right) \right) \cdot \dxx_{a} =\\
+    % - \sum_{a,b,c} \left( \cdots \right)  \cdot \dxx_{ba} 
+    % + \sum_{a,b,c} \left( \cdots \right)  \cdot \dxx_{ca} =\\
+    % - \sum_{a,b,c} (\cdots) \cdot \left( \dxx_{b} - \dxx_a \right) 
+    % + \sum_{a,b,c} (\cdots) \cdot \left( \dxx_{c} - \dxx_a \right) = \\
+    % - \sum_{a,b,c} m_{a} w_{ab} w_{ac} \Sd_{a} \xx_{bc} \cdot \dxx_{b}   
+    % + \sum_{a,b,c} m_{a} w_{ab} w_{ac} \Sd_{a} \xx_{bc} \cdot \dxx_{a} + \\
+    % +\sum_{a,b,c} m_{a} w_{ab} w_{ac} \Sd_{a} \xx_{bc} \cdot \dxx_{c} + 
+    % -\sum_{a,b,c} m_{a} w_{ab} w_{ac} \Sd_{a} \xx_{bc} \cdot \dxx_{a}   
+    \end{aligned}
+\end{equation}
+
+Finally, using Newton's second law $m \dot{\vv} = - \frac{\diff U}{\diff \xx}$ 
+we get the following equations of motion for $\Ad_a$:
+\begin{equation}
+    \begin{aligned}
+    m_{a} \dot \vv_{a} = -   
+    \sum_{b} \bigg( m_{a} m_{b} 
+    \left( \pd_{\rho} \epsilon_{a} + \pd_{\rho} \epsilon_b \right) 
+    \nabla w_{ab} +
+    m_{b} w_{ab} 2 W_a \Sd_{b} \left( \xx_{a} -
+    \bar \xx_{b} \right) \bigg)
+    \end{aligned}
+\end{equation}
+
+
+And the full simplified system of equations for $\Ad$ reads as:
+\begin{subequations}
     \begin{equation}
-        \AA(\xx) = \left( \sum_{a,b} w_a w_b \XX_{ab} \otimes \xx_{ab} \right) 
-        \left( \sum_{a,b} w_a w_b \xx_{ab} \otimes \xx_{ab} \right)^{-1}
+        \dot{\xx}_a = \vv_a\\
+    \end{equation}
+
+    \begin{equation}
+    \dot \vv_{a} = -   
+    \sum_{b} m_{b} \bigg(
+    \left( \pd_{\rho} \epsilon_{a} + \pd_{\rho} \epsilon_b \right) 
+    \nabla w_{ab} + \frac{2}{m_b} w_{ab} W_a \Sd_{b} \left( \xx_{a} -
+    \bar \xx_{b} \right) \bigg)
+    \end{equation}
+
+    \begin{equation}
+        \Ad_{a} := \Pd \invQd = \left( \sum_{b,c} w_{ab} w_{ac} \XX_{bc} \otimes \xx_{bc} \right) 
+        \left( \sum_{b,c} w_{ab} w_{ac} \xx_{bc} \otimes \xx_{bc} \right)^{-1}
     \end{equation} 
 
-    \todo[inline]{TODO: The evolution for $\AA^{double}$ be it the full or the simplified form.}
+    \text{ where }
+
+    \begin{equation}
+        \begin{aligned}
+        \Sd_{a} = c_s^{2} \left( \Ad_{a}\right)^{T} 
+        \Ad_{a} \text{dev}\left(\left(\Ad_a\right)^{T} \Ad_{a}\right) \invQd_a\\
+        % \quad \text{ and } \quad \\
+        \pd_{\rho} \epsilon_{a} = c_0^2 \rho_{0} \left( \frac{1}{\rho_a^2} + \frac{\rho_0}{\rho_a^3} \right) 
+        \end{aligned}
+    \end{equation}
+
+It is worth comparing the shear terms for both $\AA_a$ and $\Ad_a$. The shear force
+in the first case depends on the pairwise distance $\xx_{a} - \xx_{b}$ and in the 
+second case it depends on the distance of particle $a$ from the center of mass of its 
+neighbours $\xx_{a} - \bar \xx_{b}$ which in return yields one higher order convergence rate.\\
+    
+\end{subequations}
+
+
+    % \todo[inline]{TODO: The evolution for $\AA^{double}$ be it the full or the simplified form.}
+
+    From the simulation \textbf{simple\_A\_simplified\_00} we can see that it fails pretty badly.
+     \textbf{simple\_A\_simplified\_01} has the same parameters, but the force is tenfold smaller.
+     The third simulation runs with the full system of equations, however it also breaks.
+     Int the fourth and fifth we should compare whether the conservation terms as they are do
+     contribute in a meaningfull way, by comparing the energy loss with and without them.
+
 \end{subsubsection}
 
 % Using \ref{eq:dA} we can calculate the differential of the energy $U_h$ 
