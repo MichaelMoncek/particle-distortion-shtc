@@ -122,6 +122,7 @@
 \newcommand{\Pd}{\mathbf{P}^{double}}
 \newcommand{\dxx}{\text{d}\mathbf{x}}
 \newcommand{\Sd}{\mathbf{S}^{double}}
+\newcommand{\Ld}{\mathbf{L}^{double}}
 %%% COMMANDS %%%
 
 \begin{document}
@@ -917,13 +918,13 @@ And the full simplified system of equations for $\Ad$ reads as:
         \pd_{\rho} \epsilon_{a} = c_0^2 \rho_{0} \left( \frac{1}{\rho_a^2} + \frac{\rho_0}{\rho_a^3} \right) 
         \end{aligned}
     \end{equation}
+\end{subequations}
 
 It is worth comparing the shear terms for both $\AA_a$ and $\Ad_a$. The shear force
 in the first case depends on the pairwise distance $\xx_{a} - \xx_{b}$ and in the 
 second case it depends on the distance of particle $a$ from the center of mass of its 
 neighbours $\xx_{a} - \bar \xx_{b}$ which in return yields one higher order convergence rate.\\
     
-\end{subequations}
 
 
     % \todo[inline]{TODO: The evolution for $\AA^{double}$ be it the full or the simplified form.}
@@ -936,6 +937,64 @@ neighbours $\xx_{a} - \bar \xx_{b}$ which in return yields one higher order conv
 
 \end{subsubsection}
 
+\begin{subsection}{Numerics}
+    In this section we test our previous findings.
+    We are presented with two possible options on how to proceed.
+   
+    Firstly, we can work directly with $\AA_a$ from the 
+    the minimalization problem:
+    \begin{equation}
+        \AA_{a} := \PP_a \QQ^{-1}_a = 
+        \left( \sum_{b} w_{ab} \XX_{ab} \otimes \xx_{ab} \right) 
+        \left( \sum_{b} w_{ab} \xx_{ab} \otimes \xx_{ab} \right)^{-1}
+    \end{equation} 
+    compute it each time step and get the relation for force,
+    for $\Ad_a$, we can proceed equivalently.
+
+    Secondly, we can make use of the relation $\diff \AA = 
+    - \AA \LL$ and instead of computing $\AA$ directly, we
+    will compute $\LL$ each time step and update $\AA$ accordingly.
+
+    Recall that for $\AA_a$ we have:
+    \begin{equation}
+        \LL_a := \left( \sum_b w_{ab} \vv_{ab} \otimes \xx_{ab}\right)
+        \left( \sum_b w_{ab} \xx_{ab} \otimes \xx_{ab}\right)^{-1}
+    \end{equation}
+
+    And similarly for $\Ad_a$ we have:
+    \begin{equation}
+        \Ld_{a} =  
+        \left( \sum_{b,c} w_{ab} w_{ac} \vv_{bc} \otimes \xx_{bc} \right)
+        \left( \sum_{b,c} w_{ab} w_{ac} \xx_{bc} \otimes \xx_{bc} \right)^{-1}
+    \end{equation}
+    We are than presented with the following system of ODEs:
+    \begin{subequations}
+        \begin{equation}
+            \dot{\xx}_a = \vv_a\\
+        \end{equation}
+        \begin{equation}
+            m_{a}\dot \vv_{a} = -\mathbf{f}_a
+        \end{equation}
+        \begin{equation}
+            \dot \AA_{a}= - \AA_{a} \LL_{a} 
+            \quad \text{ or } \quad
+            \dot{ (\Ad_{a})}= - \Ad_{a} \Ld_a
+        \end{equation}
+    \end{subequations}
+    To solve it we proceed as sugested by Kincl \cite{kincl-unified}:
+    
+    However, it seems that the particle based definition of the distortion field, that gets recomputed each simulation step
+    is simply not precise enough, and new dose of discretization error enters the simulation each time its recomputed.
+    To confirm this we tried the same approach as employed in Kincl.
+    We had used our newly developed approximations of the velocity gradients and evolved the distortion field $\AA$ explicitely 
+    in time.
+
+    Recall that for $\AA_a$ we got:
+    We are than solving the following system of ODEs:
+    
+    
+\end{subsection}
+    
 % Using \ref{eq:dA} we can calculate the differential of the energy $U_h$ 
 % \begin{equation}
 %     \begin{aligned} 
@@ -1047,10 +1106,13 @@ neighbours $\xx_{a} - \bar \xx_{b}$ which in return yields one higher order conv
 \end{section}
 
 \begin{subsection} {Beryllium plate}
-    In this section we will compare different definitions of $\AA$ and different systems.
+%     In this section we will compare different definitions of $\AA$ and different systems.
+%
+% Remember the terms we neglected earlier because they were small? They were not that small after all, lets
+% take a look at what happens in the Beryllium plate benchmark withouth them.
+All the definitions of distortion field $\AA$ were tested on Beryllium plate benchmark.
 
-Remember the terms we neglected earlier because they were small? They were not that small after all, lets
-take a look at what happens in the Beryllium plate benchmark withouth them.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\linewidth]{plate1.png}
@@ -1069,13 +1131,13 @@ take a look at what happens in the Beryllium plate benchmark withouth them.
     $\XX - \AA \xx \approx 0$.}
     \label{fig:plate2}
 \end{figure}
-
-
-
-\todo[inline]{TODO: Add the missing terms to the evolutoin equation for distorion to 
-see what happens.}
+%
+%
+%
+% \todo[inline]{TODO: Add the missing terms to the evolutoin equation for distorion to 
+% see what happens.}
 \end{subsection}
-
+%
 %%% Bibliography
 \bibliographystyle{abbrv}  % ama, nar, alpha, plain, chicago, abbrv, siam
 \bibliography{library.bib}

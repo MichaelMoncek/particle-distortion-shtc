@@ -16,7 +16,7 @@ import LinearAlgebra
 include("algebra.jl")
 #CONSTANT PARAMETERS
 #-------------------------------
-const folder_name = "final_report/simple_A_simplified_02"
+const folder_name = "final_report/evolved_A_double_00"
 
 const L = 0.06   #rod length
 const W = 0.01   #rod width
@@ -28,13 +28,14 @@ const c_s = 9046.59  #shear sound speed
 const c_0 = sqrt(c_l^2 + 4/3*c_s^2)  #total sound speed 
 const rho0 = 1845.0   #density
 const nu = 1.0e-4    #artificial viscosity (surpresses noise but is not neccessary)
-const c_p = 0.0*0.001*1.0*c_l  #tensile penalty term
+const c_p = 0.10*4.0*c_l  #tensile penalty term
+# const c_p = 0.075*4.0*c_l  #tensile penalty term
 const c_shift = 0.000005*0.5           #particle shifting factor
 
 const dr = W/40    #discretization step
 # const dr = W/80    #discretization step
 # const h = (3.5+10*eps(Float64))dr    #support radius
-const h = (3.5+10*eps(Float64))dr    #support radius
+const h = (3.0+10*eps(Float64))dr    #support radius
 const h2 = h*h
 const vol = dr^2   #particle volume
 const m = rho0*vol #particle mass
@@ -42,7 +43,7 @@ const m = rho0*vol #particle mass
 # const eta = h/dr
 
 const dt = 0.01dr/c_0 #time step 
-const t_end = 3e-5#/10  #total simulation time
+const t_end = 3e-5/1.0  #total simulation time
 const dt_plot = max(t_end/400, dt) #how often save txt data (cheap)
 const dt_frame = max(t_end/100, dt) #how often save pvd data (expensive)
 
@@ -106,6 +107,8 @@ end
     lambda::Float64 = 0.0
     C_lambda::Float64 = 0.0
     ker_sum::Float64 = 0.0
+    L::FlatMatrix = FMAT1 #velocity gradient
+    L_double::FlatMatrix = FMAT1 #velocity gradient
     # neigh::Float64 = 0.0#h/dr
     # Omega::Float64 = 0.0
     # h::Float64 = h
@@ -178,16 +181,25 @@ function make_geometry()
         p.C_rho = rho0 - p.rho
         p.rho = 0.0
         p.C_lambda = 0.0 - p.lambda
-        p.lambda = 0.0
+        # p.C_lambda = 1.0 - p.ker_sum
+        p.ker_sum = 0.0
     end
+    apply!(sys, find_rho!)
+    # force_computation_evolved!(sys, 0.)
+    force_computation_evolved_double!(sys, 0.)
+    # force_computation!(sys, 0.)
+    # force_computation_new!(sys, 0.)
+    # force_computation_double!(sys, 0.)
 
-    force_computation!(sys, 0.)
     return sys
 end
 
+
+
+# Force computation functions
+#---------------------------------------------------------------
+
 function force_computation!(sys::ParticleSystem, t::Float64)
-    apply!(sys, find_rho!)
-    # apply!(sys, find_avg!)
     apply!(sys, find_A!)
     # apply!(sys, find_A_new!)
     # apply_ternary!(sys, find_A_new_double_sum!)
@@ -198,6 +210,46 @@ function force_computation!(sys::ParticleSystem, t::Float64)
     apply!(sys, find_force!)
 end
 
+function force_computation_evolved!(sys::ParticleSystem, t::Float64)
+    apply!(sys, find_L!)
+    apply!(sys, find_stress_evolved!)
+    apply!(sys, find_e!)
+    # apply!(sys, find_f!)
+    apply!(sys, find_force_evolved!)
+end
+
+function force_computation_evolved_double!(sys::ParticleSystem, t::Float64)
+    apply_ternary!(sys, find_L_double!)
+    apply!(sys, find_stress_evolved_double!)
+    apply!(sys, find_e!)
+    # apply!(sys, find_f!)
+    apply!(sys, find_bulk_force_evolved_double!)
+    apply_ternary!(sys, find_shear_force_evolved_double!)
+end
+
+function force_computation_new!(sys::ParticleSystem, t::Float64)
+    # apply!(sys, find_A!)
+    apply!(sys, find_A_new!)
+    # apply_ternary!(sys, find_A_new_double_sum!)
+    # apply!(sys, find_Pi!)
+    apply!(sys, find_stress_new!)
+    apply!(sys, find_e_new!)
+    # apply!(sys, find_f!)
+    apply!(sys, find_force_new!)
+end
+
+function force_computation_double!(sys::ParticleSystem, t::Float64)
+    # apply!(sys, find_A!)
+    # apply!(sys, find_A_new!)
+    apply_ternary!(sys, find_A_new_double_sum!)
+    # apply!(sys, find_Pi!)
+    apply!(sys, find_stress_double!)
+    # apply!(sys, find_e_new!)
+    # apply!(sys, find_f!)
+    # apply!(sys, find_bulk_force_double!)
+    # apply_ternary!(sys, find_shear_force_double!)
+end
+
 function init_velocity(x::RealVector)::RealVector
     A = 4.3369e-5
     omega = 2.3597e5
@@ -206,7 +258,7 @@ function init_velocity(x::RealVector)::RealVector
     a2 = 57.6455
     s = alpha*(x[1] + L/2)
     v = A*omega*(a1*(sinh(s) + sin(s)) - a2*(cosh(s) + cos(s)))
-    return 0.1*v*VECY
+    return 0.0*1*v*VECY
 end
 
 
@@ -221,6 +273,25 @@ function find_A!(p::Particle, q::Particle, r::Float64)
     X_pq = p.X - q.X
     p.P += ker*outer(X_pq, x_pq)
     p.Q += ker*outer(x_pq, x_pq)
+
+end
+
+# This is the velocity gradient arising from 
+# the single sum definition of distortion field A
+function find_L!(p::Particle, q::Particle, r::Float64)
+    ker = wendland2(h,r)
+    # velocity gradient L
+    v_pq = p.v - q.v
+    x_pq = p.x - q.x
+    p.L += ker*outer(v_pq, x_pq)
+    p.Q += ker*outer(x_pq, x_pq)
+end 
+
+# Midpoint rule for A
+function update_A!(p::Particle)
+    p.L = p.L*inv(p.Q)
+    p.A = p.A*(FMAT1 - 0.5*dt*p.L)*inv(FMAT1 + 0.5*dt*p.L)
+    # p.A = p.A*(FMAT1 - 0.5*dt*p.L)*StaticArrays.inv(FMAT1 + 0.5*dt*p.L)
 end
 
 # This is the Pavelka-Hutter definiton rewritten in a slightly 
@@ -228,12 +299,13 @@ end
 # computational costs significantly.
 function find_A_new!(p::Particle, q::Particle, r::Float64)
     ker = wendland2(h,r)
-    y_q = q.x - p.x_avg
-    Y_q = q.X - p.X_avg
+    # y_q = q.x - p.x_avg
+    # Y_q = q.X - p.X_avg
+    y_q = (q.x - p.x) - p.x_avg  # everything relative to p.x
+    Y_q = (q.X - p.X) - p.X_avg
     p.P_new += ker*outer(Y_q, y_q)
     p.Q_new += ker*outer(y_q, y_q)
 end
-
 
 # This is the new particle based definition of A as
 # defined in Pavelka-Hutter. 
@@ -245,7 +317,28 @@ function find_A_new_double_sum!(p::Particle, q::Particle, r::Particle, rq::Float
     X_qr = q.X - r.X 
     p.P_double_sum += ker*outer(X_qr, x_qr) 
     p.Q_double_sum += ker*outer(x_qr, x_qr)
+    # p.P_new += ker*outer(X_qr, x_qr) 
+    # p.Q_new += ker*outer(x_qr, x_qr)
 end 
+
+
+# This is the velocity gradient arising from 
+# the double sum (Pavelka-Hutter) definition of distortion field A
+function find_L_double!(p::Particle, q::Particle, r::Particle, rq::Float64, rr::Float64)
+    ker = wendland2(h,rq)*wendland2(h, rr)
+    # velocity gradient L
+    v_qr = q.v - r.v
+    x_qr = q.x - r.x
+    p.L_double += ker*outer(v_qr, x_qr)
+    p.Q_double_sum += ker*outer(x_qr, x_qr)
+end 
+
+# Midpoint rule for A_double
+function update_A_double!(p::Particle)
+    p.L_double = p.L_double*inv(p.Q_double_sum)
+    p.A_double_sum = p.A_double_sum*(FMAT1 - 0.5*dt*p.L_double)*inv(FMAT1 + 0.5*dt*p.L_double)
+    # p.A = p.A*(FMAT1 - 0.5*dt*p.L)*StaticArrays.inv(FMAT1 + 0.5*dt*p.L)
+end
 
 
 #PHYSICS
@@ -258,18 +351,27 @@ function find_rho!(p::Particle, q::Particle, r::Float64)
 
     ker = wendland2(h,r)
     # find the avg x_avg of x * ker_sum
-    p.x_avg += ker*q.x
-    p.X_avg += ker*q.X
+    p.x_avg += ker*(q.x - p.x)   # accumulate relative positions
+    # p.x_avg += ker*q.x
+    p.X_avg += ker*(q.X - p.X)
+    # p.X_avg += ker*q.X
     # find the kernel sum
     p.ker_sum += ker
 
 end 
 
 function find_avg!(p::Particle)
+    # p.ker_sum += p.C_lambda
+    # p.x_avg += wendland2(h, 0.0)*p.x  # self contribution
+    # p.X_avg += wendland2(h, 0.0)*p.X
     # get x_avg and X_avg
     p.x_avg = p.x_avg / p.ker_sum
     p.X_avg = p.X_avg / p.ker_sum
 end
+
+
+# find_stress functions
+# --------------------------------------------------------------
 
 function find_Pi!(p::Particle)
     # Shephard correction
@@ -284,6 +386,7 @@ function find_Pi!(p::Particle)
     # get Hutter-Pavelka A using single sum
     # get A_new and the norm of A_new - A
     invQ_new = inv(p.Q_new)
+    p.invQ = invQ_new
     p.A_new = p.P_new*invQ_new
     p.A_error = norm(p.A - p.A_new)
     #
@@ -335,22 +438,9 @@ function find_stress!(p::Particle)
     devG = dev(G)
     p.G = G
     p.norm_devG = norm(devG)
-    # Π_a = c_s² * A^T*A * dev(A^T*A) * Q^{-T}   [Eq. 15]
-    # p.Pi = c_s^2*G*devG*trans(invQ)
-    #  Q is symmetric
-    # p.S = p.A*devG*trans(invQ)
-    # p.Pi = G*devG*trans(invQ)
-    # p.S = p.A*devG*invQ
     p.Pi = G*devG*invQ
-    # Π'_a = c_s² * Q^{-1} * dev(A^T*A) * A^T
-    # p.PiCp = c_s^2*invQ*dev(G)*At
-    # P = ρ² * ε_ρ = c_0² * ρ_0 * (1 - ρ_0/ρ)
-    # ill-conditioned formula 
-    # pressure =  c_0^2*rho0*(1.0 - rho0/p.rho)
-    # pressure =  (c_0/p.rho)^2*(rho0/p.rho)*(p.rho - rho0)/p.rho
     pressure =  c_0^2*rho0*(p.rho - rho0)/p.rho^3
     p.pressure = pressure
-    # p.pressure = pressure/p.rho^2
     # Diagnostics
     p.condQ = LinearAlgebra.cond(p.Q)#LinearAlgebra.cond(p.Q[1:2,1:2])
     p.condP = LinearAlgebra.cond(p.P)#LinearAlgebra.cond(p.P[1:2,1:2])
@@ -358,6 +448,148 @@ function find_stress!(p::Particle)
     # p.condQ_double_sum = LinearAlgebra.cond(p.Q_double_sum)
 end
 #
+
+function find_stress_evolved!(p::Particle)
+    p.rho += p.C_rho
+    p.lambda += p.C_lambda
+    At = trans(p.A)
+    G = At*p.A
+    devG = dev(G)
+    p.G = G
+    p.norm_devG = norm(devG)
+    invQ = inv(p.Q)
+    p.Pi = G*devG*invQ
+    pressure =  c_0^2*rho0*(p.rho - rho0)/p.rho^3
+    p.pressure = pressure
+end
+
+function find_stress_evolved_double!(p::Particle)
+    p.rho += p.C_rho
+    p.lambda += p.C_lambda
+    At = trans(p.A_double_sum)
+    G = At*p.A_double_sum
+    devG = dev(G)
+    p.G = G
+    p.norm_devG = norm(devG)
+    invQ = inv(p.Q_double_sum)
+    p.Pi = G*devG*invQ
+    pressure =  c_0^2*rho0*(p.rho - rho0)/p.rho^3
+    p.pressure = pressure
+end
+
+function find_stress_new!(p::Particle)
+    p.rho += p.C_rho
+    # p.ker_sum += p.C_lambda 
+    invQ = inv(p.Q) 
+    p.invQ = invQ
+    p.A = p.P*invQ
+    # p.A = FMAT1
+ 
+    # get Hutter-Pavelka A using single sum
+    # get A_new and the norm of A_new - A
+    invQ_new = inv(p.Q_new)
+    p.A_new = p.P_new*invQ_new
+    p.A_error = norm(p.A - p.A_new)
+    
+    # # get Hutter-Pavelka A using double sum
+    # invQ_double_sum = inv(p.Q_double_sum)
+    # p.A_double_sum = p.P_double_sum*invQ_double_sum
+    # p.A_single_double_sum_error = norm(p.A_double_sum - p.A_new)
+
+    # p.A = p.A_new
+    # p.Q = p.Q_new
+    # invQ = inv(p.Q)
+
+    At_new = trans(p.A_new)
+    G_new = At_new*p.A_new
+    devG_new = dev(G_new)
+    p.G = G_new
+    p.norm_devG = norm(devG_new)
+    # Π_a = c_s² * A^T*A * dev(A^T*A) * Q^{-T}   [Eq. 15]
+    # p.Pi = c_s^2*G*devG*trans(invQ)
+    #  Q is symmetric
+    # p.S = p.A*devG*trans(invQ)
+    # p.Pi = G*devG*trans(invQ)
+    p.S = p.A_new*devG_new*invQ_new
+    p.Pi = G_new*devG_new*invQ_new
+    # Π'_a = c_s² * Q^{-1} * dev(A^T*A) * A^T
+    # p.PiCp = c_s^2*invQ*dev(G)*At
+    # P = ρ² * ε_ρ = c_0² * ρ_0 * (1 - ρ_0/ρ)
+    # ill-conditioned formula 
+    # pressure =  c_0^2*rho0*(1.0 - rho0/p.rho)
+    # pressure =  (c_0/p.rho)^2*(rho0/p.rho)*(p.rho - rho0)/p.rho
+    # pressure =  c_0^2*(rho0/p.rho)*(p.rho - rho0)/p.rho
+    pressure =  c_0^2*rho0*(p.rho - rho0)/p.rho^3
+    p.pressure = pressure
+    # p.pressure = pressure/p.rho^2
+    # Diagnostics
+
+
+    p.condQ = LinearAlgebra.cond(p.Q)#LinearAlgebra.cond(p.Q[1:2,1:2])
+    p.condP = LinearAlgebra.cond(p.P)#LinearAlgebra.cond(p.P[1:2,1:2])
+    p.condQ_new = LinearAlgebra.cond(p.Q_new)
+    # p.condQ_double_sum = LinearAlgebra.cond(p.Q_double_sum)
+end
+
+
+function find_stress_double!(p::Particle)
+    p.rho += p.C_rho
+    # p.ker_sum += p.C_lambda 
+    invQ = inv(p.Q) 
+    p.invQ = invQ
+    p.A = p.P*invQ
+    # p.A = FMAT1
+ 
+
+    # get Hutter-Pavelka A using single sum
+    # get A_new and the norm of A_new - A
+    # invQ_new = inv(p.Q_new)
+    # p.A_new = p.P_new*invQ_new
+    # p.A_error = norm(p.A - p.A_new)
+    
+    # # get Hutter-Pavelka A using double sum
+    invQ_double_sum = inv(p.Q_double_sum)
+    p.A_double_sum = p.P_double_sum*invQ_double_sum
+    # p.A_single_double_sum_error = norm(p.A_double_sum - p.A_new)
+
+    p.A_new = p.A_double_sum
+    p.P_new = p.P_double_sum
+    p.Q_new = p.Q_double_sum
+    invQ_new = inv(p.Q_double_sum)
+
+    # assemble velocity gradient L_double
+    # p.L_double = p.L_double * invQ_new
+
+    At_new = trans(p.A_new)
+    G_new = At_new*p.A_new
+    devG_new = dev(G_new)
+    p.G = G_new
+    p.norm_devG = norm(devG_new)
+    # Π_a = c_s² * A^T*A * dev(A^T*A) * Q^{-T}   [Eq. 15]
+    # p.Pi = c_s^2*G*devG*trans(invQ)
+    #  Q is symmetric
+    # p.S = p.A*devG*trans(invQ)
+    # p.Pi = G*devG*trans(invQ)
+    p.S = p.A_new*devG_new*invQ_new
+    p.Pi = G_new*devG_new*invQ_new
+    # Π'_a = c_s² * Q^{-1} * dev(A^T*A) * A^T
+    # p.PiCp = c_s^2*invQ*dev(G)*At
+    # P = ρ² * ε_ρ = c_0² * ρ_0 * (1 - ρ_0/ρ)
+    # ill-conditioned formula 
+    # pressure =  c_0^2*rho0*(1.0 - rho0/p.rho)
+    # pressure =  (c_0/p.rho)^2*(rho0/p.rho)*(p.rho - rho0)/p.rho
+    # pressure =  c_0^2*(rho0/p.rho)*(p.rho - rho0)/p.rho
+    pressure =  c_0^2*rho0*(p.rho - rho0)/p.rho^3
+    p.pressure = pressure
+    # p.pressure = pressure/p.rho^2
+    # Diagnostics
+
+
+    p.condQ = LinearAlgebra.cond(p.Q)#LinearAlgebra.cond(p.Q[1:2,1:2])
+    p.condP = LinearAlgebra.cond(p.P)#LinearAlgebra.cond(p.P[1:2,1:2])
+    p.condQ_new = LinearAlgebra.cond(p.Q_new)
+    # p.condQ_double_sum = LinearAlgebra.cond(p.Q_double_sum)
+end
 # function find_h!(p::Particle)
 #     # finalize Omega
 #     p.Omega = 1.0 + p.Omega/p.neigh
@@ -394,6 +626,91 @@ function find_force!(p::Particle, q::Particle, r::Float64)
     p.f += force_geom_p + force_geom_q
 end
 
+function find_force_evolved!(p::Particle, q::Particle, r::Float64) 
+    ker = wendland2(h, r)
+    rDker = rDwendland2(h,r)
+    x_pq = p.x - q.x
+    kerh = rDwendland2h(h,r)
+    # force_shear_p = m*c_s^2*ker*p.Pi/m*x_pq
+    force_shear_p = m*c_s^2*ker*p.Pi*x_pq
+    p.f += force_shear_p
+    # force_shear_p = m*c_s^2*ker*p.Pi/m*x_pq
+    force_shear_q = m*c_s^2*ker*q.Pi*x_pq
+    p.f += force_shear_q
+
+    # p.f = VEC0
+    p.f += -m^2*rDker*p.pressure*x_pq
+    p.f += -m^2*rDker*q.pressure*x_pq
+
+    # anti-clumping force 
+    # kerh = rDwendland2h(h,r)
+    # kerh = m/rho0*rDwendland2h(h,r)
+    kerh = m/p.rho*rDwendland2h(h,r)
+    # p.f += -m*kerh*(c_p/rho0)^2*(p.lambda + q.lambda)*x_pq
+    p.f += -m*kerh*c_p^2*(p.lambda + q.lambda)*x_pq
+end
+
+function find_force_new!(p::Particle, q::Particle, r::Float64) 
+    ker = wendland2(h, r)
+    rDker = rDwendland2(h,r)
+    x_pq = p.x - q.x
+    Wq = q.ker_sum
+
+    # shear force acting on particle p
+    force_shear_pq = m*c_s^2*ker*2*Wq*p.Pi*(p.x - q.x_avg)
+    p.f += force_shear_pq
+
+    # bulk force acting on particle p
+    p.f += -m^2*rDker*p.pressure*x_pq
+    p.f += -m^2*rDker*q.pressure*x_pq
+end
+
+
+function find_bulk_force_double!(p::Particle, q::Particle, r::Float64) 
+    rDker = rDwendland2(h,r)
+    x_pq = p.x - q.x
+    # bulk force acting on particle p
+    p.f += -m^2*rDker*p.pressure*x_pq
+    p.f += -m^2*rDker*q.pressure*x_pq
+end
+
+function find_bulk_force_evolved_double!(p::Particle, q::Particle, r::Float64) 
+    rDker = rDwendland2(h,r)
+    x_pq = p.x - q.x
+    # bulk force acting on particle p
+    p.f += -m^2*rDker*p.pressure*x_pq
+    p.f += -m^2*rDker*q.pressure*x_pq
+end
+#
+# function find_shear_force_double!(p::Particle, q::Particle, r::Particle, rq::Float64, rr::Float64)
+#     ker_pq = wendland2(h, rq)
+#     ker_rq = wendland2(h, norm(q.x - r.x))
+#     x_rp = r.x - p.x
+#     # shear force acting on particle p
+#     p.f += m*c_s^2*2*ker_pq*ker_rq*q.Pi*x_rp
+# end
+
+function find_shear_force_double!(p::Particle, q::Particle, r::Particle, rq::Float64, rr::Float64)
+    ker_pq = wendland2(h, rq)
+    ker_pr = wendland2(h, rr)
+    ker_qr = wendland2(h, norm(q.x - r.x))
+    x_rp = r.x - p.x
+    x_qp = q.x - p.x
+    # shear force acting on particle p
+    p.f += m*c_s^2*ker_pq*ker_qr*r.Pi*x_rp
+    p.f += m*c_s^2*ker_pr*ker_qr*q.Pi*x_qp
+end
+
+function find_shear_force_evolved_double!(p::Particle, q::Particle, r::Particle, rq::Float64, rr::Float64)
+    ker_pq = wendland2(h, rq)
+    ker_pr = wendland2(h, rr)
+    ker_qr = wendland2(h, norm(q.x - r.x))
+    x_rp = r.x - p.x
+    x_qp = q.x - p.x
+    # shear force acting on particle p
+    p.f += m*c_s^2*ker_pq*ker_qr*r.Pi*x_rp
+    p.f += m*c_s^2*ker_pr*ker_qr*q.Pi*x_qp
+end
 function find_f!(p::Particle, q::Particle, r::Float64) 
     # ker = wendland2(h, r) / (0.5*(p.neigh + q.neigh))
     # rDker = rDwendland2(h,r) / (0.5*(p.neigh + q.neigh))
@@ -470,12 +787,17 @@ function update_v!(p::Particle)
 end
 
 function update_x!(p::Particle)
-    p.x += dt*p.v
+    p.x += 0.5*dt*p.v
+    # p.A += -p.A * p.L
+end
+
+function reset!(p::Particle)
     # reset ALL per-step accumulators 
     p.f    = VEC0
     p.e    = 0.0
     p.P    = FMAT0
     p.Q    = FMAT0
+    p.Pi   = FMAT0
     # p.invQ = MAT0
     p.eQ   = 0.0
     # p.gradC = VEC0
@@ -488,8 +810,12 @@ function update_x!(p::Particle)
     p.X_avg = VEC0
     p.P_old = FMAT0
     p.Q_old = FMAT0
+    p.P_new = FMAT0
+    p.Q_new = FMAT0
     p.P_double_sum = FMAT0
     p.Q_double_sum = FMAT0
+    p.L = FMAT0
+    p.L_double = FMAT0
     # p.neigh = 0.0
     # p.Omega = 0.0
     # p.f_corr = VEC0
@@ -497,6 +823,7 @@ function update_x!(p::Particle)
     p.f_shear = VEC0
     p.f_constraint = VEC0 
 end
+
 # Diagnostics
 # ------------------------------------------------
 function find_e!(p::Particle, q::Particle, r::Float64)
@@ -509,6 +836,15 @@ function find_e!(p::Particle, q::Particle, r::Float64)
     p.eQ = norm(p.Q*p.invQ - FMAT1)
 end
 
+function find_e_new!(p::Particle, q::Particle, r::Float64)
+    eta = inv(p.A_new)*(p.X - q.X) - (p.x - q.x)
+    p.e += dot(eta, eta)
+    p.error = eta
+    # FI3 = RealMatrix(1.0, 0.0, 0.0,
+    #                  0.0, 1.0, 0.0,
+    #                  0.0, 0.0, 0.0)
+    p.eQ = norm(p.Q*p.invQ - FMAT1)
+end
 function particle_energy(p::Particle, N::Int, E0::Float64)
     # G = trans(p.A)*p.A
     # G0 = dev(G)
@@ -616,9 +952,10 @@ function main()
         end
         if (k % Int64(round(dt_frame/dt)) == 0)
             apply!(sys, find_e!)
-            save_frame!(out, sys, :v, :A, :e, :P, :Q, :invQ, :eQ, :error,
+            save_frame!(out, sys, :v, :A, :e, :P, :Q, :invQ, :eQ, :error, :x_avg,
                         :pressure, :Pi, :rho, :C_rho, :lambda, :C_lambda, :ker_sum,
                         :A_new, :A_error, :Q_new, :P_new, :condQ_new,
+                        :L, :L_double,
                         :A_double_sum, :A_single_double_sum_error, :Q_double_sum, :P_double_sum, :condQ_double_sum,
                         :E_kinet, :E_shear, :E_vol, :E_penalty, :norm_devG, :G,
                         :f_shear, :f_shear_numeric, :f_shear_error, :f_constraint,
@@ -627,9 +964,21 @@ function main()
         #verlet scheme
         apply!(sys, update_v!)
         apply!(sys, update_x!)
+        create_cell_list!(sys)
+        apply!(sys, reset!)
+        # apply!(sys, find_L!)        
+        apply_ternary!(sys, find_L_double!)        
+        # apply!(sys, update_A!)       
+        apply!(sys, update_A_double!)       
+        apply!(sys, update_x!)
         # apply!(sys, find_h!)
         create_cell_list!(sys)
-        force_computation!(sys, t)
+        apply!(sys, reset!)
+        apply!(sys, find_rho!)
+        # apply!(sys, find_avg!)
+        # force_computation_evolved!(sys, t)
+        force_computation_evolved_double!(sys, t)
+        # force_computation!(sys, t)
         apply!(sys, update_v!)
     end
     save_pvd_file(out)
