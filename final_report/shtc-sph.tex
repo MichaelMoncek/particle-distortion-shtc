@@ -33,6 +33,7 @@
 \usepackage{chemfig}
 \usetikzlibrary{decorations.markings}
 
+% \usepackage{booktabs}
 
 \linespread{1.0}
 
@@ -114,6 +115,7 @@
 \newcommand{\ee}{\mathbf{e}}
 
 \renewcommand{\ss}{\mathbf{s}}
+\newcommand{\ff}{\mathbf{f}}
 
 \newcommand{\pd}{\partial}
 \newcommand{\Ad}{\mathbf{A}^{double}}
@@ -242,6 +244,8 @@
 
 \newpage
 \begin{section}{Introduction}
+    \todo[inline]{Clean the mess in the paper, make it look civil}
+\todo[inline]{Write proper introduction}
    Complex fluids and solids can be described by the Symmetric Hyperbolic Thermodynamically Compatible (SHTC) equations. These equations have a Hamiltonian structure and are advantageous in problems with large deformations and shock waves. One of the state variables in the SHTC equations is the distortion field (close to the inverse of the deformation gradient). Recently, a new numerical method solving the SHTC equations was developed based on the Smoothed Particle hydrodynamics (SPH) \cite{kincl-unified}. 
 
 However, in a later work \cite{hutter-pavelka}, an alternative definition of the discrete distortion that is useful when adding noise to the SHTC equations (to be applied in continuum physics of nanomaterials) was developed. In this definition, the discrete distortion is defined as the minimizer of the following functional, 
@@ -264,6 +268,7 @@ fluctuations play a crucial role.
 \end{section}
 
 \begin{section}{Methods}
+    \todo[inline]{Add a page explaining notation in use}
 \begin{itemize}
     \item distortion as an error estimator (compare different definitions)
     \item comparison with Ondra's SPH
@@ -759,6 +764,7 @@ be the case) and we can work with significantly simplier system given by:
     
 \end{subequations}
 
+\todo[inline]{Add a statement and proof of the conservational properties}
 
 \begin{subsubsection} {Evolution equations for $\Ad$}
 Here we will try to derive the full evolution equations 
@@ -890,6 +896,7 @@ we get the following equations of motion for $\Ad_a$:
 
 
 And the full simplified system of equations for $\Ad$ reads as:
+\todo[inline] {Add the non simplified force equation}
 \begin{subequations}
     \begin{equation}
         \dot{\xx}_a = \vv_a\\
@@ -926,14 +933,15 @@ second case it depends on the distance of particle $a$ from the center of mass o
 neighbours $\xx_{a} - \bar \xx_{b}$ which in return yields one higher order convergence rate.\\
     
 
+\todo[inline] {Remark on conservational properties for $\Ad$}
 
     % \todo[inline]{TODO: The evolution for $\AA^{double}$ be it the full or the simplified form.}
-
-    From the simulation \textbf{simple\_A\_simplified\_00} we can see that it fails pretty badly.
-     \textbf{simple\_A\_simplified\_01} has the same parameters, but the force is tenfold smaller.
-     The third simulation runs with the full system of equations, however it also breaks.
-     Int the fourth and fifth we should compare whether the conservation terms as they are do
-     contribute in a meaningfull way, by comparing the energy loss with and without them.
+    %
+    % From the simulation \textbf{simple\_A\_simplified\_00} we can see that it fails pretty badly.
+    %  \textbf{simple\_A\_simplified\_01} has the same parameters, but the force is tenfold smaller.
+    %  The third simulation runs with the full system of equations, however it also breaks.
+    %  Int the fourth and fifth we should compare whether the conservation terms as they are do
+    %  contribute in a meaningfull way, by comparing the energy loss with and without them.
 
 \end{subsubsection}
 
@@ -981,16 +989,258 @@ neighbours $\xx_{a} - \bar \xx_{b}$ which in return yields one higher order conv
             \dot{ (\Ad_{a})}= - \Ad_{a} \Ld_a
         \end{equation}
     \end{subequations}
-    To solve it we proceed as sugested by Kincl \cite{kincl-unified}:
+    To solve it we proceed as sugested by Kincl \cite{kincl-unified}
+    utilizing the following combination of midpoint-rule (for $\AA$)
+    and Verlet integration scheme (for $\xx$ and $\vv$):
+    \begin{equation}
+        \begin{aligned}
+        \vv_a(t_{k+1/2}) = \vv_a(t_k) +
+        \frac{\Delta t}{2m_a} \ff_a(t_k)\\
+        \xx_a(t_{k}) = \xx_a(t_k) +
+        \frac{\Delta t}{2} \vv_a(t_{k+1/2})\\
+        \AA_a(t_{k+1}) = \AA_a(t_k) \left( 
+        \II - \frac{\Delta t}{2} \LL_a(t_{k+1/2}) \right) 
+        \left( 
+        \II + \frac{\Delta t}{2} \LL_a(t_{k+1/2}) \right)^{-1}\\
+        \xx_a(t_{k+1}) = \xx_a(t_{k+1/2}) +
+        \frac{\Delta t}{2} \vv_a(t_{k+1/2})\\
+        \vv_a(t_{k+1}) = \vv_a(t_{k+1/2}) +
+        \frac{\Delta t}{2m_a} \ff_a(t_{k+1})
+        \end{aligned}
+    \end{equation}
+    where $t_{k} = k \Delta t$ denotes the k-th time step and 
+    \begin{equation}
+        \ff_a(t) = \ff_a(\xx(t), \AA(t)), \quad
+        \LL_{a}= \LL_a(\xx(t), \vv(t))
+    \end{equation}
     
-    However, it seems that the particle based definition of the distortion field, that gets recomputed each simulation step
-    is simply not precise enough, and new dose of discretization error enters the simulation each time its recomputed.
-    To confirm this we tried the same approach as employed in Kincl.
-    We had used our newly developed approximations of the velocity gradients and evolved the distortion field $\AA$ explicitely 
-    in time.
+     
+\begin{subsection} {Beryllium plate}
+%     In this section we will compare different definitions of $\AA$ and different systems.
+%
+% Remember the terms we neglected earlier because they were small? They were not that small after all, lets
+% take a look at what happens in the Beryllium plate benchmark withouth them.
+All the definitions of distortion field $\AA$ were tested on Beryllium plate benchmark.
+\todo[inline]{Add the description of Beryllium plate benchmark with parameters}
 
-    Recall that for $\AA_a$ we got:
-    We are than solving the following system of ODEs:
+\todo[inline]{Add pictures showing benchmark failure for the recomputed case}
+\todo[inline]{Add pictures showing benchmark working for the evolved case}
+\todo[inline]{Add figures with energy}
+\todo[inline]{Add figures with amplitude matching the expected results}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{plate1.png}
+    \caption{For small deformations and large support radius it seems to 
+    work at first.}
+    \label{fig:plate1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{plate2.png}
+    \caption{However, even with support radius $h = 20dr$ (which is huge)
+    the simulation becomes unstable after some time. 
+    This does not seem to be tensile instability as the pressure is positive
+    in the problematic places. It more has to do with this approximation 
+    $\XX - \AA \xx \approx 0$.}
+    \label{fig:plate2}
+\end{figure}
+%
+%
+%
+% \todo[inline]{TODO: Add the missing terms to the evolutoin equation for distorion to 
+% see what happens.}
+\end{subsection}
+%
+\begin{subsubsection}{Comparison with Kincl's framework}
+    In this section we compare the main conceptual differences
+    between the SHTC-SPH method developed by Kincl et al. MLS methods
+    and between our work. 
+    Two disting approaches to approximating 
+    $\nabla \vv$ arise in meshfree methods. Both approaches are 
+    equally valid and internally consistent. 
+
+    \textbf{SPH:}\\
+    Lets first review the approach utilized by SPH.
+    Recall that at the heart of SPH lies the idea of approximating
+    differential operators and scalar functions by first convoluting
+    them with the mollifiying kernel $w$:
+    \begin{equation}
+        \begin{aligned}
+        f = f * \delta \approx f * w\\
+        \nabla f = \nabla f * \approx \nabla f * w = f * \nabla w
+        \end{aligned}
+    \end{equation}
+    and than approximating the resulting integral with numerical 
+    quadrature:
+    \begin{equation}
+        \begin{aligned}
+           \left( f * w \right)(\xx_a) = 
+           \int f(\yy) w(\xx_{a} - \yy) \diff \yy \approx 
+           \sum_{b} V_{b} f(\xx_b) w_{ab}\\ 
+           \left( f * \nabla w \right) (\xx_a) =
+           \int f(\yy) \nabla w(\xx_{a} - \yy) \diff \yy = 
+           \sum_{b} V_{b} f(\xx_b) \nabla w_{ab}\\ 
+        \end{aligned}
+    \end{equation}
+    using the volumes $V_{b} = \rho_{b} / m_b$
+    of the particles as quadrature weights.
+    Similarly for a vector function $\ff$ we have:
+    \begin{equation}
+        \begin{aligned}
+           \ff(\xx_a) \approx \sum_{b} V_{b} \ff(\xx_b) w_{ab}\\ 
+           \nabla \ff(\xx_a) \approx 
+           \sum_{b} V_{b} \ff(\xx_b) \otimes \nabla w_{ab}\\ 
+        \end{aligned}
+    \end{equation}
+
+    Recall, that our aim is to get discrete SPH form of the following 
+    relation:
+    \begin{equation}
+       \diff \AA = - \AA \diff \LL 
+    \end{equation}
+    Following the SPH philosophy we can approximate $\LL = \nabla \vv$
+    directly as:
+    \begin{equation}
+        \LL = \nabla \vv = \sum_{b} V_{b} \vv_{ab} \otimes
+        \nabla w_{ab}
+    \end{equation}
+    However this discretization is not first order exact.
+    To alleviate this issue 
+    \todo[inline]{Add the description of the corrected version of SPH velocity gradient}
+    Kincl than uses slightly modified version replacing the 
+    volumes $V_a$ with $m_a$ masses of respective particles:
+    \begin{equation}
+        \LL = \sum_{b} m_{b} \vv_{ab} \otimes 
+        \nabla w_{ab}
+    \end{equation}
+    for a benchmark problem such as Beryllium plate where density 
+    is roughly constant $\rho \approx \text{const.}$ this is
+    equivalent to the standard 
+    this interplays nicely with the differential of
+    density $\diff \rho$:
+    \begin{equation}
+        \diff \rho_{a} = \sum_{b} m_{b} \nabla w_{ab} \cdot 
+        \dxx_{ab}
+    \end{equation}
+    Equations of motion follow from the same procedure as in 
+    previous sections and we recover rather elegant system:
+    \begin{subequations}
+        \begin{equation}
+            \dot \xx_{a}= \vv_a    
+        \end{equation}
+        \begin{equation}
+            \dot \vv_{a} = \sum_{b} m_{b} \left(
+            \mathbf{T}_a + \mathbf{T}_b \right) \nabla w_{ab}
+        \end{equation}
+        \begin{equation}
+           \dot \AA_{a} = - \AA_{a} \LL_a 
+        \end{equation}
+        \text{where}
+        \begin{equation}
+            \mathbf{T}_a := - \pd_{\rho} \epsilon \mathbf{I} +
+            \AA_a^{T} \pd_{\AA} \epsilon \left( \sum_b
+            m_{b} \xx_{ab} \otimes \nabla w_{ab} \right)^{-1}
+        \end{equation}
+    \end{subequations}
+    
+    \textbf{MLS:}\\
+    The other approach (refered to as MLS - moving least squares)
+    defines the gradient of a function $f$
+    as the best affine approximation of it in the sense
+    of a least squares problem
+    \begin{equation}
+        \nabla f(\xx) =
+        \underset{\AA \in \mathbb{R}^{d\times d}}{\text{argmin}}
+    \int w(\xx - \yy) \| f(\yy) - f(\xx) - \AA \cdot
+    (\xx - \yy) \|^2 \diff \yy
+    \end{equation}
+    which gives: 
+    \begin{equation}
+        \nabla f(\xx) = \left( \int w(\xx - \yy)
+        (f(\yy) - f(\xx)) \otimes (\yy - \xx) \diff \yy \right) 
+        \left( \int w(\xx - \yy) (\yy - \xx) \otimes
+        (\yy - \xx) \diff \yy \right)^{-1}
+    \end{equation}
+    
+    Motivated by MLS approach we will define 
+    the continuum equivallent of our minimalization problem.
+    \begin{equation}\label{ls_problem}
+        \AA(x) = 
+        \underset{\AA \in \mathbb{R}^{d\times d}}{\text{argmin}}
+        \sum_b w(\xx - \xx_b) \| \AA(\xx - \xx_b) - (\XX - \XX_b)\|^2
+    \end{equation}
+    which reads as:
+    \begin{equation}\label{cont_ls_problem}
+        \AA(x) = 
+        \underset{\AA \in \mathbb{R}^{d\times d}}{\text{argmin}}
+        \int w(\xx - \yy) \| \AA(\xx - \yy) -
+        (\XX - \mathbf{Y})\|^2 \diff \yy
+    \end{equation}
+    and the SPH discretization we will get the following:
+    \begin{equation}\label{ls_problem}
+        \AA(x) = 
+        \underset{\AA \in \mathbb{R}^{d\times d}}{\text{argmin}}
+        \sum_b V_{b} w(\xx - \xx_b) 
+        \| \AA(\xx - \xx_b) - (\XX - \XX_b)\|^2
+    \end{equation}
+    We already now the solution of this problem:
+    \begin{equation}
+        \AA_{a} =
+        \left( \sum_b \frac{m_b}{\rho_{b}} w_{ab}
+        \XX_{ab} \otimes \xx_{ab} \right) 
+        \left( \sum_{b} \frac{m_b}{\rho_b} w_{ab}
+        \xx_{ab} \otimes \xx_{ab} \right)^{-1}
+    \end{equation}
+    Using our previous calculations we also immediately see that: 
+    \begin{equation}
+        \begin{aligned}
+        \diff \AA_{a} = - \AA_{a} \diff \LL_{a}
+        \quad \text{ where } \quad
+        \diff \LL_{a} = \left( \sum_{b} V_{b} w_{ab} \dxx_{ab} \otimes
+        \xx_{ab} \right) 
+        \left( \sum_{b} V_{b} w_{ab} \xx_{ab} \otimes 
+        \xx_{ab} \right)^{-1}
+        \end{aligned}
+    \end{equation}
+
+    \textbf{Pavelka-Hutter:}\\ 
+
+    \todo[inline]{Finish this section}
+    Lastly we have the least squares particle estimator defined in
+    \cite{hutter-pavelka}. Notice that unlike the two previous
+    this definition does not factor in the varying volumes of
+    different particles and is purely geometrical.
+
+    For problems where the density remains roughly constant this is 
+    of no issue, however it might be the case that this definition 
+    might not be suitable for highly compressible problems with
+    changing volume.
+
+    \todo[inline]{Add a table containing the different frameworks (MLS, SHTC-SPH, Pavelka-Hutter) and write down 
+    how the different quantities ($\AA$, $\LL$, energy) look like}
+% Please add the following required packages to your document preamble:
+%
+% \begin{table}[]
+% \begin{tabular}{@{}lllll@{}}
+% \toprule
+% Definition               & energy & distortion & velocity gradient &  \\ %\midrule
+% SHTC-SPH                 &        &            &                   &  \\
+% MLS                      &        &            &                   &  \\
+% particle based estimator &        &            &                   &  \\ %\bottomrule
+% \end{tabular}
+% \end{table}
+% %
+\end{subsubsection}
+    %
+    % However, it seems that the particle based definition of the distortion field, that gets recomputed each simulation step
+    % is simply not precise enough, and new dose of discretization error enters the simulation each time its recomputed.
+    % To confirm this we tried the same approach as employed in Kincl.
+    % We had used our newly developed approximations of the velocity gradients and evolved the distortion field $\AA$ explicitely 
+    % in time.
+    %
+    % Recall that for $\AA_a$ we got:
+    % We are than solving the following system of ODEs:
     
     
 \end{subsection}
@@ -1104,41 +1354,23 @@ neighbours $\xx_{a} - \bar \xx_{b}$ which in return yields one higher order conv
 \end{subsection} 
 
 \end{section}
+\begin{section}{Conclusions}
+    \todo[inline]{Write down a proper conclusion}
+   We have successfully implemented and tested the new definition for
+   the distortion field as defined in Pavelka and Hutter.
+   WE have also compared the three different definitions of distortion
+   field arrising from several distinct discretization philosophies.
+   We have tested the distinct formulations on a beryllium plate 
+   benchmark and we tested two different integration schemes.
+   The scheme based on recomputing the distortion field every
+   iteration proved to be unstable.
+   The scheme based on the continuum identity $\dot \AA = -\AA \LL$
+   showed remarkable conservational properties.
+\end{section}
 
-\begin{subsection} {Beryllium plate}
-%     In this section we will compare different definitions of $\AA$ and different systems.
-%
-% Remember the terms we neglected earlier because they were small? They were not that small after all, lets
-% take a look at what happens in the Beryllium plate benchmark withouth them.
-All the definitions of distortion field $\AA$ were tested on Beryllium plate benchmark.
-
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\linewidth]{plate1.png}
-    \caption{For small deformations and large support radius it seems to 
-    work at first.}
-    \label{fig:plate1}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\linewidth]{plate2.png}
-    \caption{However, even with support radius $h = 20dr$ (which is huge)
-    the simulation becomes unstable after some time. 
-    This does not seem to be tensile instability as the pressure is positive
-    in the problematic places. It more has to do with this approximation 
-    $\XX - \AA \xx \approx 0$.}
-    \label{fig:plate2}
-\end{figure}
-%
-%
-%
-% \todo[inline]{TODO: Add the missing terms to the evolutoin equation for distorion to 
-% see what happens.}
-\end{subsection}
-%
 %%% Bibliography
+\todo[inline]{Add references} 
+\todo[inline]{Add citations}
 \bibliographystyle{abbrv}  % ama, nar, alpha, plain, chicago, abbrv, siam
 \bibliography{library.bib}
 
