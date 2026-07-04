@@ -27,7 +27,7 @@ function find_e!(::DoubleSumEvolved, p::Particle, q::Particle,
     p.eQ = norm(p.Q*p.invQ - FMAT1)
 end
 
-function find_stress_double!(::DoubleSumEvolved, p::Particle)
+function find_stress!(::DoubleSumEvolved, p::Particle)
     p.rho += p.C_rho
     p.lambda += p.C_lambda
     invQ = inv(p.Q) 
@@ -67,7 +67,7 @@ function force_computation!(model::DoubleSumEvolved,
     apply_ternary!(sys, (p,q,r, pq, pr) -> 
                    find_A!(model, p, q, r, pq, pr))
     apply!(sys, p -> find_stress!(model, p))
-    apply!(sys, (p,q,r, pq, pr) -> 
+    apply_ternary!(sys, (p,q,r, pq, pr) -> 
                    find_e!(model, p, q, r, pq, pr))
     apply!(sys, find_bulk_force_double!)
     apply_ternary!(sys, find_shear_force_double!)
@@ -82,7 +82,7 @@ end
 function evolve_A!(model::DoubleSumEvolved, sys::ParticleSystem)
     create_cell_list!(sys)
     apply!(sys, reset!)
-    apply!(sys, (p,q,r, pq, pr) -> 
+    apply_ternary!(sys, (p,q,r, pq, pr) -> 
            find_L!(model, p, q, r, pq, pr))
     apply!(sys, p -> update_A!(model, p))
 end

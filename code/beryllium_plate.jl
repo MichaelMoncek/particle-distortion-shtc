@@ -7,7 +7,6 @@
 
 module plate 
 using SmoothedParticles
-# import SmoothedParticles
 using Parameters
 using Plots
 using CSV
@@ -15,10 +14,10 @@ using DataFrames
 import LinearAlgebra
 include("algebra.jl")
 
+
 #
-#CONSTANT PARAMETERS
-#-------------------------------
-#
+# DISTORTION MODELS
+#------------------------------------------------
 abstract type DistortionModel end
 abstract type DoubleSumModel <: DistortionModel end
 
@@ -28,12 +27,14 @@ struct DoubleSum <: DoubleSumModel end
 struct DoubleSumEvolved <: DoubleSumModel end
 
 const MODEL = SingleSumEvolved()
-const folder_name = "final_report/"*string(nameof(typeof(MODEL)))
+const BASE_FOLDER = "final_report/"
 
+
+#
+#CONSTANT PARAMETERS
+#-------------------------------
 const L = 0.06   #rod length
 const W = 0.01   #rod width
-
-# const pull_time = 0.5  #for how long we pull
 
 const c_l = 9046.59   #longitudinal sound speed
 const c_s = 9046.59  #shear sound speed
@@ -41,18 +42,13 @@ const c_0 = sqrt(c_l^2 + 4/3*c_s^2)  #total sound speed
 const rho0 = 1845.0   #density
 const nu = 1.0e-4    #artificial viscosity (surpresses noise but is not neccessary)
 const c_p = 0.10*4.0*c_l  #tensile penalty term
-# const c_p = 0.075*4.0*c_l  #tensile penalty term
 const c_shift = 0.000005*0.5           #particle shifting factor
 
 const dr = W/40    #discretization step
-# const dr = W/80    #discretization step
-# const h = (3.5+10*eps(Float64))dr    #support radius
 const h = (3.0+10*eps(Float64))dr    #support radius
 const h2 = h*h
 const vol = dr^2   #particle volume
 const m = rho0*vol #particle mass
-# const D = 0.05*0.5*h^2  #diffusion coefficient for shifting
-# const eta = h/dr
 
 const dt = 0.01dr/c_0 #time step 
 const t_end = 3e-5/1.0  #total simulation time
@@ -112,9 +108,9 @@ include("distortion_SingleSum.jl")
 include("distortion_DoubleSumEvolved.jl")
 include("distortion_DoubleSum.jl")
 
+#
 #STRUCTURAL KERNELS
 #------------------
-
 @fastmath function wendland2h(h::Float64, r::Float64)::Float64
     x = r/h
     return x < 1.0 ? 14.0*(1.0 - x)^3*(14.0*x^2 - 3.0*x - 1.0)/(pi*h^2) : 0.
@@ -125,9 +121,9 @@ end
     return x < 1.0 ? 140.0*(1.0 - x)^2*(4.0 - 7.0*x)/(pi*h^4) : 0.
 end
 
+#
 #CREATE INITIAL STATE
 #----------------------------
-
 function make_geometry()
     grid = Grid(dr, :hexagonal)
     # grid = Grid(dr, :square)
@@ -162,10 +158,10 @@ function init_velocity(x::RealVector)::RealVector
     return 1*v*VECY
 end
 
+
 #
 #PHYSICS
 #-------------------------------------
-
 function find_rho!(p::Particle, q::Particle, r::Float64) 
     p.rho += m*wendland2(h,r)
     p.lambda+= m*wendland2h(h,r)
@@ -218,99 +214,134 @@ end
 #
 # Diagnostics
 # ------------------------------------------------
-function particle_energy(p::Particle, N::Int, E0::Float64)
-    G0 = dev(p.G)
-    E_kinet = 0.5*m*dot(p.v, p.v)
-    # E_shear = 0.25*m*c_s^2*LinearAlgebra.norm(G0,2)^2
-    E_shear = 0.25*m*c_s^2*norm(G0)^2
-    E_vol = 0.5*m*c_0^2*(rho0/p.rho - 1)^2
-    E_penalty = 0.5*m*c_p^2*(p.lambda/rho0)^2
-    p.E_kinet = E_kinet*N/E0
-    p.E_shear = E_shear*N/E0
-    p.E_vol = E_vol*N/E0
-    p.E_penalty = E_penalty*N/E0
-    return E_kinet + E_shear + E_vol + E_penalty
+# function particle_energy(p::Particle, N::Int, E0::Float64)
+#     G0 = dev(p.G)
+#     E_kinet = 0.5*m*dot(p.v, p.v)
+#     # E_shear = 0.25*m*c_s^2*LinearAlgebra.norm(G0,2)^2
+#     E_shear = 0.25*m*c_s^2*norm(G0)^2
+#     E_vol = 0.5*m*c_0^2*(rho0/p.rho - 1)^2
+#     E_penalty = 0.5*m*c_p^2*(p.lambda/rho0)^2
+#     p.E_kinet = E_kinet*N/E0
+#     p.E_shear = E_shear*N/E0
+#     p.E_vol = E_vol*N/E0
+#     p.E_penalty = E_penalty*N/E0
+#     return E_kinet + E_shear + E_vol + E_penalty
+# end
+#
+function pE_kinetic(p::Particle)::Float64
+    return 0.5*m*dot(p.v, p.v)
+end 
+
+function pE_vol(p::Particle)::Float64
+    return 0.5*m*c_0^2*(rho0 - p.rho)^2/p.rho^2
+end
+
+function pE_shear(p::Particle)::Float64
+    G = transpose(p.A)*p.A
+    return 0.25*m*c_s^2*norm(dev(G))^2
+end
+
+function pE_penalty(p::Particle)::Float64
+    return 0.5*m*c_p^2*(p.lambda/rho0)^2
+end
+
+#ARGMIN FUNCTION
+#---------------
+
+function find_minimizer(f::Function, sys::ParticleSystem)::Particle
+    p = sys.particles[1]
+    pval = f(p)
+    for q in sys.particles
+          qval = f(q)
+        if qval < pval
+              p = q
+              pval = qval
+          end
+    end
+    return p
+ end
+
+#DATA SAVING
+#-----------
+
+function vec2string(a::Vector)::String
+    out = ""
+    for i in 1:length(a)-1
+        out = out*string(a[i])*","
+    end
+    if length(a) > 0
+        out = out*string(a[end])
+    end
+    out = out*"\n"
 end
 
 #
 #TIME ITERATION
-#--------------
-
-function integration_step(sys::ParticleSystem)
+#--------------------------------------------
+function integration_step(model::DistortionModel, sys::ParticleSystem)
     #verlet scheme
     apply!(sys, update_v!)
     apply!(sys, update_x!)
-    evolve_A!(MODEL, sys)
+    evolve_A!(model, sys)
     apply!(sys, update_x!)
     create_cell_list!(sys)
     apply!(sys, reset!)
     apply!(sys, find_rho!)
-    force_computation!(MODEL, sys)
+    force_computation!(model, sys)
     apply!(sys, update_v!)
 end
 
-function main()
+function main(simulation_id::String=""; model::DistortionModel=MODEL)
     println("Simulation starting")
     sys = make_geometry()
+    center = find_minimizer(p -> LinearAlgebra.norm(p.x), sys)
+
+    folder_name = isempty(simulation_id) ?
+    BASE_FOLDER * string(nameof(typeof(model))) :
+    BASE_FOLDER * string(nameof(typeof(model))) * "_" * simulation_id
+
     out = new_pvd_file("results/"*folder_name)
     csv_data = open("results/"*folder_name*"/plate.csv", "w")
-
-    p_sel = argmax(p -> abs(p.x[1]) + abs(p.x[2]), sys.particles) 
-
-    E0 = sum(p -> particle_energy(p, length(sys.particles), 1.0), sys.particles) 
-    println("Initial energy E0 = ", E0)
-    # E0 = 1/length(sys.particles)
-
-    # !!! Warning !!!
-    # For stationary cases norming with energy E0 is not adviced as E0 is almost zero!
-    E0 = 1.0
-
+    write(csv_data, 
+          string("t,y,E_total,E_kinetic,E_vol,E_shear,E_penalty\n"))
     
     @time for k = 0 : Int64(round(t_end/dt))
         t = k*dt
-        # if(k == 100)
-        #     E0 = sum(p -> particle_energy(p, length(sys.particles), E0), sys.particles) 
-        #     println("Initial energy E0 = ", E0)
-        # end
-
         if (k % Int64(round(dt_plot/dt)) == 0)
-            println("t = ", k*dt)
+            @show t
+            y = center.x[2]
             println("N = ", length(sys.particles))
-            E = sum(p -> particle_energy(p, length(sys.particles), E0), sys.particles)
-            println("E = ", E/E0)
-            # println("
-            # println("h = ", p_sel.x[2])
+            E_kinetic = sum(p -> pE_kinetic(p), sys.particles)
+            E_vol = sum(p -> pE_vol(p), sys.particles)
+            E_shear = sum(p -> pE_shear(p), sys.particles)
+            E_penalty = sum(p -> pE_penalty(p), sys.particles)
+            E_total = E_kinetic + E_vol + E_shear + E_penalty
+            @show E_total
+            @show E_kinetic
+            @show E_vol
+            @show E_shear
+            @show E_penalty
             println()
-            write(csv_data, string(k*dt,",",p_sel.x[2],",",E/E0,"\n"))
-            # write(csv_data, string(k*dt,",",p_sel.x[2],",",E/E0-1,"\n"))
-            # numerical_force(sys)
+            write(csv_data, vec2string([t, y, E_total, E_kinetic,
+                                        E_vol, E_shear, E_penalty]))
         end
         if (k % Int64(round(dt_frame/dt)) == 0)
-            # apply!(sys, find_e!)
             save_frame!(out, sys, :v, :A, :e, :P, :Q, :invQ, :L,
                         :eQ, :error, :x_avg,
                         :pressure, :dev_stress, :norm_devG, :G,
                         :rho, :C_rho, :lambda, 
                         :C_lambda, :ker_sum,
                         :E_kinet, :E_shear, :E_vol, :E_penalty, 
-                        :f, :condP, :condQ)#, :dv, :h, :Omega)
+                        :f, :condP, :condQ)
         end
-        integration_step(sys)
+        integration_step(model, sys)
     end
+
     save_pvd_file(out)
     close(csv_data)
-    data = CSV.read("results/"*folder_name*"/plate.csv", DataFrame; header=false)
-    p1 = plot(data[:,1], data[:,2], label = "plate-test", xlabel = "time", ylabel = "amplitude")
-    p2 = plot(data[10:end,1], data[10:end,3], label = "energy",
-              xlabel = "time", ylabel = "energy", ylims=(0,1.2))
-    savefig(p1, "results/"*folder_name*"/amplitude.pdf")
-    savefig(p2, "results/"*folder_name*"/energy.pdf")
 end
 
-# end # module end
-
-
-
+#
 # Extension of apply operator for ternary functions
 #--------------------------------------------------
 import SmoothedParticles: AbstractParticle, ParticleSystem
@@ -322,8 +353,6 @@ end
 @inline function _apply_ternary!(sys::ParticleSystem, action!::Function, p::AbstractParticle)
     key = SmoothedParticles.find_key(sys, p.x)
     # collect neighbours of p
-    # TODO: If the particles are non-penetrating, the number of neighbour particles should be fixed from 
-    # above and we could preallocate the neighbour array for better performance.
     neighbours = Int[]
     for Δkey in sys.key_diff
         neigh_key = key + Δkey
@@ -377,4 +406,4 @@ function apply_ternary!(sys::ParticleSystem, action!::Function)
     end 
 end
 
-end # module end
+end #module

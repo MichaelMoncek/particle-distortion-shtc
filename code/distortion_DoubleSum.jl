@@ -19,7 +19,7 @@ function find_e!(::DoubleSum, p::Particle, q::Particle,
     p.eQ = norm(p.Q*p.invQ - FMAT1)
 end
 
-function find_stress_double!(::DoubleSum, p::Particle)
+function find_stress!(::DoubleSum, p::Particle)
     p.rho += p.C_rho
     invQ = inv(p.Q) 
     p.invQ = invQ
@@ -61,7 +61,7 @@ function force_computation!(model::DoubleSum, sys::ParticleSystem)
     apply_ternary!(sys, (p,q,r, pq, pr) -> 
                    find_A!(model, p, q, r, pq, pr))
     apply!(sys, p -> find_stress!(model, p))
-    apply!(sys, (p,q,r, pq, pr) -> 
+    apply_ternary!(sys, (p,q,r, pq, pr) -> 
                    find_e!(model, p, q, r, pq, pr))
     apply!(sys, find_bulk_force_double!)
     apply_ternary!(sys, find_shear_force_double!)
