@@ -41,8 +41,9 @@ const c_s = 9046.59  #shear sound speed
 const c_0 = sqrt(c_l^2 + 4/3*c_s^2)  #total sound speed 
 const rho0 = 1845.0   #density
 const nu = 1.0e-4    #artificial viscosity (surpresses noise but is not neccessary)
-const c_p = 0.10*4.0*c_l  #tensile penalty term
-const c_shift = 0.000005*0.5           #particle shifting factor
+# const c_p = 0.10*4.0*c_l  #tensile penalty term
+const c_p = 0.075*4.0*c_l  #tensile penalty term
+const init_velocity_multiplier = 1.0
 
 const dr = W/40    #discretization step
 const h = (3.0+10*eps(Float64))dr    #support radius
@@ -155,7 +156,7 @@ function init_velocity(x::RealVector)::RealVector
     a2 = 57.6455
     s = alpha*(x[1] + L/2)
     v = A*omega*(a1*(sinh(s) + sin(s)) - a2*(cosh(s) + cos(s)))
-    return 1*v*VECY
+    return init_velocity_multiplier*v*VECY
 end
 
 
@@ -214,20 +215,6 @@ end
 #
 # Diagnostics
 # ------------------------------------------------
-# function particle_energy(p::Particle, N::Int, E0::Float64)
-#     G0 = dev(p.G)
-#     E_kinet = 0.5*m*dot(p.v, p.v)
-#     # E_shear = 0.25*m*c_s^2*LinearAlgebra.norm(G0,2)^2
-#     E_shear = 0.25*m*c_s^2*norm(G0)^2
-#     E_vol = 0.5*m*c_0^2*(rho0/p.rho - 1)^2
-#     E_penalty = 0.5*m*c_p^2*(p.lambda/rho0)^2
-#     p.E_kinet = E_kinet*N/E0
-#     p.E_shear = E_shear*N/E0
-#     p.E_vol = E_vol*N/E0
-#     p.E_penalty = E_penalty*N/E0
-#     return E_kinet + E_shear + E_vol + E_penalty
-# end
-#
 function pE_kinetic(p::Particle)::Float64
     return 0.5*m*dot(p.v, p.v)
 end 
@@ -245,9 +232,9 @@ function pE_penalty(p::Particle)::Float64
     return 0.5*m*c_p^2*(p.lambda/rho0)^2
 end
 
+
 #ARGMIN FUNCTION
 #---------------
-
 function find_minimizer(f::Function, sys::ParticleSystem)::Particle
     p = sys.particles[1]
     pval = f(p)
@@ -261,9 +248,10 @@ function find_minimizer(f::Function, sys::ParticleSystem)::Particle
     return p
  end
 
+
+#
 #DATA SAVING
 #-----------
-
 function vec2string(a::Vector)::String
     out = ""
     for i in 1:length(a)-1
@@ -273,6 +261,35 @@ function vec2string(a::Vector)::String
         out = out*string(a[end])
     end
     out = out*"\n"
+end
+
+using Dates
+function save_parameters(folder_name::String, model::DistortionModel)
+    path = joinpath(folder_name, "parameters.txt")
+    mkpath(folder_name)
+    open(path, "w") do io
+        println(io, "model = ", nameof(typeof(model)))
+        println(io, "timestamp = ", Dates.now())
+        println(io)
+        println(io, "L = ", L)
+        println(io, "W = ", W)
+        println(io, "c_l = ", c_l)
+        println(io, "c_s = ", c_s)
+        println(io, "c_0 = ", c_0)
+        println(io, "rho0 = ", rho0)
+        println(io, "nu = ", nu)
+        println(io, "c_p = ", c_p)
+        println(io, "init_velocity_multiplier = ", init_velocity_multiplier)
+        println(io, "dr = ", dr)
+        println(io, "h = ", h)
+        println(io, "vol = ", vol)
+        println(io, "m = ", m)
+        println(io, "dt = ", dt)
+        println(io, "t_end = ", t_end)
+        println(io, "dt_plot = ", dt_plot)
+        println(io, "dt_frame = ", dt_frame)
+    end
+    @info "saved simulation parameters to $path"
 end
 
 #
@@ -300,14 +317,20 @@ function main(simulation_id::String=""; model::DistortionModel=MODEL)
     BASE_FOLDER * string(nameof(typeof(model))) :
     BASE_FOLDER * string(nameof(typeof(model))) * "_" * simulation_id
 
+
     out = new_pvd_file("results/"*folder_name)
     csv_data = open("results/"*folder_name*"/plate.csv", "w")
     write(csv_data, 
           string("t,y,E_total,E_kinetic,E_vol,E_shear,E_penalty\n"))
     
+    save_parameters("results/"*folder_name, model)
+
     @time for k = 0 : Int64(round(t_end/dt))
         t = k*dt
         if (k % Int64(round(dt_plot/dt)) == 0)
+            progress = string(Int(round(k/Int64(round(dt_plot/dt))))) *
+            "/" * string(Int(round(Int64(round(t_end/dt))/Int64(round(dt_plot/dt)))))
+            @show progress
             @show t
             y = center.x[2]
             println("N = ", length(sys.particles))
