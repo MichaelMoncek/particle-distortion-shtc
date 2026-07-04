@@ -33,7 +33,7 @@
 \usepackage{chemfig}
 \usetikzlibrary{decorations.markings}
 
-% \usepackage{booktabs}
+\usepackage{booktabs}
 
 \linespread{1.0}
 
@@ -253,7 +253,7 @@ However, in a later work \cite{hutter-pavelka}, an alternative definition of the
     D_{\xx}(\AA) = \sum_a \sum_b w_a(\xx) w_b(\xx) \| \XX_{ab} - \AA(\xx) \xx_{ab} \|^2
 \end{equation*}
 where $\XX_{ab}$ is the difference between the Lagrangian positions of the particles $a$ and $b$,
-$\xx_{ab}$ is the difference between Eulerian positions, and $w_a(\xx)$ is a weight kernel of particle $a$ (for instance the SPH kernel) and $\AA(\xx)$ is a matrix representation
+$\xx_{ab}$ is the difference between Eulerian positions, and $w_a(\xx)$ is a weight kernel of particle $a$ (for instance the SPH kernel) and $\AA(\xx)$ is a matrix representation  
 of the distortion field.
 
 This approach is a counterpart to the one used in \cite{kincl-unified} as we are not evolving the distortion field in time according to the SHTC equations 
@@ -273,6 +273,70 @@ fluctuations play a crucial role.
     \item distortion as an error estimator (compare different definitions)
     \item comparison with Ondra's SPH
 \end{itemize}
+\begin{subsection}{Notation}
+% \begin{itemize}
+%     % \item mk
+%     \item $\xx_{ab} = \xx_{a} - \xx_{b}$
+%     \item $w_{ab} = w(\xx_{a} - \xx_{b})$
+%     \item $\sum_{b}$ means we are summing over the set of all particles
+% \end{itemize}
+%
+% \begin{center}
+\begin{tabular}{ll}
+    \toprule
+    Symbol & Description \\
+    \midrule
+    $\xx$ & Eulerian position\\
+    $\xx_a$ & Eulerian position of particle $a$ \\
+    $\XX_a$ & Lagrangian position of particle $a$ \\
+    $\XX$ & Lagrangian position\\
+    $\AA(\xx)$ & Distortion field at  $\xx$\\
+    $\AA_a$ & Approximation of Distortion field at particle $a$\\
+    $\LL(\xx)$ & Velocity gradient $\nabla \vv$ at $\xx$\\
+    $\LL_a$ & Approximation of Velocity gradient $\nabla \vv$ at $\xx_a$\\
+    \midrule
+    $m_a$ & Mass of particle $a$ \\
+    $V_a$ & Volume of particle $a$ \\
+    $\rho_a$ & Density at particle $a$\\
+    $\epsilon_a$ & Specific inner energy at $\xx_a$ \\
+    $\epsilon_{0}$ and $\epsilon_{s}$ & 
+    The bulk and shear part of the inner energy st.
+    $\epsilon = \epsilon_{0} + \epsilon_s $\\
+    $U$ & Total energy of the particle system\\
+    $c_s$ & Shear sound speed\\
+    $c_l$ & Longitudinal sound speed\\
+    $c_0$ & Total sound speed\\
+    $\ff$ & Force\\
+    $\PP_a$ and $\QQ_a$ & Matrices such that $\AA_{a} = \PP_{a} \QQ_a^{-1}$ \\
+    $\SS_a$ & $\AA_a^{T} \pd_{\AA} \epsilon_{a} \QQ_a^{-1}$\\
+    \midrule
+    $(\xx)_i$ & The i-th element of  $\xx$ \\
+    $(\AA)_{ij}$ & The ij-th element of  $\AA$ \\
+    $\xx \otimes \yy$ & Tensor product of $\xx$ and $\yy$ ie
+      $(\xx \otimes \yy)_{ij} = (\xx)_i (\yy)_j$\\
+    $\pd_{\rho} q$ & Partial derivative of  $q$ wrt $\rho$\\
+    $\pd_{\AA} q$ & Partial derivative of  $q$ wrt $\AA$\\
+    $\dot q$ & Time derivative of $q$ \\
+    $O(h)$ & Error of order $h$ ie  $\exists C > 0$ st
+    $\lim_{h \rightarrow 0} O(h) / h = C$ \\
+    $\xx_{ab}$ & $\xx_{a} - \xx_{b}$\\
+    $r_{ab}$ or $|\xx_{ab}|$ & Absolute value of $\xx_{a}- \xx_b$\\
+    $w_{ab}$ & SPH kernel at $|\mathbf{x}_a - \mathbf{x}_b|$ \\
+    $\nabla w_{ab}$ & Gradient of SPH kernel 
+     $w'_{ab} / r_{ab} \xx_{ab}$ \\
+    $\| \xx \|$ & Euclidian norm of $\xx$ \\
+    $\| \AA \|$ & Frobenius norm of $\AA$\\
+    $\sum_a$ & sum over all particles in the simulation domain\\
+    \midrule
+    st & such that\\
+    wrt & with respect to\\
+    ie & that is (id est)\\
+    eg & for example (exempli gratia)\\
+    \bottomrule
+\end{tabular}
+% \end{center}
+\end{subsection}
+
 \begin{subsection}{Distortion as a minimization problem}
     In this section we will define the distortion field as a minimizer of the following minimization problem:
     \begin{equation}\label{ls_problem}
@@ -764,8 +828,19 @@ be the case) and we can work with significantly simplier system given by:
     
 \end{subequations}
 
-\todo[inline]{Add a statement and proof of the conservational properties}
+% \todo[inline]{Add a statement and proof of the conservational properties}
 
+\textbf{Observation: Conservational Properties}\\
+Our method conserves energy, linear and angular momentum.
+Because the equations of motion can be derived from the following
+Lagrangian:
+\begin{equation}
+    \mathcal{L} = \sum_{b} m_{b} \left( \frac{1}{2} \vv_b^{2} -
+    \epsilon_{b}\right) 
+\end{equation}
+the conservation of linear and angular momentum is a consequence
+of the invariance of the Lagrangian $\mathcal{L}$ to translations
+and rotations.
 \begin{subsubsection} {Evolution equations for $\Ad$}
 Here we will try to derive the full evolution equations 
 for the general form of $\AA$ 
@@ -1020,31 +1095,31 @@ neighbours $\xx_{a} - \bar \xx_{b}$ which in return yields one higher order conv
 %
 % Remember the terms we neglected earlier because they were small? They were not that small after all, lets
 % take a look at what happens in the Beryllium plate benchmark withouth them.
-All the definitions of distortion field $\AA$ were tested on Beryllium plate benchmark.
+% All the definitions of distortion field $\AA$ were tested on Beryllium plate benchmark.
 \todo[inline]{Add the description of Beryllium plate benchmark with parameters}
 
 \todo[inline]{Add pictures showing benchmark failure for the recomputed case}
 \todo[inline]{Add pictures showing benchmark working for the evolved case}
 \todo[inline]{Add figures with energy}
 \todo[inline]{Add figures with amplitude matching the expected results}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\linewidth]{plate1.png}
-    \caption{For small deformations and large support radius it seems to 
-    work at first.}
-    \label{fig:plate1}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\linewidth]{plate2.png}
-    \caption{However, even with support radius $h = 20dr$ (which is huge)
-    the simulation becomes unstable after some time. 
-    This does not seem to be tensile instability as the pressure is positive
-    in the problematic places. It more has to do with this approximation 
-    $\XX - \AA \xx \approx 0$.}
-    \label{fig:plate2}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.85\linewidth]{plate1.png}
+%     \caption{For small deformations and large support radius it seems to 
+%     work at first.}
+%     \label{fig:plate1}
+% \end{figure}
+%
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.85\linewidth]{plate2.png}
+%     \caption{However, even with support radius $h = 20dr$ (which is huge)
+%     the simulation becomes unstable after some time. 
+%     This does not seem to be tensile instability as the pressure is positive
+%     in the problematic places. It more has to do with this approximation 
+%     $\XX - \AA \xx \approx 0$.}
+%     \label{fig:plate2}
+% \end{figure}
 %
 %
 %

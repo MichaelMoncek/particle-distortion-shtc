@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex shtc-sph"] 1783083675.24669 "shtc-sph.aux" "shtc-sph.bbl" "shtc-sph" 1783083676.25114 0
+["bibtex shtc-sph"] 1783173615.36258 "shtc-sph.aux" "shtc-sph.bbl" "shtc-sph" 1783173617.19187 0
   "./library.bib" 1763288639.34346 529836 c3b12ac802d179b49f12fb0c6b6ad96e ""
   "/usr/share/texlive/texmf-dist/bibtex/bst/base/abbrv.bst" 1764115200 20329 b5fed53e10044d0f8112183785c759b1 ""
-  "shtc-sph.aux" 1783083675.99086 7046 f1d9eb395747236bd5cfecb05f7ae69b "pdflatex"
+  "shtc-sph.aux" 1783173616.7197 5814 c6a7dcac61a64c43550f3fc5b4551dd3 "pdflatex"
   (generated)
   "shtc-sph.bbl"
   "shtc-sph.blg"
   (rewritten before read)
-["pdflatex"] 1783083675.32199 "shtc-sph.tex" "shtc-sph.pdf" "shtc-sph" 1783083676.25134 0
+["pdflatex"] 1783173615.48978 "shtc-sph.tex" "shtc-sph.pdf" "shtc-sph" 1783173617.19217 0
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc" 1202520719 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1202520719 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc" 1202520719 2840 216e6e45ad352e2456e1149f28885bee ""
@@ -169,6 +169,7 @@
   "/usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty" 1764115200 5048 84b05796b49b69e2d4257d537721c960 ""
   "/usr/share/texlive/texmf-dist/tex/latex/base/size11.clo" 1764115200 8464 63bf71cc1214ffdd38288da73a7ca182 ""
   "/usr/share/texlive/texmf-dist/tex/latex/base/textcomp.sty" 1764115200 2894 f2f8ee7d4fb94263f9f255fa22cab2d3 ""
+  "/usr/share/texlive/texmf-dist/tex/latex/booktabs/booktabs.sty" 1579038678 6078 f1cb470c9199e7110a27851508ed7a5c ""
   "/usr/share/texlive/texmf-dist/tex/latex/caption/caption.sty" 1678653221 55778 14d5c99aa26410e440820bb9ea5b8b3a ""
   "/usr/share/texlive/texmf-dist/tex/latex/caption/caption3.sty" 1678653221 71836 1a735454ad10692452eb2f2fc37f3865 ""
   "/usr/share/texlive/texmf-dist/tex/latex/caption/subcaption.sty" 1678653221 12462 ecf33913ce1e8012075d24e1f47f0d9b ""
@@ -232,12 +233,10 @@
   "/usr/share/texlive/texmf-dist/web2c/texmf.cnf" 1764115200 40900 887e0dc8cac988a9e9c574af364cf837 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1766146262.33736 4547210 0b4d8bce3d83ee4f50b88a57a6a0d7ef ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1775255385 7759955 af9c3bb2c69100a220b8f67e30e6b244 ""
-  "plate1.png" 1763288639.34545 915175 30266730c51f9afed4a3a4903e140253 ""
-  "plate2.png" 1763288639.34746 913427 a5ac80ef2abbb02774c633bdea464a83 ""
-  "shtc-sph.aux" 1783083675.99086 7046 f1d9eb395747236bd5cfecb05f7ae69b "pdflatex"
-  "shtc-sph.bbl" 1783083675.31542 500 cd84268e40f17ef5df8693677512bfcb "bibtex shtc-sph"
-  "shtc-sph.out" 1783083675.99151 1615 8a3aeb12f8e6d1716dbd0ac69f168624 "pdflatex"
-  "shtc-sph.tex" 1783083673.33643 61688 dac046ef14c0101627e9e2959257ba20 ""
+  "shtc-sph.aux" 1783173616.7197 5814 c6a7dcac61a64c43550f3fc5b4551dd3 "pdflatex"
+  "shtc-sph.bbl" 1783173615.47871 500 cd84268e40f17ef5df8693677512bfcb "bibtex shtc-sph"
+  "shtc-sph.out" 1783173616.72121 1713 84b2322ec39fe57a774c299c22e81ba7 "pdflatex"
+  "shtc-sph.tex" 1783173612.45673 64646 43327608573bcf3d45bed2d0164e29d3 ""
   (generated)
   "shtc-sph.aux"
   "shtc-sph.log"

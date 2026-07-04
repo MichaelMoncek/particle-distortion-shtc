@@ -19,7 +19,7 @@ function make_plots(filename::String)
     y = df[!,"y"]
 
     # Normalize energies
-    E0 = df[!,"E_total"][3]
+    E0 = df[!,"E_total"][1]
     E_total   = df[!,"E_total"]   ./ E0
     E_kinetic = df[!,"E_kinetic"] ./ E0
     E_vol    = df[!,"E_vol"]    ./ E0
@@ -50,7 +50,7 @@ function make_plots(filename::String)
 
     # --- Combine both plots vertically ---
     #plot(p1, p2, layout = (2, 1), size=(900, 700))
-    plot(p2)
+    plot(p1)
 end
 
 

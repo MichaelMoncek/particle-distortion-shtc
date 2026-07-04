@@ -25,6 +25,7 @@ struct SingleSum <: DistortionModel end
 struct SingleSumEvolved <: DistortionModel end
 struct DoubleSum <: DoubleSumModel end
 struct DoubleSumEvolved <: DoubleSumModel end
+struct MLSEvolved <: DistortionModel end
 
 const MODEL = SingleSumEvolved()
 const BASE_FOLDER = "final_report/"
@@ -41,8 +42,8 @@ const c_s = 9046.59  #shear sound speed
 const c_0 = sqrt(c_l^2 + 4/3*c_s^2)  #total sound speed 
 const rho0 = 1845.0   #density
 const nu = 1.0e-4    #artificial viscosity (surpresses noise but is not neccessary)
-# const c_p = 0.10*4.0*c_l  #tensile penalty term
-const c_p = 0.075*4.0*c_l  #tensile penalty term
+const c_p = 1.0*0.10*4.0*c_l  #tensile penalty term
+# const c_p = 0.010*4.0*c_l  #tensile penalty term
 const init_velocity_multiplier = 1.0
 
 const dr = W/40    #discretization step
@@ -108,6 +109,7 @@ include("distortion_SingleSumEvolved.jl")
 include("distortion_SingleSum.jl")
 include("distortion_DoubleSumEvolved.jl")
 include("distortion_DoubleSum.jl")
+include("distortion_MLSEvolved.jl")
 
 #
 #STRUCTURAL KERNELS
