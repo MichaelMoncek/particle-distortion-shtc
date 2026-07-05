@@ -25,15 +25,15 @@ struct SingleSum <: DistortionModel end
 struct SingleSumEvolved <: DistortionModel end
 struct DoubleSum <: DoubleSumModel end
 struct DoubleSumEvolved <: DoubleSumModel end
+struct MLS <: DistortionModel end
 struct MLSEvolved <: DistortionModel end
-
-const MODEL = SingleSumEvolved()
-const BASE_FOLDER = "final_report/"
-
 
 #
 #CONSTANT PARAMETERS
 #-------------------------------
+const MODEL = MLSEvolved()
+const BASE_FOLDER = "final_report/"
+
 const L = 0.06   #rod length
 const W = 0.01   #rod width
 
@@ -42,8 +42,9 @@ const c_s = 9046.59  #shear sound speed
 const c_0 = sqrt(c_l^2 + 4/3*c_s^2)  #total sound speed 
 const rho0 = 1845.0   #density
 const nu = 1.0e-4    #artificial viscosity (surpresses noise but is not neccessary)
-const c_p = 1.0*0.10*4.0*c_l  #tensile penalty term
+# const c_p = 1.0*0.0001*4.0*c_l  #tensile penalty term
 # const c_p = 0.010*4.0*c_l  #tensile penalty term
+const c_p = 0.040*c_l  #tensile penalty term
 const init_velocity_multiplier = 1.0
 
 const dr = W/40    #discretization step
@@ -52,7 +53,7 @@ const h2 = h*h
 const vol = dr^2   #particle volume
 const m = rho0*vol #particle mass
 
-const dt = 0.01dr/c_0 #time step 
+const dt = 1*0.01dr/c_0 #time step 
 const t_end = 3e-5/1.0  #total simulation time
 const dt_plot = max(t_end/400, dt) #how often save txt data (cheap)
 const dt_frame = max(t_end/100, dt) #how often save pvd data (expensive)
@@ -110,6 +111,7 @@ include("distortion_SingleSum.jl")
 include("distortion_DoubleSumEvolved.jl")
 include("distortion_DoubleSum.jl")
 include("distortion_MLSEvolved.jl")
+include("distortion_MLS.jl")
 
 #
 #STRUCTURAL KERNELS
@@ -217,21 +219,21 @@ end
 #
 # Diagnostics
 # ------------------------------------------------
-function pE_kinetic(p::Particle)::Float64
-    return 0.5*m*dot(p.v, p.v)
+function pE_kinetic!(p::Particle)::Float64
+    return p.E_kinet=0.5*m*dot(p.v, p.v)
 end 
 
-function pE_vol(p::Particle)::Float64
-    return 0.5*m*c_0^2*(rho0 - p.rho)^2/p.rho^2
+function pE_vol!(p::Particle)::Float64
+    return p.E_vol=0.5*m*c_0^2*(rho0 - p.rho)^2/p.rho^2
 end
 
-function pE_shear(p::Particle)::Float64
+function pE_shear!(p::Particle)::Float64
     G = transpose(p.A)*p.A
-    return 0.25*m*c_s^2*norm(dev(G))^2
+    return p.E_shear=0.25*m*c_s^2*norm(dev(G))^2
 end
 
-function pE_penalty(p::Particle)::Float64
-    return 0.5*m*c_p^2*(p.lambda/rho0)^2
+function pE_penalty!(p::Particle)::Float64
+    return p.E_penalty=0.5*m*c_p^2*(p.lambda/rho0)^2
 end
 
 
@@ -323,7 +325,7 @@ function main(simulation_id::String=""; model::DistortionModel=MODEL)
     out = new_pvd_file("results/"*folder_name)
     csv_data = open("results/"*folder_name*"/plate.csv", "w")
     write(csv_data, 
-          string("t,y,E_total,E_kinetic,E_vol,E_shear,E_penalty\n"))
+          string("t,y,E_total,E_kinetic,E_vol,E_shear,E_penalty, total_error\n"))
     
     save_parameters("results/"*folder_name, model)
 
@@ -336,19 +338,23 @@ function main(simulation_id::String=""; model::DistortionModel=MODEL)
             @show t
             y = center.x[2]
             println("N = ", length(sys.particles))
-            E_kinetic = sum(p -> pE_kinetic(p), sys.particles)
-            E_vol = sum(p -> pE_vol(p), sys.particles)
-            E_shear = sum(p -> pE_shear(p), sys.particles)
-            E_penalty = sum(p -> pE_penalty(p), sys.particles)
+            E_kinetic = sum(p -> pE_kinetic!(p), sys.particles)
+            E_vol = sum(p -> pE_vol!(p), sys.particles)
+            E_shear = sum(p -> pE_shear!(p), sys.particles)
+            E_penalty = sum(p -> pE_penalty!(p), sys.particles)
             E_total = E_kinetic + E_vol + E_shear + E_penalty
+            total_error = sum(p -> p.e, sys.particles) 
             @show E_total
             @show E_kinetic
             @show E_vol
             @show E_shear
             @show E_penalty
+            @show total_error
             println()
-            write(csv_data, vec2string([t, y, E_total, E_kinetic,
-                                        E_vol, E_shear, E_penalty]))
+            write(csv_data, vec2string([t, y, E_total,
+                                        E_kinetic,
+                                        E_vol, E_shear,
+                                        E_penalty, total_error]))
         end
         if (k % Int64(round(dt_frame/dt)) == 0)
             save_frame!(out, sys, :v, :A, :e, :P, :Q, :invQ, :L,

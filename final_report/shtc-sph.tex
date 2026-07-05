@@ -125,6 +125,12 @@
 \newcommand{\dxx}{\text{d}\mathbf{x}}
 \newcommand{\Sd}{\mathbf{S}^{double}}
 \newcommand{\Ld}{\mathbf{L}^{double}}
+
+\newcommand{\proj}{\text{proj}}
+\newcommand{\GL}{\mathrm{GL}(n)}%,\mathbb{R})}
+\newcommand{\gl}{\mathfrak{gl}(n)}%,\mathbb{R})}
+\newcommand{\KK}{\mathbf{K}}
+\newcommand{\Dt}{\Delta t}
 %%% COMMANDS %%%
 
 \begin{document}
@@ -1102,6 +1108,11 @@ neighbours $\xx_{a} - \bar \xx_{b}$ which in return yields one higher order conv
 \todo[inline]{Add pictures showing benchmark working for the evolved case}
 \todo[inline]{Add figures with energy}
 \todo[inline]{Add figures with amplitude matching the expected results}
+\todo[inline]{Plot the error norm(Ax-X) for the recomputed and the ODE version compare them, it should increase in the recomputed version
+and stay bounded in the ODE version}
+Notice that the error stays almost at machine level precision if the plate is not moving, however perturbing it just a little reveals that it grows rapidly.
+Now we need to cross-check against the ODE version if the behaviour remains the same.
+Or is it just that we are solving a different system with recomputed A? That is why the ODE works and recomputed A doesnt?!?!
 % \begin{figure}[H]
 %     \centering
 %     \includegraphics[width=0.85\linewidth]{plate1.png}
@@ -1307,6 +1318,169 @@ neighbours $\xx_{a} - \bar \xx_{b}$ which in return yields one higher order conv
 % \end{table}
 % %
 \end{subsubsection}
+\begin{subsubsection}{Numerical analysis}
+   We want to solve (numerically) the following ODE system:
+   \begin{subequations}
+       \begin{equation}
+           \dot \xx = \vv
+       \end{equation}
+       \begin{equation}
+           m \dot \vv = \ff(\AA, \dots)
+       \end{equation}
+       \begin{equation}
+           \dot \AA = - \AA \LL
+       \end{equation}
+   \end{subequations}
+   Where $\xx$ is eulerian position, $\XX = \xx(t=0)$ is lagrangian position, $\vv$ is velocity, $\ff$ is force,
+   $m$ is mass, $\AA$ is the distortion field (inverse of deformation gradient $\FF$ ) and $\LL$ is the velocity
+   gradient.
+   % At small scale the last equation for distortion tells us two things (well known continuum "identities"):
+   % % \begin{equation}
+   %     \[
+   %     \AA \xx - \XX \approx 0%= o(\xx - \XX)
+   %     \text{ and }
+   %     \LL \xx - \vv \approx 0
+   %     \]
+   % % \end{equation}
+   % for small $\XX - \xx$. 
+
+   The last equation can be though of as $\LL$ being the generator of the one parameter $C_0$-semigroup $\AA(t)$ ie
+   \[
+       \AA(t + \Delta t) \approx \AA(t) \exp(-\Delta t \LL)
+   \]
+   so while $\AA(t)$ lives in $\GL$ and its evolution might be highly non-linear, 
+   $\LL(t)$ lives in $\gl$ which is nice vector space.
+
+
+   To proceed with solving the system we need to approximate either $\AA$ or $\LL$. 
+   We will do so, by approximating the continuum by a system of particles - each particle (labeled $b$) carries its own
+   internal variables - $\xx_b$, $\vv_b$, $ \AA_b$, $\LL_b$ etc.
+   The idea is to than evaluate $\AA$ at an arbitrary position  $\xx$ as a projection on this set of particles 
+   weighted by $w$ (which can be though of as quadrature weights, or a mollifying kernel).
+   This method is usually referred to as MLS - Moving Least Squares.
+   
+   There are two possibilities on how to approximate $\dot \AA = -\AA \LL$ one is:
+   \begin{equation}
+       \text{proj}_{\GL} \AA(\xx) := \underset{\AA \in \GL}{\text{argmin}}
+       \sum_{b} w(\xx - \xx_b) \| \AA (\xx - \xx_b) - (\XX - \XX_b) \|^2%\text{proj}_{\AA \in V} \sum_{b} w(\xx - \xx_b) \| 
+   \end{equation}
+   and the other is: 
+   \begin{equation}
+   \text{proj}_{\gl} \LL(\xx) := \underset{\LL \in \gl}{\text{argmin}}
+       \sum_{b} w(\xx - \xx_b) \| \LL (\xx - \xx_b) - (\vv - \vv_b) \|^2%\text{proj}_{\AA \in V} \sum_{b} w(\xx - \xx_b) \| 
+   \end{equation}
+
+   That is to compute the weighted error for each data point (=particle).
+   And the two respective systems of equations are:
+   \begin{subequations}
+       \begin{equation}
+           \AA^{n+1}= \proj_{GL} \AA
+       \end{equation}
+       \begin{equation}
+           \xx^{n+1} = \xx^{n} + \Delta t \cdot \vv^{n}
+       \end{equation}
+       \begin{equation}
+           \vv^{n+1} = \vv^{n} + \Delta t \cdot \ff(\AA^n, \dots) / m
+       \end{equation}
+   \end{subequations}
+   and:  
+   \begin{subequations}
+       \begin{equation}
+           \AA^{n+1}= \AA^{n} - \Delta t \cdot \AA^{n} \cdot
+           \proj_{\gl} \LL
+       \end{equation}
+       \begin{equation}
+           \xx^{n+1} = \xx^{n} + \Delta t \cdot \vv^{n}
+       \end{equation}
+       \begin{equation}
+           \vv^{n+1} = \vv^{n} + \Delta t \cdot \ff(\AA^n, \dots) / m
+       \end{equation}
+   \end{subequations}
+   In the first case we are directly projection onto $\GL$ and in the later one onto $\gl$.
+   %
+   % The first projection method, proved to be numerically unstable and I would like to understand why is that?
+   % My guess is that even though the projection is perfectly defined, there is no guarante that 
+   % the sequence $\{\AA^n\}_n$ will satisfy the semigroup property: 
+   Even though both projections are perfectly defined, we have to check if we have have the semigroup property:
+   \[
+       \AA^{n+1} \approx \AA^{n} \exp(- \Delta t \LL^n)
+    \]
+    % while if we approximate $\LL$ this property will hold, any thoughs on that?
+    In the first case this will not be true anymore. Suppose: 
+        
+    \[
+        \AA^{n} = \proj_{\GL} \AA(t_{n}) = \AA(t_n) + e_n 
+    \]
+    \[
+        \AA^{n+1} = \proj_{\GL} \AA(t_{n+1}) = \AA(t_{n+1}) + e_{n+1}
+    \]
+    as there is no link between the residuals $e_n$ and $e_{n+1}$ in general we have: 
+    \[
+        \AA^{n+1} - \AA^{n} = 
+        \AA(t_{n+1}) - \AA(t_{n}) + e_{n+1} - e_{n} = 
+        \AA(t_{n+1}) - \AA(t_{n}) + \text{projection noise} 
+    .\] 
+    and therefore
+   \[
+       \AA^{n+1} \not \approx \AA^{n} \exp(- \Delta t \LL^n)
+    \]
+    as the projection noise is of order $O(h^p)$ and cannot be refined by smaller
+    timesteping.
+    However, we will get a positive result in the second case.
+    First assume that the projection $\proj_{\gl} \LL$ approximates
+    $\LL$ up to order p in space ie
+    \[
+    \LL_{h} = \proj_{\gl} \LL = \LL + O(h^p) 
+    \]  
+    which combined with the implicit euler integration scheme
+    gives:
+    \[
+       \AA^{n+1}= \AA^{n} - \Delta t \cdot \AA^{n} \cdot
+       \LL_h^n + O(h^{p}\Delta) =
+       \AA^{n} \left( \II - \Delta t \LL_h^n 
+       \right) + O(h^{p}\Delta t) =\\
+       \AA^{n} \exp( - \Delta t \LL_h^n) +
+       O(\Delta t^2) + O(h^{p} \Delta t)
+    \] 
+    this will also hold for our mid-point rule (which is the
+    Cayley map in disguise):
+    \[
+    \AA^{n+1} = \AA^{n} \left( \II - \frac{\Delta t}{2}
+    \LL^{n+1/2}\right) \left( \II + \frac{\Delta t}{2}
+    \LL^{n+1/2}\right)^{-1} 
+    \] 
+    let $\KK = \Dt \LL^{n+1/2}$
+    \[
+        \AA^{n+1} = \AA^{n}\left( \II - \frac{1}{2} \KK \right) 
+        \left( \II + \frac{1}{2} \KK \right)^{-1} 
+    .\] 
+    expand the inverse assuming ($\Dt \|\LL\| << 1$):
+    \[
+        \left( \II + \frac{1}{2} \KK \right)^{-1} =
+        \II - \frac{1}{2} \KK + \frac{1}{4} \KK^{2} -
+        \frac{1}{8} \KK^{3}+ \cdots
+    .\] 
+    \[
+        \left( \II - \frac{1}{2} \KK \right) 
+        \left( \II + \frac{1}{2} \KK \right)^{-1} =
+        \II - \KK + \frac{1}{2}\KK^{2} - 
+        \frac{1}{4}\KK^{3} + O(\|\KK^4\|)
+    .\] 
+    comparing this with the exponential:
+    \[
+    \exp(\KK) = \II - \KK + \frac{1}{2} \KK^{2} - 
+    \frac{1}{6}\KK^{3} + O(\|\KK^4\|)
+    .\] 
+    so we have:
+    \[
+        \AA^{n+1} = \AA^{n} \exp(- \Dt \LL^{n+1/2}) + O(\Dt^3)
+    .\] 
+    and we can proceed similarly for any other
+    consistent time integrator.
+    % p.L = p.L*inv(p.Q)
+    % p.A = p.A*(FMAT1 - 0.5*dt*p.L)*inv(FMAT1 + 0.5*dt*p.L)
+\end{subsubsection}
+
     %
     % However, it seems that the particle based definition of the distortion field, that gets recomputed each simulation step
     % is simply not precise enough, and new dose of discretization error enters the simulation each time its recomputed.

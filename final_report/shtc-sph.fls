@@ -1168,6 +1168,13 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/lm/lmmi12.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/lm/lmsy10.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
+INPUT /usr/share/texlive/texmf-dist/tex/latex/amsfonts/ueuf.fd
+INPUT /usr/share/texlive/texmf-dist/tex/latex/amsfonts/ueuf.fd
+INPUT /usr/share/texlive/texmf-dist/tex/latex/amsfonts/ueuf.fd
+INPUT /usr/share/texlive/texmf-dist/tex/latex/amsfonts/ueuf.fd
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/euler/eufm10.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/euler/eufm10.tfm
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/euler/eufm7.tfm
 INPUT ./shtc-sph.bbl
 INPUT shtc-sph.bbl
 INPUT ./shtc-sph.bbl
@@ -1175,6 +1182,7 @@ INPUT shtc-sph.bbl
 INPUT shtc-sph.aux
 INPUT ./shtc-sph.out
 INPUT ./shtc-sph.out
+INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx10.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx12.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx8.pfb
