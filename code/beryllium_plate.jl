@@ -289,7 +289,7 @@ function save_parameters(params::SimulationParameters)
     derived = derived_parameters(params)
     folder_name = derived.BASE_FOLDER
 
-    path = joinpath(folder_name, "parameters.txt")
+    path = joinpath("results"*folder_name, "parameters.txt")
     mkpath(folder_name)
     open(path, "w") do io
         println(io, "model = ", nameof(typeof(derived.model)))
