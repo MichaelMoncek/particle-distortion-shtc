@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2026.4.4)  5 JUL 2026 19:29
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2026.4.4)  5 JUL 2026 19:36
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -879,7 +879,10 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <5> on input line 279.
-
+LaTeX Font Info:    Trying to load font information for U+euf on input line 338.
+ (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/ueuf.fd
+File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
+)
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 25.18872pt, for example:
@@ -914,20 +917,20 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-13.18872pt}.
 
 [5]
-Overfull \hbox (6.15984pt too wide) detected at line 520
+Overfull \hbox (6.15984pt too wide) detected at line 523
 [][][][][]
  []
 
 \c@MLS_problem=\count346
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 620.
+(Font)              <12> on input line 623.
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 620.
+(hyperref)                removing `math shift' on input line 623.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 620.
+(hyperref)                removing `math shift' on input line 623.
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -948,82 +951,82 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.811     \begin{equation}
+l.814     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.811     \begin{equation}
+l.814     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.811     \begin{equation}
+l.814     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.811     \begin{equation}
+l.814     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.820     \begin{equation}
+l.823     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.820     \begin{equation}
+l.823     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.820     \begin{equation}
+l.823     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.820     \begin{equation}
+l.823     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.824     \begin{equation}
+l.827     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.824     \begin{equation}
+l.827     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.824     \begin{equation}
+l.827     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.824     \begin{equation}
+l.827     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.4}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.829     \begin{equation}
+l.832     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.4}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.829     \begin{equation}
+l.832     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.4}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.829     \begin{equation}
+l.832     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.4}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.829     \begin{equation}
+l.832     \begin{equation}
                           
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1035,15 +1038,15 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 [8]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 850.
+(hyperref)                removing `math shift' on input line 853.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `superscript' on input line 850.
+(hyperref)                removing `superscript' on input line 853.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 850.
+(hyperref)                removing `math shift' on input line 853.
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1056,84 +1059,84 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.982     \begin{equation}
+l.985     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.982     \begin{equation}
+l.985     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.982     \begin{equation}
+l.985     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.982     \begin{equation}
+l.985     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.986     \begin{equation}
+l.989     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.986     \begin{equation}
+l.989     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.986     \begin{equation}
+l.989     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.986     \begin{equation}
+l.989     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.994     \begin{equation}
+l.997     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.994     \begin{equation}
+l.997     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.994     \begin{equation}
+l.997     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.994     \begin{equation}
+l.997     \begin{equation}
                           
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.4}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1001     \begin{equation}
+l.1004     \begin{equation}
                            
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.4}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1001     \begin{equation}
+l.1004     \begin{equation}
                            
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.4}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1001     \begin{equation}
+l.1004     \begin{equation}
                            
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.4}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1001     \begin{equation}
+l.1004     \begin{equation}
                            
-Underfull \hbox (badness 10000) in paragraph at lines 1011--1015
+Underfull \hbox (badness 10000) in paragraph at lines 1014--1018
 
  []
 
@@ -1148,44 +1151,39 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1061         \begin{equation}
+l.1064         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1061         \begin{equation}
+l.1064         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1061         \begin{equation}
+l.1064         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1061         \begin{equation}
-                               
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
 l.1064         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1064         \begin{equation}
+l.1067         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1064         \begin{equation}
+l.1067         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1064         \begin{equation}
+l.1067         \begin{equation}
                                
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.1067         \begin{equation}
@@ -1193,17 +1191,22 @@ l.1067         \begin{equation}
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1067         \begin{equation}
+l.1070         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1067         \begin{equation}
+l.1070         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1067         \begin{equation}
+l.1070         \begin{equation}
+                               
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.1070         \begin{equation}
                                
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1224,84 +1227,84 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1215         \begin{equation}
+l.1218         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1215         \begin{equation}
+l.1218         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1215         \begin{equation}
+l.1218         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1215         \begin{equation}
-                               
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
 l.1218         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1218         \begin{equation}
+l.1221         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1218         \begin{equation}
+l.1221         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1218         \begin{equation}
+l.1221         \begin{equation}
+                               
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.1221         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1222         \begin{equation}
+l.1225         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1222         \begin{equation}
+l.1225         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1222         \begin{equation}
+l.1225         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1222         \begin{equation}
+l.1225         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.4}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1226         \begin{equation}
+l.1229         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.4}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1226         \begin{equation}
+l.1229         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.4}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1226         \begin{equation}
+l.1229         \begin{equation}
                                
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.4}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1226         \begin{equation}
+l.1229         \begin{equation}
                                
-Underfull \hbox (badness 10000) in paragraph at lines 1293--1294
+Underfull \hbox (badness 10000) in paragraph at lines 1296--1297
 
  []
 
@@ -1309,22 +1312,22 @@ Underfull \hbox (badness 10000) in paragraph at lines 1293--1294
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1324        \begin{equation}
+l.1327        \begin{equation}
                               
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1324        \begin{equation}
+l.1327        \begin{equation}
                               
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1324        \begin{equation}
+l.1327        \begin{equation}
                               
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1324        \begin{equation}
+l.1327        \begin{equation}
                               
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1337,24 +1340,19 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1327        \begin{equation}
+l.1330        \begin{equation}
                               
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1327        \begin{equation}
+l.1330        \begin{equation}
                               
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1327        \begin{equation}
+l.1330        \begin{equation}
                               
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.1327        \begin{equation}
-                              
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.1330        \begin{equation}
@@ -1362,43 +1360,39 @@ l.1330        \begin{equation}
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1330        \begin{equation}
+l.1333        \begin{equation}
                               
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1330        \begin{equation}
+l.1333        \begin{equation}
                               
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1330        \begin{equation}
+l.1333        \begin{equation}
                               
-LaTeX Font Info:    Trying to load font information for U+euf on input line 1352.
- (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/ueuf.fd
-File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
-)
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1376        \begin{equation}
+l.1333        \begin{equation}
                               
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1376        \begin{equation}
+l.1379        \begin{equation}
                               
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1376        \begin{equation}
+l.1379        \begin{equation}
                               
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1376        \begin{equation}
+l.1379        \begin{equation}
                               
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.1379        \begin{equation}
@@ -1406,19 +1400,19 @@ l.1379        \begin{equation}
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1379        \begin{equation}
+l.1382        \begin{equation}
                               
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1379        \begin{equation}
+l.1382        \begin{equation}
                               
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1379        \begin{equation}
+l.1382        \begin{equation}
                               
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.1382        \begin{equation}
@@ -1426,59 +1420,59 @@ l.1382        \begin{equation}
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1382        \begin{equation}
+l.1385        \begin{equation}
                               
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1382        \begin{equation}
+l.1385        \begin{equation}
                               
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1382        \begin{equation}
-                              
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.1388        \begin{equation}
-                              
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.1388        \begin{equation}
-                              
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.1388        \begin{equation}
-                              
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.1388        \begin{equation}
-                              
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.1392        \begin{equation}
-                              
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.1392        \begin{equation}
-                              
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.1392        \begin{equation}
-                              
-pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.1392        \begin{equation}
+l.1385        \begin{equation}
                               
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.1385        \begin{equation}
+                              
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.1391        \begin{equation}
+                              
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.1391        \begin{equation}
+                              
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.1391        \begin{equation}
+                              
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.1391        \begin{equation}
+                              
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.1395        \begin{equation}
+                              
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.1395        \begin{equation}
+                              
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.1395        \begin{equation}
+                              
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.1395        \begin{equation}
@@ -1486,17 +1480,22 @@ l.1395        \begin{equation}
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1395        \begin{equation}
+l.1398        \begin{equation}
                               
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1395        \begin{equation}
+l.1398        \begin{equation}
                               
 pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1395        \begin{equation}
+l.1398        \begin{equation}
+                              
+pdfTeX warning (ext4): destination with the same identifier (name{equation.2.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.1398        \begin{equation}
                               
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1521,15 +1520,15 @@ Package rerunfilecheck Info: File `shtc-sph.out' has not changed.
 (rerunfilecheck)             Checksum: 137D76536EB3427A49143FE2279DE38F;1874.
  ) 
 Here is how much of TeX's memory you used:
- 28652 strings out of 476034
- 563028 string characters out of 5792865
+ 28653 strings out of 476034
+ 563040 string characters out of 5792865
  1875388 words of memory out of 6000000
- 48441 multiletter control sequences out of 15000+600000
- 564295 words of font info for 72 fonts, out of 8000000 for 9000
+ 48442 multiletter control sequences out of 15000+600000
+ 564531 words of font info for 73 fonts, out of 8000000 for 9000
  1137 hyphenation exceptions out of 8191
  84i,12n,80p,555b,1092s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on shtc-sph.pdf (15 pages, 274912 bytes).
+Output written on shtc-sph.pdf (15 pages, 275257 bytes).
 PDF statistics:
  354 PDF objects out of 1000 (max. 8388607)
  301 compressed objects within 4 object streams

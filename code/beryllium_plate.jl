@@ -29,38 +29,53 @@ struct MLS <: DistortionModel end
 struct MLSEvolved <: DistortionModel end
 
 #
-#CONSTANT PARAMETERS
-#-------------------------------
-const MODEL = MLSEvolved()
-const BASE_FOLDER = "final_report/"
+#SIMULATION PARAMETERS
+#------------------------------------------------------
+Base.@kwdef struct SimulationParameters
+    model::DistortionModel = MLSEvolved()
+    W = 0.01
+    dr::Float64 = W/40
+    dt_factor::Float64 = 0.01
+    t_end::Float64 = 3e-5
 
+    output_folder::String = "final_report/"
+    run_name::String = ""
+end
+
+#
+# PHYSICAL PARAMETERS 
+# ----------------------------------------------------
 const L = 0.06   #rod length
 const W = 0.01   #rod width
-
 const c_l = 9046.59   #longitudinal sound speed
 const c_s = 9046.59  #shear sound speed
 const c_0 = sqrt(c_l^2 + 4/3*c_s^2)  #total sound speed 
 const rho0 = 1845.0   #density
-const nu = 1.0e-4    #artificial viscosity (surpresses noise but is not neccessary)
+const c_p = 0.040*c_l  #tensile penalty term
+const init_velocity_multiplier = 1.0 # initial velocity multiplier
 # const c_p = 1.0*0.0001*4.0*c_l  #tensile penalty term
 # const c_p = 0.010*4.0*c_l  #tensile penalty term
-const c_p = 0.040*c_l  #tensile penalty term
-const init_velocity_multiplier = 1.0
 
-const dr = W/40    #discretization step
-const h = (3.0+10*eps(Float64))dr    #support radius
-const h2 = h*h
-const vol = dr^2   #particle volume
-const m = rho0*vol #particle mass
 
-const dt = 1*0.01dr/c_0 #time step 
-const t_end = 3e-5/1.0  #total simulation time
-const dt_plot = max(t_end/400, dt) #how often save txt data (cheap)
-const dt_frame = max(t_end/100, dt) #how often save pvd data (expensive)
+function derived_parameters(params::SimulationParameters)
+    dr = params.dr      #discretization step
+    h = (3.0+10*eps(Float64))dr    #support radius
+    vol = dr^2                      # particle volume
+    m = rho0*vol # particle mass
+    dt = params.dt_factor*dr/c_0 #time step 
+    t_end = params.t_end  #total simulation time
+    dt_plot = max(t_end/400, dt) #how often save txt data (cheap)
+    dt_frame = max(t_end/100, dt) #how often save pvd data (expensive)
+    BASE_FOLDER = params.output_folder
+    simulation_id = params.run_name
+    model = params.model
+    return (; dr, h, vol, m, dt, t_end, dt_plot,
+            dt_frame, BASE_FOLDER, simulation_id, model)
+end
 
+#
 #ALGEBRAIC TOOLS
 #----------------------------------------
-
 @inbounds function outer(x::RealVector, y::RealVector)::FlatMatrix
     return FlatMatrix(
         x[1]*y[1], x[2]*y[1],  
@@ -71,7 +86,6 @@ end
 #
 #DEFINE VARIABLES
 #------------------------------
-
 @with_kw mutable struct Particle <: AbstractParticle
 	x::RealVector         # position
     x_avg::RealVector = VEC0
@@ -106,6 +120,7 @@ end
     norm_devG::Float64 = 0.0
 end
 
+# load different distortion definitions
 include("distortion_SingleSumEvolved.jl")
 include("distortion_SingleSum.jl")
 include("distortion_DoubleSumEvolved.jl")
@@ -129,7 +144,9 @@ end
 #
 #CREATE INITIAL STATE
 #----------------------------
-function make_geometry()
+function make_geometry(params::SimulationParameters, h)
+    dr = params.dr
+    model = params.model
     grid = Grid(dr, :hexagonal)
     # grid = Grid(dr, :square)
     rod = Rectangle(-L/2, -W/2, L/2, W/2)
@@ -147,7 +164,7 @@ function make_geometry()
         p.ker_sum = 0.0
     end
     apply!(sys, find_rho!)
-    force_computation!(MODEL, sys)
+    force_computation!(model, sys)
 
     return sys
 end
@@ -268,11 +285,14 @@ function vec2string(a::Vector)::String
 end
 
 using Dates
-function save_parameters(folder_name::String, model::DistortionModel)
+function save_parameters(params::SimulationParameters)
+    derived = derived_parameters(params)
+    folder_name = derived.BASE_FOLDER
+
     path = joinpath(folder_name, "parameters.txt")
     mkpath(folder_name)
     open(path, "w") do io
-        println(io, "model = ", nameof(typeof(model)))
+        println(io, "model = ", nameof(typeof(derived.model)))
         println(io, "timestamp = ", Dates.now())
         println(io)
         println(io, "L = ", L)
@@ -281,21 +301,19 @@ function save_parameters(folder_name::String, model::DistortionModel)
         println(io, "c_s = ", c_s)
         println(io, "c_0 = ", c_0)
         println(io, "rho0 = ", rho0)
-        println(io, "nu = ", nu)
         println(io, "c_p = ", c_p)
         println(io, "init_velocity_multiplier = ", init_velocity_multiplier)
-        println(io, "dr = ", dr)
-        println(io, "h = ", h)
-        println(io, "vol = ", vol)
-        println(io, "m = ", m)
-        println(io, "dt = ", dt)
-        println(io, "t_end = ", t_end)
-        println(io, "dt_plot = ", dt_plot)
-        println(io, "dt_frame = ", dt_frame)
+        println(io, "dr = ", derived.dr)
+        println(io, "h = ", derived.h)
+        println(io, "vol = ", derived.vol)
+        println(io, "m = ", derived.m)
+        println(io, "dt = ", derived.dt)
+        println(io, "t_end = ", derived.t_end)
+        println(io, "dt_plot = ", derived.dt_plot)
+        println(io, "dt_frame = ", derived.dt_frame)
     end
     @info "saved simulation parameters to $path"
 end
-
 #
 #TIME ITERATION
 #--------------------------------------------
@@ -312,49 +330,66 @@ function integration_step(model::DistortionModel, sys::ParticleSystem)
     apply!(sys, update_v!)
 end
 
-function main(simulation_id::String=""; model::DistortionModel=MODEL)
+function main(params::SimulationParameters)
+    # set parameters derived from SimulationParameters 
+    (; dr, h, vol, m, dt, t_end, dt_plot,
+     dt_frame, BASE_FOLDER,
+     simulation_id, model) = derived_parameters(params)
+    
+    # start the simulation
     println("Simulation starting")
-    sys = make_geometry()
+    t0 = time()
+    sys = make_geometry(params, h)
     center = find_minimizer(p -> LinearAlgebra.norm(p.x), sys)
+
 
     folder_name = isempty(simulation_id) ?
     BASE_FOLDER * string(nameof(typeof(model))) :
     BASE_FOLDER * string(nameof(typeof(model))) * "_" * simulation_id
 
-
     out = new_pvd_file("results/"*folder_name)
     csv_data = open("results/"*folder_name*"/plate.csv", "w")
     write(csv_data, 
-          string("t,y,E_total,E_kinetic,E_vol,E_shear,E_penalty, total_error\n"))
+          string("t,y,E_total,E_kinetic,E_vol,E_shear,E_penalty, total_error, avg_error, max_error\n"))
     
-    save_parameters("results/"*folder_name, model)
+    save_parameters(params)
+    time_steps = Int64(round(t_end/dt))
 
-    @time for k = 0 : Int64(round(t_end/dt))
+    @time for k = 0 : time_steps
         t = k*dt
         if (k % Int64(round(dt_plot/dt)) == 0)
+            # progress bar
             progress = string(Int(round(k/Int64(round(dt_plot/dt))))) *
             "/" * string(Int(round(Int64(round(t_end/dt))/Int64(round(dt_plot/dt)))))
             @show progress
             @show t
             y = center.x[2]
             println("N = ", length(sys.particles))
+            # energy measures
             E_kinetic = sum(p -> pE_kinetic!(p), sys.particles)
             E_vol = sum(p -> pE_vol!(p), sys.particles)
             E_shear = sum(p -> pE_shear!(p), sys.particles)
             E_penalty = sum(p -> pE_penalty!(p), sys.particles)
             E_total = E_kinetic + E_vol + E_shear + E_penalty
+            # error measures
             total_error = sum(p -> p.e, sys.particles) 
+            avg_error = sum(p -> p.e, sys.particles) / length(sys.particles)
+            # max_error = find_minimizer(p -> -p.e, sys).e
+            max_error = maximum(p.e for p in sys.particles)
             @show E_total
             @show E_kinetic
             @show E_vol
             @show E_shear
             @show E_penalty
             @show total_error
+            @show avg_error 
+            @show max_error 
             println()
             write(csv_data, vec2string([t, y, E_total,
                                         E_kinetic,
                                         E_vol, E_shear,
-                                        E_penalty, total_error]))
+                                        E_penalty, 
+                                        total_error, avg_error, max_error]))
         end
         if (k % Int64(round(dt_frame/dt)) == 0)
             save_frame!(out, sys, :v, :A, :e, :P, :Q, :invQ, :L,
@@ -370,8 +405,21 @@ function main(simulation_id::String=""; model::DistortionModel=MODEL)
 
     save_pvd_file(out)
     close(csv_data)
-end
 
+    # write down summary.txt
+    runtime = time() - t0
+
+    path = joinpath("results/"*folder_name, "summary.txt")
+    mkpath(folder_name)
+    open(path,  "w") do io
+    println(io, "timestamp = ", Dates.now())
+    println(io, "Runtime = $(Int(round(runtime)))s")
+    println(io, "Particles = $(length(sys.particles))")
+    println(io, "Timesteps = $time_steps")
+    println(io, "Model = $(typeof(model))")
+    end
+    @info "saved simulation summary to $path"
+end
 #
 # Extension of apply operator for ternary functions
 #--------------------------------------------------
@@ -392,10 +440,10 @@ end
                 if j == 0; break; end
                 q = sys.particles[j]
                 if q == p; continue; end
-                #rq = dist(p, q) 
-                rq2 = dist2(p,q)
-                #if rq <= sys.h
-                if rq2 <= h2
+                rq = dist(p, q) 
+                # rq2 = dist2(p,q)
+                if rq <= sys.h
+                # if rq2 <= h2
                     push!(neighbours, j)
                 end
             end

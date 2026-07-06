@@ -334,6 +334,9 @@ fluctuations play a crucial role.
     $\| \AA \|$ & Frobenius norm of $\AA$\\
     $\sum_a$ & sum over all particles in the simulation domain\\
     \midrule
+    $\GL$ & General linear group $\GL$ ie the set of $n \times n$ invertible matrices\\
+    $\gl$ & The Lie algebra $\gl$ of $n \times n$ real matrices\\
+    \midrule
     st & such that\\
     wrt & with respect to\\
     ie & that is (id est)\\
@@ -1449,7 +1452,7 @@ Or is it just that we are solving a different system with recomputed A? That is 
     \LL^{n+1/2}\right) \left( \II + \frac{\Delta t}{2}
     \LL^{n+1/2}\right)^{-1} 
     \] 
-    let $\KK = \Dt \LL^{n+1/2}$
+    let $\KK = \Dt \LL^{n+1/2}$ than
     \[
         \AA^{n+1} = \AA^{n}\left( \II - \frac{1}{2} \KK \right) 
         \left( \II + \frac{1}{2} \KK \right)^{-1} 
