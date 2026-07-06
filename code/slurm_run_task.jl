@@ -2,6 +2,7 @@
 include("beryllium_plate.jl")
 using .plate
 include("param_table.jl")
+params = plate.SimulationParameters()
 
 idx = parse(Int, ENV["SLURM_ARRAY_TASK_ID"]) + 1
 cfg = PARAM_TABLE[idx]
