@@ -31,7 +31,7 @@ struct MLSEvolved <: DistortionModel end
 #
 #SIMULATION PARAMETERS
 #------------------------------------------------------
-Base.@kwdef struct SimulationParameters
+Base.@kwdef mutable struct SimulationParameters
     model::DistortionModel = MLSEvolved()
     W = 0.01
     dr::Float64 = W/40
