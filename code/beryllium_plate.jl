@@ -27,6 +27,7 @@ struct DoubleSum <: DoubleSumModel end
 struct DoubleSumEvolved <: DoubleSumModel end
 struct MLS <: DistortionModel end
 struct MLSEvolved <: DistortionModel end
+struct DoubleSumMLSEvolved <: DoubleSumModel end
 
 #
 #SIMULATION PARAMETERS
@@ -52,7 +53,7 @@ const c_s = 9046.59  #shear sound speed
 const c_0 = sqrt(c_l^2 + 4/3*c_s^2)  #total sound speed 
 const rho0 = 1845.0   #density
 const c_p = 0.040*c_l  #tensile penalty term
-const init_velocity_multiplier = 1.0 # initial velocity multiplier
+const init_velocity_multiplier = 0.0 # initial velocity multiplier
 # const c_p = 1.0*0.0001*4.0*c_l  #tensile penalty term
 # const c_p = 0.010*4.0*c_l  #tensile penalty term
 
@@ -127,6 +128,7 @@ include("distortion_DoubleSumEvolved.jl")
 include("distortion_DoubleSum.jl")
 include("distortion_MLSEvolved.jl")
 include("distortion_MLS.jl")
+include("distortion_DoubleSumMLSEvolved.jl")
 
 #
 #STRUCTURAL KERNELS

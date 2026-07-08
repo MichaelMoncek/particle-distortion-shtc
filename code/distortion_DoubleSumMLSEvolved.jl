@@ -1,17 +1,22 @@
-# distortion_DoubleSumEvolved.jl
 
-function find_A!(::DoubleSumEvolved, p::Particle, q::Particle,
+# distortion_DoubleSumMLSEvolved.jl
+
+function find_A!(::DoubleSumMLSEvolved, p::Particle, q::Particle,
                 r::Particle, rq::Float64, rr::Float64) 
-    ker = wendland2(h,rq)*wendland2(h,rr) 
+    Vq = m / q.rho
+    Vr = m / r.rho
+    ker = Vq*wendland2(h,rq)*Vr*wendland2(h,rr) 
     x_qr = q.x - r.x 
     X_qr = q.X - r.X 
     p.P += ker*outer(X_qr, x_qr) 
     p.Q += ker*outer(x_qr, x_qr)
 end 
 
-function find_L!(::DoubleSumEvolved, p::Particle, q::Particle,
+function find_L!(::DoubleSumMLSEvolved, p::Particle, q::Particle,
                 r::Particle, rq::Float64, rr::Float64)
-    ker = wendland2(h,rq)*wendland2(h, rr)
+    Vq = m / q.rho
+    Vr = m / r.rho
+    ker = Vq*wendland2(h,rq)*Vr*wendland2(h,rr) 
     # velocity gradient L
     v_qr = q.v - r.v
     x_qr = q.x - r.x
@@ -19,7 +24,7 @@ function find_L!(::DoubleSumEvolved, p::Particle, q::Particle,
     p.Q += ker*outer(x_qr, x_qr)
 end 
 
-function find_e!(::DoubleSumEvolved, p::Particle, q::Particle,
+function find_e!(::DoubleSumMLSEvolved, p::Particle, q::Particle,
                               r::Particle, rq::Float64, rr::Float64) 
     eta = inv(p.A)*(q.X - r.X) - (q.x - r.x)
     p.e += dot(eta, eta)
@@ -27,7 +32,7 @@ function find_e!(::DoubleSumEvolved, p::Particle, q::Particle,
     p.eQ = norm(p.Q*p.invQ - FMAT1)
 end
 
-function find_stress!(::DoubleSumEvolved, p::Particle)
+function find_stress!(::DoubleSumMLSEvolved, p::Particle)
     p.rho += p.C_rho
     p.lambda += p.C_lambda
     invQ = inv(p.Q) 
@@ -52,12 +57,14 @@ function find_bulk_force_double!(p::Particle, q::Particle,
     p.f += -m^2*rDker*p.pressure*x_pq
     p.f += -m^2*rDker*q.pressure*x_pq
     # # anti-clumping force 
-    kerh = m/p.rho*rDwendland2h(h,r)
-    p.f += -m*kerh*c_p^2*(p.lambda + q.lambda)*x_pq
+    # kerh = m/p.rho*rDwendland2h(h,r)
+    # p.f += -m*kerh*c_p^2*(p.lambda + q.lambda)*x_pq
 end
 
 function find_shear_force_double!(p::Particle, q::Particle,
                      r::Particle, rq::Float64, rr::Float64)
+    # Vq = m / q.rho
+    # Vr = m / r.rho
     ker_pq = wendland2(h, rq)
     ker_pr = wendland2(h, rr)
     ker_qr = wendland2(h, norm(q.x - r.x))
@@ -68,7 +75,7 @@ function find_shear_force_double!(p::Particle, q::Particle,
     p.f += m*ker_pr*ker_qr*q.dev_stress*x_qp
 end
 
-function force_computation!(model::DoubleSumEvolved,
+function force_computation!(model::DoubleSumMLSEvolved,
                             sys::ParticleSystem)
     apply_ternary!(sys, (p,q,r, pq, pr) -> 
                    find_A!(model, p, q, r, pq, pr))
@@ -80,12 +87,12 @@ function force_computation!(model::DoubleSumEvolved,
 end
 
 # Midpoint rule for A
-function update_A!(::DoubleSumEvolved, p::Particle)
+function update_A!(::DoubleSumMLSEvolved, p::Particle)
     p.L = p.L*inv(p.Q)
     p.A = p.A*(FMAT1 - 0.5*dt*p.L)*inv(FMAT1 + 0.5*dt*p.L)
 end
 
-function evolve_A!(model::DoubleSumEvolved, sys::ParticleSystem)
+function evolve_A!(model::DoubleSumMLSEvolved, sys::ParticleSystem)
     create_cell_list!(sys)
     apply!(sys, reset!)
     apply_ternary!(sys, (p,q,r, pq, pr) -> 
