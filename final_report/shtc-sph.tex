@@ -34,6 +34,8 @@
 \usetikzlibrary{decorations.markings}
 
 \usepackage{booktabs}
+\usepackage{rotating} % add this to your preamble
+\usepackage{array} % for p{} columns
 
 \linespread{1.0}
 
@@ -355,6 +357,7 @@ directions.
     $m_a$ & Mass of particle $a$ \\
     $V_a$ & Volume of particle $a$ \\
     $\rho_a$ & Density at particle $a$\\
+    $\tau$ & Relaxation time $\tau$ \\
     $\epsilon_a$ & Specific inner energy at $\xx_a$ \\
     $\epsilon_{0}$ and $\epsilon_{s}$ & 
     The bulk and shear part of the inner energy st.
@@ -406,9 +409,40 @@ directions.
 \end{subsection}
 
 \begin{section}*{Methods}
+    The distortion field $\AA \in \mathbb{R}^{d \times d}$ plays
+    a prominent role in the SHTC equations.
+    In the perfectly elastic case it is equal to the inverse 
+    of the deformation gradient.
+    If we do not assume perfect elasticity the evolution of
+    $\AA$ is being governed by:
+    \begin{equation} \label{shtc_evol_A}
+        \dot \AA = - \AA \LL + \frac{1}{\theta(\tau, \rho)}
+    \end{equation}
+    where $\theta(\tau, \rho)$ is a relaxation function of
+    relaxation time $\tau$ and density $\rho$.
+    It roughly speaking says how much does the material flow.
+    For large $\tau$ the material becomes elastic and for 
+    $\tau \rightarrow 0+$ the material behaves more and more like 
+    a Navier-Stokes-Fourier fluid.
+   
+    In this work we will turn our attention on the case 
+    $\tau \rightarrow +\infty$ — a perfectly elastic material and
+    the equation of interest will therefore be:
+    \begin{equation}
+        \dot \AA = - \AA \LL 
+    \end{equation}
+    The reason is that once we can solve the equations for a
+    perfectly elastic solid adding dissipation ($\tau < +\infty$)
+    is straightforward. 
+    It can be done either by integrating \Ref{shtc_evol_A} or
+    by relaxing the initial configuration.
+    Reader can follow \cite{kincl-unified} if he or she 
+    wishes to do that.
 
+    
+    
 \begin{subsection}*{Distortion as a minimization problem}
-    In this section we will define the distortion field as a minimizer of the following minimization problem:
+    In this section inspired by we will define the distortion field as a minimizer of the following minimization problem:
     \begin{equation}\label{ls_problem}
         \AA(x) = \underset{\AA \in \mathbb{R}^{d\times d}}{\text{argmin}} \sum_b w(\xx - \xx_b) \| \AA(\xx - \xx_b) - (\XX - \XX_b)\|^2
     \end{equation}
@@ -1120,26 +1154,70 @@ and rotations.
     % might not be suitable for highly compressible problems with
     % changing volume.
 
-    \todo[inline]{Add a table containing the different frameworks (MLS, SHTC-SPH, Pavelka-Hutter) and write down 
-    how the different quantities ($\AA$, $\LL$, energy) look like}
+    % \todo[inline]{Add a table containing the different frameworks (MLS, SHTC-SPH, Pavelka-Hutter) and write down 
+    % how the different quantities ($\AA$, $\LL$, energy) look like.
+% Formulation - Energy - Distortion - Velocity gradient - projection space (evolved quantity)}
 % Please add the following required packages to your document preamble:
 %
 % \begin{table}[]
 % \begin{tabular}{@{}lllll@{}}
 % \toprule
-% Definition               & energy & distortion & velocity gradient &  \\ %\midrule
-% SHTC-SPH                 &        &            &                   &  \\
-% MLS                      &        &            &                   &  \\
-% particle based estimator &        &            &                   &  \\ %\bottomrule
+% \textbf{Definition}               & \textbf{Energy functional} & \textbf{Distortion} &
+% \textbf{Velocity gradient} & \textbf{Projection space / Evolved quantity}\\% & Convergence order %\midrule
+% Kincl                 & $D[\LL](\xx_a) = \sum_b w'_{ab}/r_{ab} \|\LL \xx_{ab} - \vv_{ab}\|^2 $       & $\AA_{a} =\left( \sum_{b} w'_{ab}/r_{ab} 
+% \XX_{ab}\otimes \xx_{ab}\right) \left( \sum_{b} w'_{ab}/r_{ab} \xx_{ab}\otimes \xx_{ab} \right)^{-1} $           &                   &  \\
+% MLSEvolved                      &  $D[\LL](\xx_a) = \sum_{b} V_{b} w_{ab} \|\LL \xx_{ab} - \vv_{ab}\|^2$ &  $\AA_{a} =\left( \sum_{b}w_{ab} 
+% \XX_{ab}\otimes \xx_{ab}\right) \left( \sum_{b}w_{ab} \xx_{ab}\otimes \xx_{ab} \right)^{-1} $          &                   &  \\
+% MLS                      &  $D[\AA](\xx_a) = \sum_{b} V_{b} w_{ab} \|\AA \xx_{ab} - \XX_{ab}\|^2$ &  $\AA_{a} =\left( \sum_{b}w_{ab} 
+% \XX_{ab}\otimes \xx_{ab}\right) \left( \sum_{b}w_{ab} \xx_{ab}\otimes \xx_{ab} \right)^{-1} $          &                   &  \\
+% SingleSumEvolved                      & $D[\LL](\xx_a) = \sum_{b} w_{ab} \|\LL \xx_{ab} - \vv_{ab}\|^2$ &  $\AA_{a} =\left( \sum_{b}w_{ab} 
+% \XX_{ab}\otimes \xx_{ab}\right) \left( \sum_{b}w_{ab} \xx_{ab}\otimes \xx_{ab} \right)^{-1} $          &                   &  \\
+% SingleSum                      & $D[\AA](\xx_a) = \sum_{b} w_{ab} \|\AA \xx_{ab} - \XX_{ab}\|^2$      &  $\AA_{a} =\left( \sum_{b}w_{ab} 
+% \XX_{ab}\otimes \xx_{ab}\right) \left( \sum_{b}w_{ab} \xx_{ab}\otimes \xx_{ab} \right)^{-1} $          &                   &  \\
+% DoubleSumEvolved                      & $D[\LL](\xx_a) = \sum_{b,c} w_{ab} w_{ac} \|\LL \xx_{bc} - \vv_{bc}\|^2$ &  $\AA_{a} =\left( \sum_{b}w_{ab} 
+% \XX_{ab}\otimes \xx_{ab}\right) \left( \sum_{b}w_{ab} \xx_{ab}\otimes \xx_{ab} \right)^{-1} $          &                   &  \\
+% DoubleSum                      & $D[\AA](\xx_a) = \sum_{b,c} w_{ab} w_{ac} \|\AA \xx_{bc} - \XX_{bc}\|^2$       &  $\AA_{a} =\left( \sum_{b}w_{ab} 
+% \XX_{ab}\otimes \xx_{ab}\right) \left( \sum_{b}w_{ab} \xx_{ab}\otimes \xx_{ab} \right)^{-1} $          &                   &  \\
 % \end{tabular}
+% \caption{Comparison of different definitions of the distortion field.}
 % \end{table}
-% %
+
 \end{subsubsection}
 
+% %\section{First Attachment}
+% \afterpage{
+% \begin{sidewaystable}[htbp]
+% 	\centering
+% 	\renewcommand{\arraystretch}{1.3}
+% 	%\setlength{\tabcolsep}{10pt}
+% 	\resizebox{\textwidth}{!}{
+% 	\begin{tabular}{|l|c|c|c|c|c|}
+% 	  \hline
+% 	  \textbf{Parameter} & \textbf{Flow in a channel} & \textbf{Beryllium plate} & \textbf{Oscillating beam} & \textbf{Flow around a cylinder} & \textbf{Turek-Hron benchmark} \\
+% 	  \hline
+% 	  dr     & 3.9e-3 & 5.0e-4 & 3.9e-3 & 3.9e-3 & 3.9e-3 \\
+% 	  \hline
+% 	  dt     & 9.74e-6 & 9.04e-10 & 5.15e-6 & 5.15e-6 & 5.15e-6 \\
+% 	  \hline
+% 	  $c_0$  & 40 & 9046.59 & 60 & 40 & 40 and 60 \\
+% 	  \hline
+% 	  $c_s$  & 5.47e-3 & 9046.59 & 40 & 5.47e-3 & 5.47e-3 and 40 \\
+% 	  \hline
+% 	  $\rho$ &	1.0	   &    1.0    &   1845.0   &  1.0   &   1.0 and 1.0  \\
+% 	  \hline
+% 	  $c_p$  & 3.5 & 36186.36 & 3.5 & 3.5 & 3.5 and 3.5 \\
+% 	  \hline
+% 	  h      & 9.75e-3 & 1.5e-3 & 9.75e-3 & 9.75e-3 & 9.75e-3 \\
+% 	  \hline	
+% 	\end{tabular}
+% 	}
+% 	\caption{Simulation parameters for different benchmark cases. The Turek-Hron benchmark uses two values: the first for the fluid and the second for the elastic beam. The artificial diffusion parameter $\xi = 0.02$ is used in all simulations. Reynolds number $Re=20$ corresponds to $U_{\max} = 0.3$, $Re=100$ to $U_{\max} = 1.5$, and $Re=220$ to $U_{\max} = 3.3$ in all examples.}
+% 	\label{tab:simulation_parameters}
+%   \end{sidewaystable}
+% }
 
 \begin{subsubsection}*{Evolution equations for $\Ad$}
-Here we will try to derive the full evolution equations 
-for the general form of $\AA$ 
+    In this section we will derive evolution equations for $\Ad$
 from Pavelka a Hutter \cite{hutter-pavelka}:
 % The distortion field $\AA$ is assumed to have the following full form:
     % \begin{equation}
@@ -1147,19 +1225,21 @@ from Pavelka a Hutter \cite{hutter-pavelka}:
     %     \left( \sum_{a,b} w_a w_b \xx_{ab} \otimes \xx_{ab} \right)^{-1}
     % \end{equation} 
 
-\begin{equation}
+Recall the distortion field from \cite{hutter-pavelka}:
+\[
     \Ad_{a} := \Pd \invQd = \left( \sum_{b,c} w_{ab} w_{ac} \XX_{bc} \otimes \xx_{bc} \right) 
     \left( \sum_{b,c} w_{ab} w_{ac} \xx_{bc} \otimes \xx_{bc} \right)^{-1}
-\end{equation} 
+\]
 
-Next, analogously to the previous section we can write the differential of $\AA_a$ in 
-the following manner:
-\begin{equation}
+Next, analogously to the previous section our goal is to compute the differential of $\AA_a$
+and than use Newton's equations of motion to get the evolutionary equations. Proceeding
+with our plan:
+\[
     \diff \AA_{a} = \diff \left( \Pd_{a} \invQd_{a} \right) = \diff \Pd \Qd -
     \Ad \diff \Qd \invQd
-\end{equation}
+\]
 where $\Pd_{a}$ and $\Qd_a$ are:
-\begin{equation}
+\[
     \begin{aligned}
         \diff \Pd_{a} = 2 \sum_{b,c} \left( \nabla w_{ab} \cdot \dxx_{ab} \right) 
         w_{ab} \XX_{bc} \otimes \xx_{bc} + 
@@ -1169,9 +1249,9 @@ where $\Pd_{a}$ and $\Qd_a$ are:
         \sum_{b,c} w_{ab} w_{ac} \xx_{bc} \otimes \dxx_{bc} + 
         \sum_{b,c} w_{ab} w_{ac} \dxx_{bc} \otimes \xx_{bc}\\
     \end{aligned}
-\end{equation}
-plugging this in the previous expression we get:
-\begin{equation}
+\]
+plugging these in the previous expression for the differential $\diff \Ad$ we obtain: 
+\[
     \begin{aligned}
         \diff \Ad_{a} = 2 \sum_{b,c} \left( \nabla w_{ab} \cdot \dxx_{ab} \right) 
         w_{ab} \XX_{bc} \otimes \xx_{bc} + 
@@ -1189,35 +1269,49 @@ plugging this in the previous expression we get:
         - \Ad_{a} \left( \sum_{b,c} w_{ab} w_{ac} \dxx_{bc} \otimes \xx_bc \right) \invQd
         % w_{ab} \XX_{bc} \otimes \xx_{bc}  
     \end{aligned}
-\end{equation}
-We can identify the error term $e_{abc} := \XX_{bc} - \Ad_{a} \xx_{bc}$ and work with the simplified
-system in case its small. The simplified differential of $\Ad$ is than:
+\]
+Analogously to the previous section, we can identify the error term 
+$e_{abc} := \XX_{bc} - \Ad_{a} \xx_{bc}$ and work with the 'simplified'
+differential.
+The simplified differential of $\Ad$ is equal to:
 
-\begin{equation}
+\begin{equation} \label{diffAd}
     \diff \Ad_{a} = - \Ad_{a} 
     \left( \sum_{b,c} w_{ab} w_{ac} \dxx_{bc} \otimes \xx_{bc} \right)
     \left( \sum_{b,c} w_{ab} w_{ac} \xx_{bc} \otimes \xx_{bc} \right)^{-1}
 \end{equation}
+And we can once again idenfity $\Ld_a$ as: 
+\[
+    \Ld_{a} := 
+    \left( \sum_{b,c} w_{ab} w_{ac} \dxx_{bc} \otimes \xx_{bc} \right)
+    \left( \sum_{b,c} w_{ab} w_{ac} \xx_{bc} \otimes \xx_{bc} \right)^{-1}
+\] 
+and write \Ref{diffAd} simply as:
+\[
+\diff \Ad_a = -\Ad_a \Ld_a
+\] 
 
+To obtain the evolution we need to compute the differential of energy 
+ $\diff U$ and arrange the terms in the following manner:
+\[
+    \diff U = \sum_{b,c} \text{something} \cdot \dxx_a
+\] 
+We will continue as in the case for $\AA$ and split the differential of
+energy into the bulk part $\diff U_{0}$ and the shear part $\diff U_s$ as: 
 
-
-Next we will compute the differential of the energy as in the previous section.
-We will continue as in the case for $\AA$ and split it into 
-the bulk part $\diff U_{0}$ and the shear part $\diff U_s$ as: 
-
-\begin{equation}
+\[
     \diff U = \sum_{a} m_{a} \left( \frac{\pd \epsilon_a}{\pd \rho} \diff \rho_a + 
     \frac{\pd \epsilon_a}{\pd \AA}: \diff \Ad_{a}\right) = \diff U_{0} + \diff U_{s}
-\end{equation}
+\]
 
 For the bulk part we get the same expression as for $\AA$ : 
-\begin{equation}
+\[
     \diff U_{0} = \sum_{a,b} m_{a} m_{b} \left( \pd_{\rho} \epsilon_{a} + \pd_{\rho} \epsilon_b \right) 
     \nabla w_{ab} \cdot \diff \xx_a
-\end{equation}
+\]
 
 And for the shear part we will get:
-\begin{equation}
+\[
     \begin{aligned}
     \diff U_{s} = \sum_{a} m_{a} \frac{\pd \epsilon_a}{\pd \AA}: \diff \Ad_{a} = 
     \sum_{a} m_{a} \left( 
@@ -1250,11 +1344,12 @@ And for the shear part we will get:
     % +\sum_{a,b,c} m_{a} w_{ab} w_{ac} \Sd_{a} \xx_{bc} \cdot \dxx_{c} + 
     % -\sum_{a,b,c} m_{a} w_{ab} w_{ac} \Sd_{a} \xx_{bc} \cdot \dxx_{a}   
     \end{aligned}
-\end{equation}
+\]
 
 Finally, using Newton's second law $m \dot{\vv} = - \frac{\diff U}{\diff \xx}$ 
-we get the following equations of motion for $\Ad_a$:
-\begin{equation}
+we will get the two following (and equivalent) equations of motion
+for $\vv_a$:
+\[
     \begin{aligned}
     m_{a} \dot \vv_{a} = -   
     \sum_{b} \bigg( m_{a} m_{b} 
@@ -1263,11 +1358,21 @@ we get the following equations of motion for $\Ad_a$:
     m_{b} w_{ab} 2 W_a \Sd_{b} \left( \xx_{a} -
     \bar \xx_{b} \right) \bigg)
     \end{aligned}
-\end{equation}
+\]
+or equivalently:
+\[
+    \begin{aligned}
+    m_{a} \dot \vv_{a} = -   
+    \sum_{b,c} \bigg( m_{a} m_{b} 
+    \left( \pd_{\rho} \epsilon_{a} + \pd_{\rho} \epsilon_b \right) 
+    \nabla w_{ab} -
+    m_{b} w_{ab} w_{bc} \Sd_{b} \xx_{ca} - 
+    m_{c} w_{cb} w_{ac} \Sd_{c} \xx_{ba} \bigg)
+    \end{aligned}
+\]
 
-
-And the full simplified system of equations for $\Ad$ reads as:
-\todo[inline] {Add the non simplified force equation}
+The full simplified system of equations for $\Ad$ reads as:
+% \todo[inline] {Add the non simplified force equation}
 \begin{subequations}
     \begin{equation}
         \dot{\xx}_a = \vv_a\\
@@ -1280,14 +1385,22 @@ And the full simplified system of equations for $\Ad$ reads as:
     \nabla w_{ab} + \frac{2}{m_b} w_{ab} W_a \Sd_{b} \left( \xx_{a} -
     \bar \xx_{b} \right) \bigg)
     \end{equation}
-
+    \text{or}
+    \begin{equation}
+    \dot \vv_{a} = -   
+    \sum_{b,c} \bigg( m_{b} 
+    \left( \pd_{\rho} \epsilon_{a} + \pd_{\rho} \epsilon_b \right) 
+    \nabla w_{ab} -
+    \frac{m_{b}}{m_{a}} w_{ab} w_{bc} \Sd_{b} \xx_{ca} - 
+    \frac{m_{c}}{m_{a}} w_{cb} w_{ac} \Sd_{c} \xx_{ba} \bigg)
+    \end{equation}
+    
     \begin{equation}
         \Ad_{a} := \Pd \invQd = \left( \sum_{b,c} w_{ab} w_{ac} \XX_{bc} \otimes \xx_{bc} \right) 
         \left( \sum_{b,c} w_{ab} w_{ac} \xx_{bc} \otimes \xx_{bc} \right)^{-1}
     \end{equation} 
 
     \text{ where }
-
     \begin{equation}
         \begin{aligned}
         \Sd_{a} = c_s^{2} \left( \Ad_{a}\right)^{T} 
@@ -1297,15 +1410,23 @@ And the full simplified system of equations for $\Ad$ reads as:
         \end{aligned}
     \end{equation}
 \end{subequations}
-
+\\
 It is worth comparing the shear terms for both $\AA_a$ and $\Ad_a$. The shear force
 in the first case depends on the pairwise distance $\xx_{a} - \xx_{b}$ and in the 
 second case it depends on the distance of particle $a$ from the center of mass of its 
 neighbours $\xx_{a} - \bar \xx_{b}$ which in return yields one higher order convergence rate.\\
     
+However, this has certain disadvantages as well. If the particle 
+cloud is smaller on one side than on the other eg near the boundaries
+the formulation becames unstable very quickly. This is a know caveat
+of similar methods.
 
-\todo[inline] {Remark on conservational properties for $\Ad$}
+% \todo[inline] {Remark on conservational properties for $\Ad$}
 
+This formulation, being derived from energy does conserve energy 
+and conserves linear momentum. However, there is a possibility it
+might not conserve angular momentum which could explain behaviour
+near the boundaries. This remains to be tested in the future.
     % \todo[inline]{TODO: The evolution for $\AA^{double}$ be it the full or the simplified form.}
     %
     % From the simulation \textbf{simple\_A\_simplified\_00} we can see that it fails pretty badly.
@@ -1318,34 +1439,48 @@ neighbours $\xx_{a} - \bar \xx_{b}$ which in return yields one higher order conv
 
 \begin{subsection}*{Numerics}
     In this section we will test our previous findings.
+    We will first formulate our equations and go over the integration
+    scheme. We will provide a numerical stabilization for tensile 
+    instability which is a well know and documented SPH numerical
+    artifiact.
+    Next we will proceed with a theoretical viewpoint answering
+    why a subset of our methods kept failing.
+    Finally we will test our finding on a Beryllium plate benchmark
+    problem.
+    All the numerical code is based on the \textit{SmoothedParticles.jl} Julia library
+    \cite{fountain, sph-reversible, kincl-unified}.
+%fountain
+%sph-reversible
+%kincl-unified
+
     We are presented with two possible options on how to proceed.
    
     Firstly, we can work directly with $\AA_a$ from the 
     the minimalization problem:
-    \begin{equation}
+    \[
         \AA_{a} := \PP_a \QQ^{-1}_a = 
         \left( \sum_{b} w_{ab} \XX_{ab} \otimes \xx_{ab} \right) 
         \left( \sum_{b} w_{ab} \xx_{ab} \otimes \xx_{ab} \right)^{-1}
-    \end{equation} 
+    \]
     compute it each time step and get the relation for force,
     for $\Ad_a$, we can proceed equivalently.
 
     Secondly, we can make use of the relation $\diff \AA = 
-    - \AA \LL$ and instead of computing $\AA$ directly, we
+    - \AA \diff \LL$ and instead of computing $\AA$ directly, we
     will compute $\LL$ each time step and update $\AA$ accordingly.
 
     Recall that for $\AA_a$ we have:
-    \begin{equation}
+    \[
         \LL_a := \left( \sum_b w_{ab} \vv_{ab} \otimes \xx_{ab}\right)
         \left( \sum_b w_{ab} \xx_{ab} \otimes \xx_{ab}\right)^{-1}
-    \end{equation}
+    \]
 
     And similarly for $\Ad_a$ we have:
-    \begin{equation}
+    \[
         \Ld_{a} =  
         \left( \sum_{b,c} w_{ab} w_{ac} \vv_{bc} \otimes \xx_{bc} \right)
         \left( \sum_{b,c} w_{ab} w_{ac} \xx_{bc} \otimes \xx_{bc} \right)^{-1}
-    \end{equation}
+    \]
     We are than presented with the following system of ODEs:
     \begin{subequations}
         \begin{equation}
@@ -1380,10 +1515,10 @@ neighbours $\xx_{a} - \bar \xx_{b}$ which in return yields one higher order conv
         \end{aligned}
     \end{equation}
     where $t_{k} = k \Delta t$ denotes the k-th time step and 
-    \begin{equation}
+    \[
         \ff_a(t) = \ff_a(\xx(t), \AA(t)), \quad
         \LL_{a}= \LL_a(\xx(t), \vv(t))
-    \end{equation}
+    \]
     
     Once again, the simulation suffers from tensile instability -
     a well-known and documented SPH numerical artifact.
@@ -1607,10 +1742,10 @@ neighbours $\xx_{a} - \bar \xx_{b}$ which in return yields one higher order conv
 
 % \todo[inline]{Add pictures showing benchmark failure for the recomputed case}
 % \todo[inline]{Add pictures showing benchmark working for the evolved case}
-\todo[inline]{Add figures with energy}
-\todo[inline]{Add figures with amplitude matching the expected results}
-\todo[inline]{Plot the error norm(Ax-X) for the recomputed and the ODE version compare them, it should increase in the recomputed version
-and stay bounded in the ODE version}
+% \todo[inline]{Add figures with energy}
+% \todo[inline]{Add figures with amplitude matching the expected results}
+% \todo[inline]{Plot the error norm(Ax-X) for the recomputed and the ODE version compare them, it should increase in the recomputed version
+% and stay bounded in the ODE version}
 % Notice that the error stays almost at machine level precision if the plate is not moving, however perturbing it just a little reveals that it grows rapidly.
 % Now we need to cross-check against the ODE version if the behaviour remains the same.
 % Or is it just that we are solving a different system with recomputed A? That is why the ODE works and recomputed A doesnt?!?!
@@ -1622,7 +1757,7 @@ we follow the position of its middle point.
 
 The simulation domain $\Omega$ is a symmetric rectangular plate:
 \[
-\Omega = \left( -\frac{L}{2}, \frac{L}{2}\right) 
+\Omega = \left( -\frac{L}{2}, \frac{L}{2}\right) \times
 \left( -\frac{W}{2}, \frac{W}{2} \right) 
 \] 
 with $W = 0.01 \text{ m}$ and $L = 0.06 \text{ m}$.
@@ -1646,7 +1781,7 @@ with:
     a_{2} = 57.6455\\
 \end{gather*}
 % \begin{figure}[H]
-Furthermore we assume perfect elasticity $\tau = 0$
+Furthermore we assume perfect elasticity $\tau = \infty$
 and we set the longitudinal and shear sound speed
 as:
 \[
@@ -1658,11 +1793,106 @@ to the CFL condition as:
 \[
     \text{dt} = 0.05 \frac{\text{dr}}{\sqrt{c_0^2 + 4/3 c_s^2}}
 \] 
-\todo[inline]{Add the figures for time t = 0.075 $\mu s$, with cp/c0}
-\todo[inline]{Add the figures for time t = 0.150 $\mu s$, with cp/c0}
-\todo[inline]{Add the figures for time t = 0.225 $\mu s$, with cp/c0}
+% \todo[inline]{Add the figures for time t = 0.075 $\mu s$, with cp/c0}
+% \todo[inline]{Add the figures for time t = 0.150 $\mu s$, with cp/c0}
+% \todo[inline]{Add the figures for time t = 0.225 $\mu s$, with cp/c0}
 
-\todo[inline]{Add the different energy contributions plot}
+% \todo[inline]{Add the different energy contributions plot}
+
+
+\begin{figure}[htbp]
+    \centering
+    % First row
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\linewidth]{img/SingleSumEvolved_24.png}
+        \caption{t = 0.075 $\mu$s, $c_{p} / c_{0}= 0.04$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \includegraphics[width=\linewidth]{img/MLSEvolved_24.png}
+        \caption{t = 0.075 $\mu$s, $c_{p} / c_{0}= 0.04$}
+    \end{subfigure}
+    
+    \vspace{0.5cm}
+    % Second row
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\linewidth]{img/SingleSumEvolved_49.png}
+        \caption{t = 0.150 $\mu$s, $c_{p} / c_{0}= 0.04$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \includegraphics[width=\linewidth]{img/MLSEvolved_49.png}
+        \caption{t = 0.150 $\mu$s, $c_{p} / c_{0}= 0.04$}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+    % Third row
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\linewidth]{img/SingleSumEvolved_74.png}
+        %\caption{Caption 5}
+        \caption{t = 0.225 $\mu$s, $c_{p} / c_{0}= 0.04$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \includegraphics[width=\linewidth]{img/MLSEvolved_74.png}
+        %\caption{Caption 6}
+        \caption{t = 0.225 $\mu$s, $c_{p} / c_{0}= 0.04$}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+    % % Fourth row
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\linewidth]{img/MLS_vs_SingleSum_axis.png}
+    %     %\caption{Caption 7}
+    \end{subfigure}
+    % \hfill
+    % \begin{subfigure}{0.49\textwidth}
+        % \includegraphics[width=\linewidth]{img/turek_hron_Re220_34.png}
+        %\caption{Caption 8}
+    % \end{subfigure}
+
+    \caption{A comparison of the pressure fields for the
+        MLSEvolved and SingleSumEvolved definition of the
+        distortion field in the Beryllium benchmark problem.
+    }
+    \label{fig:Single_vs_MLS_plate}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\linewidth]{img/SingleSumEvolved center position.pdf}
+        %\caption{Caption 1}
+        % \caption{t = 0.225 $\mu$s, $c_{p} / c_{0}= 0.04$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \includegraphics[width=\linewidth]{img/MLSEvolved center position.pdf}
+        %\caption{Caption 2}
+        % \caption{t = 0.225 $\mu$s, $c_{p} / c_{0}= 0.04$}
+    \end{subfigure}
+
+    \caption{The y coordinate of the center point of the beryllium
+    plate benchmark.\\ (SingleSumEvolved left, MLSEvolved right)}
+    % \vspace{0.5cm}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\linewidth]{img/SingleSumEvolved energy components.pdf}
+        %\caption{Caption 1}
+        % \caption{t = 0.225 $\mu$s, $c_{p} / c_{0}= 0.04$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \includegraphics[width=\linewidth]{img/MLSEvolved energy components.pdf}
+        %\caption{Caption 2}
+        % \caption{t = 0.225 $\mu$s, $c_{p} / c_{0}= 0.04$}
+    \end{subfigure}
+    \caption{Normalized components of energy plotted against time.\\
+    (SingleSumEvolved left, MLSEvolved right)}
+\end{figure}
 %     \centering
 %     \includegraphics[width=0.85\linewidth]{plate1.png}
 %     \caption{For small deformations and large support radius it seems to 
@@ -1831,4 +2061,87 @@ to the CFL condition as:
 \bibliographystyle{abbrv}  % ama, nar, alpha, plain, chicago, abbrv, siam
 \bibliography{library.bib}
 
+
+
+
+
+
+
+% Column types: horizontally + vertically centered, fixed width
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}m{#1}}
+
+\begin{sidewaystable}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+
+\begin{tabular}{@{}L{3.2cm} C{7cm} C{7cm}@{}}
+\toprule
+\textbf{Definition} & \textbf{Energy functional} & \textbf{Distortion} \\
+\midrule
+Kincl &
+$D[\LL](\xx_a) = \sum_b m_{b} w'_{ab}/r_{ab} \|\LL \xx_{ab} - \vv_{ab}\|^2$ &
+$\AA_{a} =\left( \sum_{b} m_{b} w'_{ab}/r_{ab} \XX_{ab}\otimes \xx_{ab}\right) \left( \sum_{b} m_{b} w'_{ab}/r_{ab} \xx_{ab}\otimes \xx_{ab} \right)^{-1}$ \\[6pt]
+MLSEvolved &
+$D[\LL](\xx_a) = \sum_{b} V_{b} w_{ab} \|\LL \xx_{ab} - \vv_{ab}\|^2$ &
+$\AA_{a} =\left( \sum_{b} V_{b} w_{ab} \XX_{ab}\otimes \xx_{ab}\right) \left( \sum_{b} V_{b} w_{ab} \xx_{ab}\otimes \xx_{ab} \right)^{-1}$ \\[6pt]
+MLS &
+$D[\AA](\xx_a) = \sum_{b} V_{b} w_{ab} \|\AA \xx_{ab} - \XX_{ab}\|^2$ &
+$\AA_{a} =\left( \sum_{b} V_{b}w_{ab} \XX_{ab}\otimes \xx_{ab}\right) \left( \sum_{b} V_{b} w_{ab} \xx_{ab}\otimes \xx_{ab} \right)^{-1}$ \\[6pt]
+SingleSumEvolved &
+$D[\LL](\xx_a) = \sum_{b} w_{ab} \|\LL \xx_{ab} - \vv_{ab}\|^2$ &
+$\AA_{a} =\left( \sum_{b}w_{ab} \XX_{ab}\otimes \xx_{ab}\right) \left( \sum_{b}w_{ab} \xx_{ab}\otimes \xx_{ab} \right)^{-1}$ \\[6pt]
+SingleSum &
+$D[\AA](\xx_a) = \sum_{b} w_{ab} \|\AA \xx_{ab} - \XX_{ab}\|^2$ &
+$\AA_{a} =\left( \sum_{b}w_{ab} \XX_{ab}\otimes \xx_{ab}\right) \left( \sum_{b}w_{ab} \xx_{ab}\otimes \xx_{ab} \right)^{-1}$ \\[6pt]
+DoubleSumEvolved &
+$D[\LL](\xx_a) = \sum_{b,c} w_{ab} w_{ac} \|\LL \xx_{bc} - \vv_{bc}\|^2$ &
+$\AA_{a} =\left( \sum_{b, c} w_{ab} w_{ac} \XX_{bc}\otimes \xx_{bc}\right) \left( \sum_{b, c} w_{ab} w_{ac} \xx_{bc}\otimes \xx_{bc} \right)^{-1}$ \\[6pt]
+DoubleSum &
+$D[\AA](\xx_a) = \sum_{b,c} w_{ab} w_{ac} \|\AA \xx_{bc} - \XX_{bc}\|^2$ &
+$\AA_{a} =\left( \sum_{b, c} w_{ab} w_{ac} \XX_{bc}\otimes \xx_{bc}\right) \left( \sum_{b, c} w_{ab} w_{ac}\xx_{bc}\otimes \xx_{bc} \right)^{-1}$ \\
+\bottomrule
+\end{tabular}
+
+\vspace{1cm}
+
+\begin{tabular}{@{}L{3.2cm} C{9cm} C{5cm}@{}}
+\toprule
+\textbf{Definition} & \textbf{Velocity gradient} & \textbf{Projection space and Projected variable} \\
+\midrule
+Kincl &
+$\LL_{a}= \left( \sum_{b} m_{b} w'_{ab}/r_{ab} \vv_{ab}\otimes \xx_{ab}\right) \left( \sum_{b} m_{b} w'_{ab}/r_{ab} \xx_{ab}\otimes \xx_{ab} \right)^{-1}$ &
+$\gl$ and $\LL$ \\[6pt]
+MLSEvolved &
+$\LL_{a}= \left( \sum_{b} V_{b} w_{ab} \vv_{ab}\otimes \xx_{ab}\right) \left( \sum_{b} V_{b} w_{ab} \xx_{ab}\otimes \xx_{ab} \right)^{-1}$ &
+$\gl$ and $\LL$ \\[6pt]
+MLS &
+$\LL_{a}= \left( \sum_{b} V_{b} w_{ab} \vv_{ab}\otimes \xx_{ab}\right) \left( \sum_{b} V_{b} w_{ab} \xx_{ab}\otimes \xx_{ab} \right)^{-1}$ &
+$\GL$ and $\AA$ \\[6pt]
+SingleSumEvolved &
+$\LL_{a}= \left( \sum_{b} w_{ab} \vv_{ab}\otimes \xx_{ab}\right) \left( \sum_{b} w_{ab} \xx_{ab}\otimes \xx_{ab} \right)^{-1}$ &
+$\gl$ and $\LL$ \\[6pt]
+SingleSum &
+$\LL_{a}= \left( \sum_{b} w_{ab} \vv_{ab}\otimes \xx_{ab}\right) \left( \sum_{b} w_{ab} \xx_{ab}\otimes \xx_{ab} \right)^{-1}$ &
+$\GL$ and $\AA$ \\[6pt]
+DoubleSumEvolved &
+$\LL_{a}= \left( \sum_{b,c} w_{ab} w_{ac} \vv_{bc}\otimes \xx_{bc}\right) \left( \sum_{b,c} w_{ab} w_{ac} \xx_{bc}\otimes \xx_{bc} \right)^{-1}$ &
+$\gl$ and $\LL$ \\[6pt]
+DoubleSum &
+$\LL_{a}= \left( \sum_{b,c} w_{ab} w_{ac} \vv_{bc}\otimes \xx_{bc}\right) \left( \sum_{b,c} w_{ab} w_{ac} \xx_{bc}\otimes \xx_{bc} \right)^{-1}$ &
+$\GL$ and $\AA$ \\
+\bottomrule
+\end{tabular}
+
+\captionsetup{justification=centering}
+\caption{Comparison of different definitions of the distortion field:\\
+(top) energy functional and resulting distortion;
+(bottom) velocity gradient and evolved quantity.}
+\end{sidewaystable}
+
 \end{document}
+
+%fountain
+%sph-reversible
+%kincl-unified
