@@ -423,12 +423,12 @@ directions.
     It roughly speaking says how much does the material flow.
     For large $\tau$ the material becomes elastic and for 
     $\tau \rightarrow 0+$ the material behaves more and more like 
-    a Navier-Stokes-Fourier fluid.
+    a Navier—Stokes—Fourier fluid.
    
     In this work we will turn our attention on the case 
     $\tau \rightarrow +\infty$ — a perfectly elastic material and
     the equation of interest will therefore be:
-    \begin{equation}
+    \begin{equation} \label{shtc_evol_A_elastic}
         \dot \AA = - \AA \LL 
     \end{equation}
     The reason is that once we can solve the equations for a
@@ -1063,14 +1063,14 @@ and rotations.
     defines the gradient of a function $f$
     as the best affine approximation of it in the sense
     of a least squares problem
-    \begin{equation}
+    \begin{equation} \label{MLS}
         \nabla f(\xx) =
         \underset{\AA \in \mathbb{R}^{d\times d}}{\text{argmin}}
     \int w(\xx - \yy) \| f(\yy) - f(\xx) - \AA \cdot
     (\xx - \yy) \|^2 \diff \yy
     \end{equation}
     which gives: 
-    \begin{equation}
+    \begin{equation} \label{MLS_solution}
         \nabla f(\xx) = \left( \int w(\xx - \yy)
         (f(\yy) - f(\xx)) \otimes (\yy - \xx) \diff \yy \right) 
         \left( \int w(\xx - \yy) (\yy - \xx) \otimes
@@ -1424,10 +1424,7 @@ of similar methods.
 % \todo[inline] {Remark on conservational properties for $\Ad$}
 
 This formulation, being derived from energy does conserve energy 
-and conserves linear momentum. However, there is a possibility it
-might not conserve angular momentum which could explain behaviour
-near the boundaries. This remains to be tested in the future.
-    % \todo[inline]{TODO: The evolution for $\AA^{double}$ be it the full or the simplified form.}
+and conserves linear momentum by the same argument as in previous section.     % \todo[inline]{TODO: The evolution for $\AA^{double}$ be it the full or the simplified form.}
     %
     % From the simulation \textbf{simple\_A\_simplified\_00} we can see that it fails pretty badly.
     %  \textbf{simple\_A\_simplified\_01} has the same parameters, but the force is tenfold smaller.
@@ -1448,7 +1445,7 @@ near the boundaries. This remains to be tested in the future.
     Finally we will test our finding on a Beryllium plate benchmark
     problem.
     All the numerical code is based on the \textit{SmoothedParticles.jl} Julia library
-    \cite{fountain, sph-reversible, kincl-unified}.
+\cite{fountain, sph-reversible, kincl-unified}.
 %fountain
 %sph-reversible
 %kincl-unified
@@ -2036,23 +2033,79 @@ to the CFL condition as:
 %     \end{subsubsection}
 %
 %
+\todo[inline]{Add norm(A\_evolved - A\_recomputed)}
+\todo[inline]{Add figures for A\_{recomputed} failing} 
+
 \end{subsection} 
 
 \end{section}
 \begin{section}*{Conclusions}
     \todo[inline]{Write down a proper conclusion}
-   We have successfully implemented and tested the new definition for
-   the distortion field as defined in Pavelka and Hutter.
-   WE have also compared the three different definitions of distortion
-   field arrising from several distinct discretization philosophies.
-   We have tested the distinct formulations on a beryllium plate 
-   benchmark and we tested two different integration schemes.
-   The scheme based on recomputing the distortion field every
-   iteration proved to be unstable.
-   The scheme based on the continuum identity $\dot \AA = -\AA \LL$
-   showed remarkable conservational properties.
+   % We have successfully implemented and tested the new definition for
+   % the distortion field as defined in Pavelka and Hutter.
+   % WE have also compared the three different definitions of distortion
+   % field arrising from several distinct discretization philosophies.
+   % We have tested the distinct formulations on a beryllium plate 
+   % benchmark and we tested two different integration schemes.
+   % The scheme based on recomputing the distortion field every
+   % iteration proved to be unstable.
+   % The scheme based on the continuum identity $\dot \AA = -\AA \LL$
+   % showed remarkable conservational properties 
+   % (with tensile penalty off).
+   %
 
 
+   In this paper we have introduced and compared two ideologicaly 
+   distinct families of numerical discretization of the SHTC evolution
+   equation for the distortion field \Ref{shtc_evol_A_elastic} 
+   withing the SPH framework inspired by \cite{hutter-pavelka}.
+   
+
+   Firstly we had defined the distortion field as a weighted LS
+   projection $\proj_{\GL} : \GL \rightarrow \GL$ where we
+   measured the error as $ \AA \xx - \XX$.
+   Secondly we had defined the distortion field as a weighted LS 
+   projection $\proj_{\gl} : \GL \rightarrow \gl$ where we 
+   measured the error as $\LL \xx - \vv$.
+
+   We have shown that the first projection 
+   $\AA \rightarrow \proj_{\GL}\AA$ while an excellent
+   approximation of $\AA$ at a fixed time will not yield the 
+   correct dynamics
+   while the second projection 
+   $\LL \rightarrow \proj_{\GL}\LL$ will yield the correct dynamics
+   for $\AA$.
+   
+   We have suggested several discretizations 
+   (summed up in the appendix) related by 
+   $\diff \left(\proj_{\GL} \AA \right) (\xx) = -
+   \left(\proj_{\GL} \AA \right)(\xx) \left( \proj_{\gl} \LL \right) (\xx) +
+   O(\left( \proj_{\GL}\AA \right) \xx - \XX)$ with the error
+   $O(\left( \proj_{\GL}\AA \right) \xx - \XX)$ being the
+   smallest possible.
+   Next we have derived the equations of motion for both formulations
+   and proved several usefull properties regarding conservation
+   of energy, linear and angular momentum, and order of convergence
+   in space and in time.
+
+   A discussion putting all the methods in place and unifiying them as
+   a weighted LS problem with various lengths was done.
+   We have arrived at the conlusion that the MLS formulation is the
+   'correct' formulation for our problem as it is a discrete version 
+   of \Ref{MLS} and therefore it does take into account the dynamical
+   properties of individual particles (ie the volume, density and mass)
+   unline the \textit{SingleSum} 
+   formulation which does take into account only the geometry (positions).
+   To put it plainly MLS uses the correct quadrature weights which do
+   recover the distortion field in the limit.
+
+
+   We have performed multiple numerical simulations to confirm our
+   findings.
+
+   The code used for the simulations is made public and can be found
+   on this adress: \href{https://github.com/MichaelMoncek/particle-distortion-shtc}{https://github.com/MichaelMoncek/particle-distortion-shtc}
+   % on this adress: https://github.com/MichaelMoncek/particle-distortion-shtc
 \end{section}
 
 %%% Bibliography

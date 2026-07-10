@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex shtc-sph"] 1783703998.45134 "shtc-sph.aux" "shtc-sph.bbl" "shtc-sph" 1783704028.22053 0
+["bibtex shtc-sph"] 1783722732.20049 "shtc-sph.aux" "shtc-sph.bbl" "shtc-sph" 1783722733.28338 0
   "./library.bib" 1763288639.34346 529836 c3b12ac802d179b49f12fb0c6b6ad96e ""
   "/usr/share/texlive/texmf-dist/bibtex/bst/base/abbrv.bst" 1764115200 20329 b5fed53e10044d0f8112183785c759b1 ""
-  "shtc-sph.aux" 1783704027.51768 3514 c606c06735c0a0c8287e6edfb8396a47 "pdflatex"
+  "shtc-sph.aux" 1783722732.97181 4086 bf1cf59810acc7b635f3b288ca4c553c "pdflatex"
   (generated)
   "shtc-sph.bbl"
   "shtc-sph.blg"
   (rewritten before read)
-["pdflatex"] 1783704025.51395 "shtc-sph.tex" "shtc-sph.pdf" "shtc-sph" 1783704028.22095 0
+["pdflatex"] 1783722732.28125 "shtc-sph.tex" "shtc-sph.pdf" "shtc-sph" 1783722733.28379 0
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc" 1202520719 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1202520719 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc" 1202520719 2840 216e6e45ad352e2456e1149f28885bee ""
@@ -251,7 +251,7 @@
   "/usr/share/texlive/texmf-dist/tex/latex/xkeyval/xkeyval.sty" 1655411236 4937 4ce600ce9bd4ec84d0250eb6892fcf4f ""
   "/usr/share/texlive/texmf-dist/web2c/texmf.cnf" 1764115200 40900 887e0dc8cac988a9e9c574af364cf837 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1766146262.33736 4547210 0b4d8bce3d83ee4f50b88a57a6a0d7ef ""
-  "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1775255385 7759955 af9c3bb2c69100a220b8f67e30e6b244 ""
+  "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1783721131 7759954 bd100b3016aa2517659add1a1b7d3444 ""
   "img/MLSEvolved center position.pdf" 1783635976 15330 9a7c380fbbe865ad6687e6c88d69d624 ""
   "img/MLSEvolved energy components.pdf" 1783636372 25798 e0e2ec18849f189b354756c830565087 ""
   "img/MLSEvolved_24.png" 1783536551.90734 156471 d8bfb63e094acced9181de87c40b24c4 ""
@@ -263,10 +263,10 @@
   "img/SingleSumEvolved_24.png" 1783536729.14144 124687 a944806bfdb24970a877b8a21d27c78f ""
   "img/SingleSumEvolved_49.png" 1783536750.05631 162099 0a09715ebe283073f0a7d29d91d7730e ""
   "img/SingleSumEvolved_74.png" 1783536775.84415 153398 44a83c6a13a8dbbfab89f0870f41d4e5 ""
-  "shtc-sph.aux" 1783704027.51768 3514 c606c06735c0a0c8287e6edfb8396a47 "pdflatex"
-  "shtc-sph.bbl" 1783703998.61224 914 fb7a821a045404f22d476aeb49315d8c "bibtex shtc-sph"
-  "shtc-sph.out" 1783704026.70669 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "shtc-sph.tex" 1783704024.98771 93299 73e61930e0ed28649ef03243b52164e4 ""
+  "shtc-sph.aux" 1783722732.97181 4086 bf1cf59810acc7b635f3b288ca4c553c "pdflatex"
+  "shtc-sph.bbl" 1783722732.27381 914 fb7a821a045404f22d476aeb49315d8c "bibtex shtc-sph"
+  "shtc-sph.out" 1783722732.69981 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "shtc-sph.tex" 1783722729.26484 95905 7518bc552ffe0ee19572989bf427b89a ""
   (generated)
   "shtc-sph.aux"
   "shtc-sph.log"
