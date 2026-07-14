@@ -3,9 +3,10 @@ include("beryllium_plate.jl")
 using .plate
 
 params = plate.SimulationParameters()
-params.t_end = 3e-5/100.0
+params.t_end = 3e-5/1.0
+params.dt_factor = 0.05
 # params.model = plate.DoubleSumEvolved()
-params.model = plate.DoubleSumMLSEvolved()
+params.model = plate.MLSEvolved()
 
 
 d = plate.derived_parameters(params)

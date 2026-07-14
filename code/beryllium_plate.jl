@@ -53,7 +53,7 @@ const c_s = 9046.59  #shear sound speed
 const c_0 = sqrt(c_l^2 + 4/3*c_s^2)  #total sound speed 
 const rho0 = 1845.0   #density
 const c_p = 0.040*c_l  #tensile penalty term
-const init_velocity_multiplier = 0.0 # initial velocity multiplier
+const init_velocity_multiplier = 1.0 # initial velocity multiplier
 # const c_p = 1.0*0.0001*4.0*c_l  #tensile penalty term
 # const c_p = 0.010*4.0*c_l  #tensile penalty term
 
@@ -112,6 +112,7 @@ end
     condP::Float64 = 0.0    # the condition number of P
     condQ::Float64 = 0.0    # the condition number of Q
     eQ::Float64 = 0.0
+    error_rel_A::Float64= 0.0
     # Energies
     E_kinet::Float64 = 0.0
     E_shear::Float64 = 0.0
@@ -228,7 +229,7 @@ function reset!(p::Particle)
     p.eQ   = 0.0
     p.rho  = 0.0 
     p.lambda = 0.0
-
+    p.error_rel_A = 0.0
     # reset the averaging values
     p.ker_sum = 0.0
     p.x_avg = VEC0
@@ -358,7 +359,7 @@ function main(params::SimulationParameters)
     out = new_pvd_file("results/"*folder_name)
     csv_data = open("results/"*folder_name*"/plate.csv", "w")
     write(csv_data, 
-          string("t,y,E_total,E_kinetic,E_vol,E_shear,E_penalty, total_error, avg_error, max_error\n"))
+          string("t,y,E_total,E_kinetic,E_vol,E_shear,E_penalty, total_error, avg_error, max_error, error_rel_A\n"))
     
     save_parameters(params)
     time_steps = Int64(round(t_end/dt))
@@ -401,7 +402,7 @@ function main(params::SimulationParameters)
         end
         if (k % Int64(round(dt_frame/dt)) == 0)
             save_frame!(out, sys, :v, :A, :e, :P, :Q, :invQ, :L,
-                        :eQ, :error, :x_avg,
+                        :eQ, :error, :x_avg, :error_rel_A,
                         :pressure, :dev_stress, :norm_devG, :G,
                         :rho, :C_rho, :lambda, 
                         :C_lambda, :ker_sum,

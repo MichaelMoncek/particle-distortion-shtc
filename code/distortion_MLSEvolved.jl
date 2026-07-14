@@ -11,6 +11,20 @@ function find_A!(::MLSEvolved, p::Particle,
     p.Q += ker*outer(x_pq, x_pq)
 end
 
+function find_P!(::MLSEvolved, p::Particle,
+                               q::Particle, r::Float64)
+    ker = wendland2(h, r)
+    x_pq = p.x - q.x
+    X_pq = p.X - q.X
+    p.P += ker*outer(X_pq, x_pq)
+end
+
+function find_error_rel_A!(::MLSEvolved, p::Particle)
+    A_projected = p.P*inv(p.Q)
+    # p.error_rel_A = norm(p.A - A_projected) / norm(p.A)
+    p.error_rel_A = norm(10*p.A - A_projected) + 1
+end
+
 function find_L!(::MLSEvolved, p::Particle, 
                                      q::Particle, r::Float64)
     # vol = m / q.rho # possible division by zero
@@ -86,4 +100,8 @@ function evolve_A!(model::MLSEvolved, sys::ParticleSystem)
     apply!(sys, reset_L_and_Q!)
     apply!(sys, (p,q,r) -> find_L!(model, p, q, r))
     apply!(sys, p -> update_A!(model, p))
+
+    # find out the relative error between recomputed A and evolved A
+    apply!(sys, (p,q,r) -> find_P!(model, p, q, r))
+    apply!(sys, p -> find_error_rel_A!(model, p))
 end

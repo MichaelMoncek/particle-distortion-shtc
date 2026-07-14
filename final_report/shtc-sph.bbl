@@ -20,4 +20,9 @@ O.~Kincl, D.~Schmoranzer, and M.~Pavelka.
 \newblock Simulation of superfluid fountain effect using smoothed particle hydrodynamics.
 \newblock {\em Physics of Fluids}, 35(047124), 2023.
 
+\bibitem{sph-correction}
+L.~Westhofen, S.~Jeske, and J.~Bender.
+\newblock A comparison of linear consistent correction methods for first-order sph derivatives.
+\newblock {\em Proceedings of the ACM on Computer Graphics and Interactive Techniques}, 6:1--20, 08 2023.
+
 \end{thebibliography}
