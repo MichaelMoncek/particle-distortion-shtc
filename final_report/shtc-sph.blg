@@ -3,44 +3,44 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: shtc-sph.aux
 The style file: abbrv.bst
 Database file #1: library.bib
-You've used 2 entries,
+You've used 5 entries,
             2118 wiz_defined-function locations,
-            511 strings with 4093 characters,
-and the built_in function-call counts, 748 in all, are:
-= -- 72
-> -- 36
+            530 strings with 4651 characters,
+and the built_in function-call counts, 1660 in all, are:
+= -- 159
+> -- 85
 < -- 0
-+ -- 14
-- -- 12
-* -- 61
-:= -- 132
-add.period$ -- 6
-call.type$ -- 2
-change.case$ -- 12
++ -- 34
+- -- 28
+* -- 129
+:= -- 294
+add.period$ -- 15
+call.type$ -- 5
+change.case$ -- 29
 chr.to.int$ -- 0
-cite$ -- 2
-duplicate$ -- 22
-empty$ -- 56
-format.name$ -- 12
-if$ -- 148
+cite$ -- 5
+duplicate$ -- 54
+empty$ -- 122
+format.name$ -- 28
+if$ -- 332
 int.to.chr$ -- 0
-int.to.str$ -- 2
-missing$ -- 2
-newline$ -- 13
-num.names$ -- 4
-pop$ -- 8
+int.to.str$ -- 5
+missing$ -- 5
+newline$ -- 28
+num.names$ -- 10
+pop$ -- 19
 preamble$ -- 1
-purify$ -- 10
+purify$ -- 24
 quote$ -- 0
-skip$ -- 15
+skip$ -- 38
 stack$ -- 0
-substring$ -- 62
-swap$ -- 2
+substring$ -- 108
+swap$ -- 5
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 8
+type$ -- 20
 warning$ -- 0
-while$ -- 7
-width$ -- 3
-write$ -- 24
+while$ -- 15
+width$ -- 6
+write$ -- 57
