@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex shtc-sph"] 1783989996.48731 "shtc-sph.aux" "shtc-sph.bbl" "shtc-sph" 1783990280.66314 0
+["bibtex shtc-sph"] 1784027233.99513 "shtc-sph.aux" "shtc-sph.bbl" "shtc-sph" 1784027236.02462 0
   "./library.bib" 1783988715.35961 530189 4b5c8aa8a8de946d88517fb442ea8c8a ""
   "/usr/share/texlive/texmf-dist/bibtex/bst/base/abbrv.bst" 1764115200 20329 b5fed53e10044d0f8112183785c759b1 ""
-  "shtc-sph.aux" 1783990280.41102 3628 396fc0bb40482ec5d2db66c9c6016ffd "pdflatex"
+  "shtc-sph.aux" 1784027235.47826 4076 145b6ff2a32c2b93f259f58527d82516 "pdflatex"
   (generated)
   "shtc-sph.bbl"
   "shtc-sph.blg"
   (rewritten before read)
-["pdflatex"] 1783990279.79216 "shtc-sph.tex" "shtc-sph.pdf" "shtc-sph" 1783990280.66332 0
+["pdflatex"] 1784027234.1157 "shtc-sph.tex" "shtc-sph.pdf" "shtc-sph" 1784027236.02494 0
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc" 1202520719 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1202520719 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc" 1202520719 2840 216e6e45ad352e2456e1149f28885bee ""
@@ -239,6 +239,7 @@
   "/usr/share/texlive/texmf-dist/tex/latex/pgf/utilities/pgffor.sty" 1601326656 348 ee405e64380c11319f0e249fed57e6c5 ""
   "/usr/share/texlive/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty" 1601326656 274 5ae372b7df79135d240456a1c6f2cf9a ""
   "/usr/share/texlive/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty" 1601326656 325 f9f16d12354225b7dd52a3321f085955 ""
+  "/usr/share/texlive/texmf-dist/tex/latex/placeins/placeins.sty" 1137110565 4087 636308456f60d2b31cbf97867db5708d ""
   "/usr/share/texlive/texmf-dist/tex/latex/refcount/refcount.sty" 1576624809 9878 9e94e8fa600d95f9c7731bb21dfb67a4 ""
   "/usr/share/texlive/texmf-dist/tex/latex/relsize/relsize.sty" 1369619135 15542 c4cc3164fe24f2f2fbb06eb71b1da4c4 ""
   "/usr/share/texlive/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty" 1657483315 9714 ba3194bd52c8499b3f1e3eb91d409670 ""
@@ -263,10 +264,14 @@
   "img/SingleSumEvolved_24.png" 1783536729.14144 124687 a944806bfdb24970a877b8a21d27c78f ""
   "img/SingleSumEvolved_49.png" 1783536750.05631 162099 0a09715ebe283073f0a7d29d91d7730e ""
   "img/SingleSumEvolved_74.png" 1783536775.84415 153398 44a83c6a13a8dbbfab89f0870f41d4e5 ""
-  "shtc-sph.aux" 1783990280.41102 3628 396fc0bb40482ec5d2db66c9c6016ffd "pdflatex"
-  "shtc-sph.bbl" 1783989996.54458 1181 0fdbb5b89501aee42d66ef2952f1ed82 "bibtex shtc-sph"
-  "shtc-sph.out" 1783990280.15608 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "shtc-sph.tex" 1783990278.38803 97619 0ef4ef6223d03c35a36e845fe0d02f69 ""
+  "img/SingleSum_1.png" 1783954580.40677 101579 2af172c8495333701ee060984edf30e1 ""
+  "img/SingleSum_2.png" 1783954591.72868 133478 62250a58afa978b231389d28b015832f ""
+  "img/SingleSum_3.png" 1783954597.60864 164047 5a417ac045965d9263f4f2fc6aa0a54d ""
+  "img/SingleSum_4.png" 1783954605.45958 168003 1194d524bc7409bedc0b8bb3a672b4ec ""
+  "shtc-sph.aux" 1784027235.47826 4076 145b6ff2a32c2b93f259f58527d82516 "pdflatex"
+  "shtc-sph.bbl" 1784027234.10526 1181 0fdbb5b89501aee42d66ef2952f1ed82 "bibtex shtc-sph"
+  "shtc-sph.out" 1784027234.86283 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "shtc-sph.tex" 1784027230.93028 99269 5afcb7aadab2be412a414f2d43c880a4 ""
   (generated)
   "shtc-sph.aux"
   "shtc-sph.log"

@@ -229,7 +229,7 @@ function reset!(p::Particle)
     p.eQ   = 0.0
     p.rho  = 0.0 
     p.lambda = 0.0
-    p.error_rel_A = 0.0
+    # p.error_rel_A = 0.0
     # reset the averaging values
     p.ker_sum = 0.0
     p.x_avg = VEC0
@@ -359,7 +359,7 @@ function main(params::SimulationParameters)
     out = new_pvd_file("results/"*folder_name)
     csv_data = open("results/"*folder_name*"/plate.csv", "w")
     write(csv_data, 
-          string("t,y,E_total,E_kinetic,E_vol,E_shear,E_penalty, total_error, avg_error, max_error, error_rel_A\n"))
+          string("t,y,E_total,E_kinetic,E_vol,E_shear,E_penalty,total_error,avg_error,max_error,error_rel_A\n"))
     
     save_parameters(params)
     time_steps = Int64(round(t_end/dt))
@@ -385,6 +385,7 @@ function main(params::SimulationParameters)
             avg_error = sum(p -> p.e, sys.particles) / length(sys.particles)
             # max_error = find_minimizer(p -> -p.e, sys).e
             max_error = maximum(p.e for p in sys.particles)
+            error_rel_A = sum(p -> p.error_rel_A, sys.particles) / length(sys.particles)
             @show E_total
             @show E_kinetic
             @show E_vol
@@ -393,12 +394,13 @@ function main(params::SimulationParameters)
             @show total_error
             @show avg_error 
             @show max_error 
+            @show error_rel_A
             println()
             write(csv_data, vec2string([t, y, E_total,
                                         E_kinetic,
                                         E_vol, E_shear,
                                         E_penalty, 
-                                        total_error, avg_error, max_error]))
+                                        total_error, avg_error, max_error, error_rel_A]))
         end
         if (k % Int64(round(dt_frame/dt)) == 0)
             save_frame!(out, sys, :v, :A, :e, :P, :Q, :invQ, :L,

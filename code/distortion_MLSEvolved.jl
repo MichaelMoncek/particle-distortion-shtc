@@ -13,7 +13,8 @@ end
 
 function find_P!(::MLSEvolved, p::Particle,
                                q::Particle, r::Float64)
-    ker = wendland2(h, r)
+    Vq = m / q.rho
+    ker = Vq*wendland2(h, r)
     x_pq = p.x - q.x
     X_pq = p.X - q.X
     p.P += ker*outer(X_pq, x_pq)
@@ -21,8 +22,7 @@ end
 
 function find_error_rel_A!(::MLSEvolved, p::Particle)
     A_projected = p.P*inv(p.Q)
-    # p.error_rel_A = norm(p.A - A_projected) / norm(p.A)
-    p.error_rel_A = norm(10*p.A - A_projected) + 1
+    p.error_rel_A = norm(p.A - A_projected) / norm(A_projected)
 end
 
 function find_L!(::MLSEvolved, p::Particle, 

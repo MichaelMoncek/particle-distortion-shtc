@@ -179,6 +179,19 @@ function plot_max_error_vs_dt(runs, dt_factor)
     return p
 end
 
+function plot_error_rel_A(run_MLS, run_SingleSum)
+    p = plot(
+        xlabel = "Time [s]",
+        ylabel = "Relative error",
+        title = "Relative error A evolved vs A recomputed",
+        grid = true,)
+        plot!(p, run_MLS.t, run_MLS.error_rel_A,
+              label = "MLSEvolved", lw = 2)
+        plot!(p, run_SingleSum.t, run_SingleSum.error_rel_A,
+              label = "SingleSumEvolved", lw = 2)
+        return p
+end
+
 function plot_max_error_vs_dr(runs, dr)
     selected = select_runs(runs; dr = dr)
     selected = sort(selected, by = r -> r.params.dt_factor)

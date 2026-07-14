@@ -4,8 +4,8 @@ using .plate
 
 params = plate.SimulationParameters()
 params.t_end = 3e-5/1.0
-params.dt_factor = 0.05
-# params.model = plate.DoubleSumEvolved()
+params.dt_factor = 0.01
+# params.model = plate.SingleSumEvolved()
 params.model = plate.MLSEvolved()
 
 

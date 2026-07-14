@@ -19,7 +19,7 @@ end
 
 function find_error_rel_A!(::SingleSumEvolved, p::Particle)
     A_projected = p.P*inv(p.Q)
-    p.error_rel_A = norm(p.A - A_projected) / norm(p.A)
+    p.error_rel_A = norm(p.A - A_projected) / norm(A_projected)
 end
 
 function find_L!(::SingleSumEvolved, p::Particle, 

@@ -35,7 +35,7 @@
 
 \usepackage{booktabs}
 \usepackage{rotating} % add this to your preamble
-\usepackage{array} % for p{} columns
+\usepackage{placeins}
 
 \linespread{1.0}
 
@@ -441,48 +441,58 @@ directions.
 
     
     
-\begin{subsection}*{Distortion as a minimization problem}
+\begin{subsection}*{Particle Distortion field as a minimization problem}
     In this section inspired by \cite{hutter-pavelka} we will define the distortion field as a minimizer of the following minimization problem:
     \begin{equation}\label{ls_problem}
         \AA(x) = \underset{\AA \in \mathbb{R}^{d\times d}}{\text{argmin}} \sum_b w(\xx - \xx_b) \| \AA(\xx - \xx_b) - (\XX - \XX_b)\|^2
     \end{equation}
-    The term
-    \begin{equation}
-    e_{b}(\xx) := \|\AA(\xx - \xx_b) - (\XX - \XX_b)\|
-    \end{equation}
-    plays the role of the error by which we fail to approximate the linearized relation:
-     \begin{equation}
-        \AA(x) d\xx - d\XX = 0
-    \end{equation}
-    The equation \Ref{ls_problem} can be than written compactly as:
-
-    \begin{equation}
-        \AA(x) =  \underset{\AA \in \mathbb{R}^{d\times d}}{\text{argmin}} \sum_{b} w(\xx - \xx_b) e_b(\xx)^2 
-    \end{equation}
-    which is a weighted least squares problem. 
+    and we will prove existence of the solution under mild conditions on the particle distribution.
+    This will serve as a cornerstone of this work as all the results and schemes presented here are essentialy the same
+    minimization problem with slightly different weights $w$.
+    %
+    % The term
+    % \[
+    %     e_{b}(\xx) := \|\AA(\xx - \xx_b) - (\XX - \XX_b)\|
+    % \]
+    % plays the role of the error by which we fail to approximate the linearized relation for small $\diff \xx$ and $\diff \XX$:
+    %  \[
+    %     \AA(x) d\xx - d\XX = 0
+    % \]
+    % The equation \Ref{ls_problem} can be than written compactly as:
+    %
+    % \[
+    %     \AA(x) =  \underset{\AA \in \mathbb{R}^{d\times d}}{\text{argmin}} \sum_{b} w(\xx - \xx_b) e_b(\xx)^2 
+    % \]
+    % which is a weighted least squares problem. 
     
-    Evaluated at position $\xx_a$ associated with particle $a$ we get the following:
-    \begin{equation}
+    While definition \Ref{ls_problem} is advantageous as it allows us to define the distortion field 
+    for arbitrary position $\xx$ we will be working with particle based Lagrangian methods and therefore
+    we will always be interested how does the distortion field evaluated at position $\xx_a$ associated with particle $a$
+    look like. 
+    The minimization problem \Ref{ls_problem} evaluated at $\xx_a$ can be than written as:
+    \begin{equation} \label{ls_problem_a}
         \AA_{a} = \underset{\AA \in \mathbb{R}^{d\times d}}{\text{argmin}} \sum_{b} w_{ab} \|\AA \xx_{ab} - \XX_{ab}\|^2
     \end{equation}
 
-    Next we will prove that \Ref{ls_problem} has a solution:
-    \newtheorem{LS_problem}{Lemma: (LS problem)}
+    Next we will prove that \Ref{ls_problem_a} does have a solution.\\
+    % \newtheorem{LS_problem}{Lemma: (LS problem)}
+    \textbf{Observation}:\\
+    \Ref{ls_problem_a} has a solution assuming $\QQ_a$ is invertible.
+    Furthermore the solution can be explicitely written as $\AA_{a} = \PP_{a} \QQ_a^{-1}$
 
-    \begin{LS_problem}
-        \text{The LS problem } \Ref{ls_problem} \text{ has a solution.}
-    \end{LS_problem}
+    % \begin{LS_problem}
+    %     \text{The LS problem } \Ref{ls_problem} \text{ has a solution.}
+    % \end{LS_problem}
     \textbf{Proof:}\\
     Let $I(\AA_a) :=  \frac{1}{2} \sum_{b} w_{ab} |\ \AA_{a}\xx_{ab} - \XX_{ab}\|^2$ and observe that 
     $I(\AA_a)$ is a differentiable and coercive function meaning: 
-    \begin{equation}
+    \[
         I(\AA_a)/\|\AA_a\| \rightarrow + \infty
-    \end{equation}
-    This implies existence of global minimum. %The neccessary condition for existence of a min 
-    
-    We can also compute this minimum explicitly:\\
-    Lets denote $\AA_{a}\xx_{ab} - \XX_{ab} =: e_{ab}$ and lets take the Gatteaux derivative of $I(\AA_a)$ in the direction $\diff \AA_a$
-    \begin{equation}
+    \]
+    This implies existence of a global minimum. %The neccessary condition for existence of a min 
+    To compute this minimum explicitly
+    let us first denote $\AA_{a}\xx_{ab} - \XX_{ab} =: e_{ab}$ and lets take the Gatteaux derivative of $I(\AA_a)$ in the direction $\diff \AA_a$:
+    \[
         \begin{aligned}
         \text{D}I(\AA_{a})[\diff \AA_a] := \lim_{\lambda \rightarrow 0+} 
         \frac{I(\AA_{a} + \lambda \diff \AA_a) - I(\AA_a)}{\lambda} =\\ 
@@ -494,7 +504,7 @@ directions.
         \sum_{b} w_{ab} \left( \AA_{a}\xx_{ab} - \XX_{ab} \right) \cdot \diff \AA_{a} \xx_{ab} = \\
         \diff \AA_{a} : \left( \sum_{b} w_{ab} \left( \AA_{a} \xx_{ab} - \XX_{ab} \right) \cdot \xx_{ab}  \right) 
         \end{aligned}
-    \end{equation}
+    \]
     Which immediately implies:
     \begin{equation}
         \AA_a = \PP_a \QQ_a^{-1}
@@ -505,71 +515,72 @@ directions.
     \end{equation}
     Notice that the matrix $\QQ_a$ is positive definite and hence invertible (unless $\xx_{ab} = 0$ for all $a, b$).
     To prove it, we need to show that $\vv \cdot \QQ_{a} \vv > 0 $ for each  nonzero $\vv$.
-    \begin{equation}
+    \[
         \vv \cdot \QQ_{a} \vv = \vv \cdot  \left( \sum_b w_{ab} \xx_{ab} \otimes \xx_{ab} \right) \vv =
         \sum_{b} w_{ab} (\xx_{ab} \cdot \vv)^2 > 0
-    \end{equation}
+    \]
     
 
     We can also generalize this and use the definition from Pavelka \& Hutter \cite{hutter-pavelka} where we hope to
     achieve better precision at the cost of summing over all particle pairs instead of singletons.
-    \begin{equation}
-        \AA^{double}(x) = \underset{\AA \in \mathbb{R}^{d\times d}}{\text{argmin}} \sum_b \sum_{c} w(\xx - \xx_b) w(\xx - \xx_c)
+    The minimization problem from \cite{hutter-pavelka} reads as:
+    \[
+        \Ad(x) = \underset{\AA \in \mathbb{R}^{d\times d}}{\text{argmin}} \sum_b \sum_{c} w(\xx - \xx_b) w(\xx - \xx_c)
         \| \AA\xx_{bc} - \XX_{bc}\|^2
-    \end{equation}
+    \]
     Evaluated at position $\xx_a$ associated with particle $a$ we get the following: 
-    \begin{equation}
-        \AA^{double}_a = \underset{\AA \in \mathbb{R}^{d\times d}}{\text{argmin}} \sum_b \sum_{c} w_{ab} w_{ac}
+    \[
+        \Ad_a = \underset{\AA \in \mathbb{R}^{d\times d}}{\text{argmin}} \sum_b \sum_{c} w_{ab} w_{ac}
         \| \AA\xx_{bc} - \XX_{bc}\|^2
-    \end{equation}
+    \]
     Following the same procedure as in the first example we get the explicit formula for 
-    $\AA^{double}$ in this case:
-    \begin{equation}
-        \AA^{double}(\xx) = \left( \sum_{a,b} w_a w_b \XX_{ab} \otimes \xx_{ab} \right) 
+    $\Ad$ in this case:
+    \[
+        \Ad(\xx) = \left( \sum_{a,b} w_a w_b \XX_{ab} \otimes \xx_{ab} \right) 
         \left( \sum_{a,b} w_a w_b \xx_{ab} \otimes \xx_{ab} \right)^{-1}
-    \end{equation} 
+    \]
     Evaluated at position $\xx_a$ associated with particle $a$ we get the following:
-    \begin{equation}
-        \AA^{double}_a = \PP^{double}_a (\QQ^{double}_a)^{-1}
-    \end{equation}
+    \[
+        \Ad_a = \Pd_a (\Qd_a)^{-1}
+    \]
     where
-    \begin{equation}
-        \PP^{double}_a = \left( \sum_{b,c} w_{ab} w_{ac} \XX_{bc} \otimes \xx_{bc} \right) \text{ and } 
-        \QQ^{double}_a = \left( \sum_{b,c} w_{ab} w_{ac} \xx_{bc} \otimes \xx_{bc} \right)
-    \end{equation} 
+    \[
+        \Pd_a = \left( \sum_{b,c} w_{ab} w_{ac} \XX_{bc} \otimes \xx_{bc} \right) \text{ and } 
+        \Qd_a = \left( \sum_{b,c} w_{ab} w_{ac} \xx_{bc} \otimes \xx_{bc} \right)
+    \]
     % To deal with the computational complexity that is quadratic in this case we can make the following observation:
-    We can make the following interesting observation that allows us to rewrite $\AA^double_{a}$ in an alternative way:
+    We can make the following interesting observation that allows us to rewrite $\Ad_{a}$ in an alternative way:
 
     \textbf{Notice:} 
-    \begin{equation}
+    \[
         \xx_{bc} \otimes \xx_{bc} = (\xx_{b} - \xx_{c}) \otimes (\xx_{b}- \xx_c) =
         \xx_{b} \otimes \xx_{b} + \xx_{c} \otimes \xx_{c} - \xx_{b} \otimes \xx_{c} - \xx_{c} \otimes \xx_b
-    \end{equation}
+    \]
     Therefore we have:
-    \begin{equation}
+    \[
         \begin{aligned}
         \QQ^{double}_a = \sum_{b,c} w_{ab} w_{ac} \left( 
         \xx_{b} \otimes \xx_{b} + \xx_{c} \otimes \xx_{c} - \xx_{b} \otimes \xx_{c} - \xx_{c} \otimes \xx_b \right) =\\
         2 \left( \sum_{b} w_{ab} \right) \left( \sum_{b} w_{ab} \xx_{b} \otimes \xx_{b} \right) 
         - 2 \left( \sum_{b} w_{ab} \xx_b \right) \otimes \left( \sum_{b} w_{ab} \xx_b \right)
         \end{aligned}
-    \end{equation}
+    \]
     which after introducing the notation: $\bar \xx_{a} := (\sum_{b} w_{ab} \xx_b) / (\sum_{b} w_{ab})$ and realizing that
     $\sum_{b} w_{ab} (\xx_{b} - \bar \xx_a) = 0$ can be written as:
-    \begin{equation}
-        \QQ^{double}_a = 2 \left( \sum_{b} w_{ab} \right) \left( \sum_{b} (\xx_{b} - \bar \xx_a) \otimes  (\xx_{b} - \bar \xx_a) \right) 
-    \end{equation}
+    \[
+        \Qd_a = 2 \left( \sum_{b} w_{ab} \right) \left( \sum_{b} (\xx_{b} - \bar \xx_a) \otimes  (\xx_{b} - \bar \xx_a) \right) 
+    \]
     And similarly:
-    \begin{equation}
-        \PP^{double}_a = 2 \left( \sum_{b} w_{ab} \right) \left( \sum_{b} (\XX_{b} - \bar \XX_a) \otimes  (\xx_{b} - \bar \xx_a) \right) 
-    \end{equation}
+    \[
+        \Pd_a = 2 \left( \sum_{b} w_{ab} \right) \left( \sum_{b} (\XX_{b} - \bar \XX_a) \otimes  (\xx_{b} - \bar \xx_a) \right) 
+    \]
     We can also get rid of the prefactor $2 \left( \sum_{b} w_{ab} \right)$ as it will not change the value of $\AA^{double}_a$ 
     and simply write:
-    \begin{equation}
-        \AA^{double}_a = \left( \sum_{b} (\XX_{b} - \bar \XX_a) \otimes  (\xx_{b} - \bar \xx_a) \right)
+    \[
+        \Ad_a = \left( \sum_{b} (\XX_{b} - \bar \XX_a) \otimes  (\xx_{b} - \bar \xx_a) \right)
         \left( \sum_{b} (\xx_{b} - \bar \xx_a) \otimes  (\xx_{b} - \bar \xx_a) \right)^{-1}
-    \end{equation}
-    Notice that to compute $\AA^{double}_a$ from this definition we only need to know 
+    \]
+    Notice that to compute $\Ad_a$ from this definition we only need to know 
     $\bar \xx_{a} := (\sum_{b} w_{ab} \xx_b) / (\sum_{b} w_{ab})$ which can be precomputed.
 
     \begin{subsubsection}*{Convergence order}
@@ -1745,7 +1756,7 @@ and conserves linear momentum by the same argument as in previous section.     %
     .\] 
     comparing this with the exponential:
     \[
-    \exp(\KK) = \II - \KK + \frac{1}{2} \KK^{2} - 
+    \exp(-\KK) = \II - \KK + \frac{1}{2} \KK^{2} - 
     \frac{1}{6}\KK^{3} + O(\|\KK^4\|)
     .\] 
     so we have:
@@ -1892,6 +1903,40 @@ to the CFL condition as:
         distortion field in the Beryllium benchmark problem.
     }
     \label{fig:Single_vs_MLS_plate}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    % First row
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\linewidth]{img/SingleSum_1.png}
+        % \caption{t = 0.075 $\mu$s, $c_{p} / c_{0}= 0.04$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \includegraphics[width=\linewidth]{img/SingleSum_2.png}
+        % \caption{t = 0.075 $\mu$s, $c_{p} / c_{0}= 0.04$}
+    \end{subfigure}
+    
+    % Second row
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\linewidth]{img/SingleSum_3.png}
+        % \caption{t = 0.075 $\mu$s, $c_{p} / c_{0}= 0.04$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \includegraphics[width=\linewidth]{img/SingleSum_4.png}
+        % \caption{t = 0.075 $\mu$s, $c_{p} / c_{0}= 0.04$}
+    \end{subfigure}
+
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=\linewidth]{img/MLS_vs_SingleSum_axis.png}
+    \end{subfigure}
+    \caption{Pressure field of the projection of $\AA$ - SingleSum. 
+        The simulation will develop instabilities early
+        and fail as expected.
+    }
+    \label{fig:Single_vs_MLS_plate_recomputed}
 \end{figure}
 
 \begin{figure}
@@ -2073,11 +2118,12 @@ to the CFL condition as:
 %
 %
 \todo[inline]{Add norm(A\_evolved - A\_recomputed)}
-\todo[inline]{Add figures for A\_{recomputed} failing} 
+% \todo[inline]{Add figures for A\_{recomputed} failing} 
 
 \end{subsection} 
 
 \end{section}
+\FloatBarrier
 \begin{section}*{Conclusions}
     % \todo[inline]{Write down a proper conclusion}
    % We have successfully implemented and tested the new definition for
