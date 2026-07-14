@@ -67,6 +67,7 @@
 using CSV
 using DataFrames
 using Plots
+using Printf
 
 include("beryllium_plate.jl")
 using .plate
@@ -98,6 +99,8 @@ end
 # loads CSV file from path
 function _load_csv(path)
     df = CSV.read(path, DataFrame)
+    # remove leading/trailing whitespaces
+    rename!(df, Symbol.(strip.(string.(names(df)))))
     return df
 end
 
@@ -124,14 +127,20 @@ function load_all_runs()
     return [load_run(entry) for entry in PARAM_TABLE]
 end
 
-function select_runs(runs; dr=nothing, dt_factor=nothing)
+function select_runs(runs; dr=nothing, dt_factor=nothing, 
+                     model=nothing)
     selected = runs
     if dr !== nothing
-        selected = filter(r -> r.params.dr == dr, selected)
+        selected = filter(r -> isapprox(r.params.dr, dr), selected)
     end
 
     if dt_factor !== nothing
-        selected = filter(r -> r.params.dt == dt_factor, selected)
+        selected = filter(r -> isapprox(r.params.dt_factor, dt_factor), selected)
+    end
+
+    if model !== nothing
+        selected = filter(r -> (string(nameof(typeof(r.params.model)))
+== model), selected)
     end
 
     if isempty(selected)
@@ -143,7 +152,7 @@ end
 function run_label(run)
     params = run.params
     model_name = string(nameof(typeof(params.model)))
-    run_label = "$(model_name), dr=$(params.dr), dt=$(params.dt)dr/c0"
+    run_label = "$(model_name), dr=$(params.dr), dt=$(params.dt_factor)dr/c0"
     return run_label
 end
 
@@ -173,8 +182,9 @@ function plot_max_error_vs_dt(runs, dt_factor)
         grid   = true,
     )
     for r in selected
+    label = @sprintf("dr=%.3g", r.params.dr)
         plot!(p, r.df.t, r.df.max_error,
-              label = "dr=$(r.params.dr)", lw = 2)
+              label = label, lw = 2)
     end
     return p
 end
@@ -191,8 +201,9 @@ function plot_max_error_vs_dr(runs, dr)
         grid   = true,
     )
     for r in selected
+    label = @sprintf("dt=%.3gdr/c0", r.params.dt_factor)
         plot!(p, r.df.t, r.df.max_error,
-              label = "dt=$(r.params.dt_factor)dr/c0", lw = 2)
+              label = label, lw = 2)
     end
     return p
 end
@@ -223,8 +234,9 @@ function plot_avg_error_vs_dt(runs, dt_factor)
         grid   = true,
     )
     for r in selected
+    label = @sprintf("dr=%.3g", r.params.dr)
         plot!(p, r.df.t, r.df.avg_error,
-              label = "dr=$(r.params.dr)", lw = 2)
+              label = label, lw = 2)
     end
     return p
 end
@@ -241,9 +253,11 @@ function plot_avg_error_vs_dr(runs, dr)
         grid   = true,
     )
     for r in selected
+    label = @sprintf("dt=%.3gdr/c0", r.params.dt_factor)
         plot!(p, r.df.t, r.df.avg_error,
-              label = "dt=$(r.params.dt_factor)dr/c0", lw = 2)
+              label = label, lw = 2)
     end
+    return p
 end
 
 function plot_energies(run)
@@ -263,7 +277,7 @@ function plot_energies(run)
     plot!(t, E_penalty, label="Penalty", lw=2, color=:orange)
     xlabel!("Time [s]")
     ylabel!("Energy / E₀")
-    title!("Normalized Energy Components -- " * run_label(run))
+    title!("Normalized Energy Components")# -- " * run_label(run))
     return p
 end
 
@@ -274,13 +288,15 @@ function plot_center(run)
     p = plot(t, y,
         xlabel = "Time [s]",
         ylabel = "Y Position",
-        title = "Plate center Y Position -- " * run_label(run),
+        title = "Plate center Y Position",# -- " * run_label(run),
         lw = 2,
         color = :purple,
         legend = false,
-        grid = true
+        # grid = true
     )
     return p
 end
 
-
+function save_plot(p, name::String)
+    savefig(p, "$(name).pdf")	#, fmt = :pdf)
+end
